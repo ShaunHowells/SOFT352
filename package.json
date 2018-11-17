@@ -1,0 +1,15 @@
+{
+  "name": "soft352",
+  "version": "1.0.0",
+  "description": "--- Repository for SOFT352 coursework ---",
+  "main": "index.js",
+  "dependencies": {
+    "eslint": "^5.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,6 +1,4 @@
-var sessionTabs = angular.module("sessionTabs", []);
-
-sessionTabs.controller("availableSessionsCtrl", function ($scope) {
+MainApp.getInstance().controller("availableSessionsCtrl", function ($scope) {
     $scope.availableSessions = [{
             owner: 'Shaun',
             name: 'My Test Session',
@@ -35,8 +33,8 @@ sessionTabs.controller("availableSessionsCtrl", function ($scope) {
     ];
 });
 
-$(document).ready(function(){
-    $(".list-group-item").click(function(event){
+$(document).ready(function () {
+    $(".list-group-item").click(function (event) {
         $(".list-group-item").removeClass("active");
         $(this).addClass("active");
     });

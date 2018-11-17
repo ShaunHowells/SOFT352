@@ -1,16 +1,81 @@
+.main {
+    max-width: 100%;
+}
+
+.sessionTabs{
+    height: 80%;
+}
+
 .sessionList {
-    flex: 1 1 0; /* flex: 1, which you had before, is equivalent but doesn't work */
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    height: 100%;
-}
-
-.sessionTabs {
-    height: 25%
+    height: 95%;
 }
 
 .createSession {
+    width: 100%
+}
+
+.chatArea {
+    background-color: darkgray;
+    height: 80%;
+    padding-right:0;
+}
+
+.chatMessages {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 80%;
+}
+
+.chatMessage {
+    background-color: lightgray;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.chatInput {
+    position: absolute;
+    bottom: 0;
+    border: 0;
+    padding: 10px;
     width: 100%;
-    bottom: 0px;
+    height: 10%;
+}
+
+.chatInputMessage {
+    border: 0;
+    padding: 10px;
+    background: whitesmoke;
+    margin-top: 5px;
+    border-radius: 5px;
+    padding: 5px;
+    width: 100%;
+}
+
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+
+.carousel-inner>.carousel-item>img,
+.carousel-inner>.carousel-item>a>img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.carousel-item {
+    max-height: 80%;
+}
+
+.bookPageImg {
+    height: 100%;
 }
