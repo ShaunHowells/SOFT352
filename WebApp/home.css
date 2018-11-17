@@ -1,0 +1,16 @@
+.sessionList {
+    flex: 1 1 0; /* flex: 1, which you had before, is equivalent but doesn't work */
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.sessionTabs {
+    height: 25%
+}
+
+.createSession {
+    width: 100%;
+    bottom: 0px;
+}
