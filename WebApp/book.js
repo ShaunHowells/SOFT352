@@ -1,6 +1,6 @@
 MainApp.getInstance().controller("bookCtlr", function($scope){
     $scope.book = {
-        name: "Shaun's Test Book"
+        title: "Shaun's Test Book"
     };
     $scope.page = {
         pageNum: 1,

@@ -1,28 +1,18 @@
 var http = require("http");
 var express = require("express");
+var bodyParser = require('body-parser');
+
 var app = express();
 var port = 9000;
 
-app.get("/listsessions", function(request, response){
-    //Implement code to list all sessions
-    
-    response.send();
-});
+//Set up body parser
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/createsession", function(request, response){
-    //Implement code to create a session
+//Set up routing + set database connection
+require("./helpers/books/bookrouting.js")(app);
+require("./helpers/sessions/sessionsrouting.js")(app);
 
-    response.send();
-});
-
-app.get("/joinsession", function(request, response){
-    //Implement code to join a session
-
-    response.send();
-});
-
-
-
-var server = app.listen(port, function(){
+var server = app.listen(port, function () {
     console.log(`Listening on port ${port}`)
 });

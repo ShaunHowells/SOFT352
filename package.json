@@ -6,7 +6,10 @@
   "dependencies": {
     "eslint": "^5.9.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cucumber": "^5.0.2",
+    "jsdoc": "^3.5.5"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

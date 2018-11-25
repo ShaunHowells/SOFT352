@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/npm/pouchdb@7.0.0/dist/pouchdb.min.js"></script>
 
     <script src="mainapp.js"></script>
     <script src="sessions.js"></script>
@@ -74,7 +75,7 @@
         </div>
         <div class="col-sm-3 chatArea border">
             <div class="bookdetails" ng-controller="bookCtlr">
-                <p class="text-center"><strong>Currently Reading: {{book.name}} - Page: {{page.pageNum}}</strong></p>
+                <p class="text-center"><strong>Currently Reading: {{book.title}} - Page: {{page.pageNum}}</strong></p>
             </div>
             <div id="chatMessages" ng-controller="chatMessagesCtrl" class="list-group chatMessages">
                 <li ng-repeat="message in chatMessages" class="list-group-item chatMessage"><b>{{message.user}}</b>:
