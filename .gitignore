@@ -1,1 +1,3 @@
 node_modules
+WebApp/test/QUnit/report/
+WebApp/test/Cucumber/report/
