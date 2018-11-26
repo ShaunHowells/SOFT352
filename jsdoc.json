@@ -1,0 +1,6 @@
+{
+    "opts": {
+        "destination": "./Documentation/JSDoc/",          // same as -d ./out/
+        "recurse": true                   // same as -r
+    }
+}
