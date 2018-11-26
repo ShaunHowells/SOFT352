@@ -4,11 +4,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-qunit-istanbul');
     grunt.initConfig({
         qunit: {
-            all: ['WebApp/QUnit/*.html'],
+            all: ['WebApp/test/QUnit/*.html'],
         },
         qunit_junit: {
             options: {
-                dest: 'WebApp/QUnit/report/'
+                dest: 'WebApp/test/QUnit/report/'
             }
         }
     });
