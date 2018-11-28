@@ -15,3 +15,11 @@ var MainApp = (function () {
         }
     };
 })();
+
+
+$(document).ready(function () {
+    $(".list-group-item").click(function (event) {
+        $(".list-group-item").removeClass("active");
+        $(this).addClass("active");
+    });
+});

@@ -33,9 +33,27 @@ MainApp.getInstance().controller("availableSessionsCtrl", function ($scope) {
     ];
 });
 
-$(document).ready(function () {
-    $(".list-group-item").click(function (event) {
-        $(".list-group-item").removeClass("active");
-        $(this).addClass("active");
-    });
-});
+
+function Sessions(user) {
+    this.availableSessions = null;
+    this.currentUserSessions = [];
+    this.user = user;
+    this.startRetrievingAvailableSessions = function () {
+        //TODO: Sets up websocket to get list of available sessions
+    };
+    this.stopRetrievingAvailableSessions = function () {
+        //TODO: Destroy web socked that gets list of avaailable sessions
+    };
+    this.retrieveAvailableSessions = function () {
+        //TODO: Query sever to get available sessions once
+    };
+    this.retrieveCurrentUserSessions = function () {
+        //TODO: Query Server to get current user sessions once
+    };
+    this.getAvailableSessions = function () {
+        //TODO: Return list of available sessions
+    };
+    this.getCurrentUserSessions = function () {
+        //TODO: Return list of currentUserSessions
+    };
+}
