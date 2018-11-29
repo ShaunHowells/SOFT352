@@ -103,6 +103,23 @@ module.exports = function (app) {
         });
     });
 
+    sessionsRouter.post("/getusersessions", function (request, response) {
+        var sessionName = request.body.sessionName; //User friendly name of the session
+        var userId = request.body.userId; //ID of the user creating the session
+
+        sessionsdb.getUserSessions(userId, function (err) {
+            if (err) {
+                //If an error has occured then write to console and inform caller of error
+                console.log(`Error in getUserSessions: ${err}`);
+                response.send("An error has occured attempting to get user sessions. Please try again.")
+            } else {
+                //If successful then return result to caller
+                console.log(`Session: ${result._id} created`);
+                response.send(result);
+            }
+        });
+    });
+
     sessionsRouter.use(function (request, response, next) {
         response.setHeader("Content-Type", "application/json");
         next();

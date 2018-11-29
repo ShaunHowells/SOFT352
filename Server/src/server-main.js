@@ -13,6 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require("./helpers/books/bookrouting.js")(app);
 require("./helpers/sessions/sessionsrouting.js")(app);
 
+//Set up http server
 var server = app.listen(port, function () {
     console.log(`Listening on port ${port}`)
 });
+
+var sessionsWebSockets = require("./helpers/sessions/sessionswebsockets")(server);

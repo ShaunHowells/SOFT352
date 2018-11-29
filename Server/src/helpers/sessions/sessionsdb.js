@@ -1,3 +1,5 @@
+var SessionWebSockets = require("./sessionswebsockets.js");
+
 //Set up database connections
 var mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost/collaborativereader", {
@@ -32,7 +34,7 @@ var Sessions = mongoose.model("Sessions", {
  * @param {object} result - The result returned from MongoDB access
  */
 
- /**
+/**
  * Gets all of the Sessions from MongoDB
  *
  * @param {sessionsCallback} callback - A callback to run after database access.
@@ -40,7 +42,7 @@ var Sessions = mongoose.model("Sessions", {
 var getAllSessions = function (callback) {
     Sessions.find().exec(callback);
 };
- /**
+/**
  * Returns the session with a given id.
  *
  * @param {string} sessionId - The id of the session you want to retrieve.
@@ -52,7 +54,7 @@ var getSessionById = function (sessionId, callback) {
     }).exec(callback);
 };
 
- /**
+/**
  * Join a session
  *
  * @param {string} sessionId - The id of the session to be joined
@@ -71,7 +73,7 @@ var joinSession = function (sessionId, userId, callback) {
     }, callback);
 };
 
- /**
+/**
  * Creates a new session
  *
  * @param {string} sessionName - The user input name of the new session
@@ -97,8 +99,40 @@ var createSession = function (sessionName, userId, bookId, callback) {
     });
 
     newSession.save(callback);
+
+    // newSession.save(function (err, result) {
+    //     callback(err, result);
+    //     var response = {};
+    //     if (err) {
+    //         //If an error has occured then write to console and inform caller of error
+    //         console.log(`Error in getAllSessions: ${err}`);
+    //         response = {
+    //             success: false,
+    //             message: "Add error has occured trying to get all of the sessions. Please try again."
+    //         };
+    //     } else {
+    //         //If successful then return result to caller
+    //         response = {
+    //             success: true,
+    //             result: result
+    //         };
+    //     }
+    //     SessionWebSockets.notifyUsersAllSessions(response)
+    // });
 }
 
+
+/**
+ * Gets all of the Sessions from MongoDB for a given user
+ *
+ * @param {String} userId - The id of the user to retrieve all sessions of
+ * @param {sessionsCallback} callback - A callback to run after database access.
+ */
+var getUserSessions = function (userId, callback) {
+    Sessions.find({
+        "users.userId": userId
+    }).exec(callback);
+};
 
 module.exports = {
     getAllSessions: getAllSessions,
