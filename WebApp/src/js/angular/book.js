@@ -1,4 +1,4 @@
-MainApp.getInstance().controller("bookCtlr", function($scope){
+AngularMainApp.getInstance().controller("bookCtlr", function($scope){
     $scope.book = {
         title: "Shaun's Test Book"
     };

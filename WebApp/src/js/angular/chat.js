@@ -1,4 +1,4 @@
-MainApp.getInstance().controller("chatMessagesCtrl", function ($scope) {
+AngularMainApp.getInstance().controller("chatMessagesCtrl", function ($scope) {
     $scope.chatMessages = [{
             user: "Shaun",
             contents: "This is the first message"

@@ -110,4 +110,8 @@ module.exports = function (app) {
         next();
     });
     app.use("/books", booksRouter);
+
+    return {
+        booksdb: booksdb
+    }
 };

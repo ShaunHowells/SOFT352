@@ -1,6 +1,6 @@
 var express = require("express");
 
-module.exports = function (app) {
+module.exports = function (app, webSockets) {
     //Set up router for /sessions
     var sessionsRouter = express.Router();
 
@@ -15,7 +15,7 @@ module.exports = function (app) {
                 console.log(`Error in getAllSessions: ${err}`);
                 response.send({
                     success: false,
-                    message: "Add error has occured trying to get all of the sessions. Please try again."
+                    message: "An error has occured trying to get all of the sessions. Please try again."
                 });
             } else {
                 //If successful then return result to caller
@@ -90,15 +90,21 @@ module.exports = function (app) {
         var userId = request.body.userId; //ID of the user creating the session
         var bookId = request.body.bookId; //ID of the book to be loaded into the session
 
-        sessionsdb.createSession(sessionName, userId, bookId, function (err) {
+        sessionsdb.createSession(sessionName, userId, bookId, function (err, result) {
             if (err) {
                 //If an error has occured then write to console and inform caller of error
                 console.log(`Error in createSession: ${err}`);
-                response.send("An error has occured attempting to create a session. Please try again.")
+                response.send({
+                    success: false,
+                    message: "An error has occured attempting to create a session. Please try again."
+                });
             } else {
                 //If successful then return result to caller
                 console.log(`Session: ${result._id} created`);
-                response.send(result);
+                response.send({
+                    success: true,
+                    result: result
+                });
             }
         });
     });
@@ -125,4 +131,8 @@ module.exports = function (app) {
         next();
     });
     app.use("/sessions", sessionsRouter);
+
+    return {
+        sessionsdb: sessionsdb
+    }
 };

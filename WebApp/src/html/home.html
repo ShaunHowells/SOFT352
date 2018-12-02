@@ -8,14 +8,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.js"></script>
     <script src="http://cdn.jsdelivr.net/npm/pouchdb@7.0.0/dist/pouchdb.min.js"></script>
 
-    <script src="../js/mainapp.js"></script>
-    <script src="../js/sessions.js"></script>
-    <script src="../js/book.js"></script>
-    <script src="../js/chat.js"></script>
-    
+    <!-- Get classes -->
+    <script src="../js/classes/collabbookreader.js"></script>
+    <script src="../js/classes/sessions.js"></script>
+    <script src="../js/classes/book.js"></script>
+    <script src="../js/classes/chat.js"></script>
+
+    <!-- Set up angular -->
+    <script src="../js/angular/angularmainapp.js"></script>
+    <script src="../js/angular/book.js"></script>
+    <script src="../js/angular/chat.js"></script>
+    <script src="../js/angular/sessions.js"></script>
+
+    <script src="../js/main.js"></script>
 
     <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.14.0.css">
     <script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
@@ -38,7 +47,7 @@
             <li>NOTHING</li>
         </ul>
     </div>
-    <div class="row border main" id="main" ng-app="mainApp">
+    <div class="row border main" id="main" ng-app="AngularMainApp">
         <div class="col-sm-3 sessionTabs">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item active"><a href="#availableSessions" role="tab" data-toggle="tab" class="nav-link active">Available

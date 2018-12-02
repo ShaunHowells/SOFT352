@@ -10,12 +10,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //Set up routing + set database connection
-require("./helpers/books/bookrouting.js")(app);
-require("./helpers/sessions/sessionsrouting.js")(app);
+var booksRouting = require("./helpers/books/booksrouting.js")(app);
+var sessionsRouting = require("./helpers/sessions/sessionsrouting.js")(app);
 
 //Set up http server
 var server = app.listen(port, function () {
     console.log(`Listening on port ${port}`)
 });
 
-var sessionsWebSockets = require("./helpers/sessions/sessionswebsockets")(server);
+var webSockets = require("./helpers/websockets")(server, sessionsRouting.sessionsdb);
+
+sessionsRouting.sessionsdb.setWebSockets(webSockets);
+
