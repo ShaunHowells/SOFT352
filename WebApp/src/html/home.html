@@ -24,11 +24,13 @@
     <script src="../js/angular/chat.js"></script>
     <script src="../js/angular/sessions.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qunit/2.8.0/qunit.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qunit/2.8.0/qunit.min.js"></script>
+    <script src="../../test/Qunit/tests/sessionqunit.js"></script>
+
+    <!-- Start main.js after unit tests are complete -->
     <script src="../js/main.js"></script>
 
-    <link rel="stylesheet" href="//code.jquery.com/qunit/qunit-1.14.0.css">
-    <script src="http://code.jquery.com/qunit/qunit-1.14.0.js"></script>
-    <script src="../../test/Qunit/tests/sessionqunit.js"></script>
 </head>
 
 <body>
@@ -48,27 +50,56 @@
         </ul>
     </div>
     <div class="row border main" id="main" ng-app="AngularMainApp">
+        <!-- Sesssion Lists -->
         <div class="col-sm-3 sessionTabs">
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item active"><a href="#availableSessions" role="tab" data-toggle="tab" class="nav-link active">Available
+            <ul id="sessionTabList" class="nav nav-tabs" role="tablist">
+                <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab" data-toggle="tab" class="nav-link active">Available
                         Sessions</a></li>
-                <li class="nav-item"><a href="#mySessions" role="tab" data-toggle="tab" class="nav-link">My Sessions</a></li>
+                <li class="nav-item"><a id="currentUserSessionsTabHeading" href="#currentUserSessions" role="tab" data-toggle="tab" class="nav-link">My Sessions</a></li>
             </ul>
             <div class="tab-content sessionList">
+                <!-- Available Session List -->
                 <div id="availableSessions" ng-controller="availableSessionsCtrl" class="tab-pane active list-group">
                     <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action"
-                        id="availablesessionId{{session._id}}">{{session.name}}</a>
+                        id="availablesessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
+                    <!-- Available Session Details Model Popup -->
+                    <div class="modal" id="availableSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="availableSessionDetailsModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel">{{selectedSession.name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Currently reading: {{selectedSession.currentBook.name}}</p>
+                                    <p>Owner: {{selectedSession.owner}}</p>
+                                    <p>Number of users: {{selectedSession.users.length}}</p>
+                                    <br>
+                                    Do you wish to join this session?
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button id="availableSessionDetailsModalJoinSession" type="button" class="btn btn-primary" ng-click="joinSession(selectedSession)">Join Session</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="mySessions" ng-controller="mySessionsCtrl" class="tab-pane list-group">
+                <!-- My Session List (Current User Sessions) -->
+                <div id="currentUserSessions" ng-controller="currentUserSessionsCtrl" class="tab-pane list-group">
                     <div>
-                        <a href="" role="button" ng-repeat="session in mySessions" class="list-group-item list-group-item-action"
-                            id="mySessionId{{session.id}}">{{session.name}}</a>
+                        <a href="" role="button" ng-repeat="session in currentUserSessions" class="list-group-item list-group-item-action"
+                            id=currentUserSessionId{{session.id}}">{{session.name}}</a>
                         <button class="btn btn-primary createSession" id="createSession">Start new session</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-6">
+            <!-- Book page display -->
             <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active" id="bookPage{{page.pageNum}}" ng-controller="bookCtlr">
@@ -86,13 +117,16 @@
             </div>
         </div>
         <div class="col-sm-3 chatArea border">
+            <!-- Book details -->
             <div class="bookdetails" ng-controller="bookCtlr">
                 <p class="text-center"><strong>Currently Reading: {{book.title}} - Page: {{page.pageNum}}</strong></p>
             </div>
+            <!-- Chat message list -->
             <div id="chatMessages" ng-controller="chatMessagesCtrl" class="list-group chatMessages">
                 <li ng-repeat="message in chatMessages" class="list-group-item chatMessage"><b>{{message.user}}</b>:
                     {{message.contents}}</a>
             </div>
+            <!-- Chat message input -->
             <div class="chatInput row border">
                 <div class="col-sm-10">
                     <input type="text" placeholder="Enter your message here" class="chatInputMessage">

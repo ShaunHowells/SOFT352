@@ -10,7 +10,10 @@ var CollabBookReader = (function () {
     }
 
     function stopWebSocketConnection() {
-        this.websocket = null;
+        if (this.websocket) {
+            this.websocket.close();
+            this.websocket = null;
+        }
     }
 
     function handleWebSocketMessage(message) {
@@ -19,7 +22,7 @@ var CollabBookReader = (function () {
 
         switch (messageData.type) {
             case "connected":
-                this.clientId = messageData.clientId;
+                this.sessions.currentUserId = messageData.clientId;
                 break;
             case "allsessions":
                 if (messageData.success) {
@@ -35,8 +38,6 @@ var CollabBookReader = (function () {
                 break;
         }
     }
-
-
 
     function setSessions(sessions) {
         if (sessions) {

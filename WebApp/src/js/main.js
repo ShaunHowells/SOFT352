@@ -1,12 +1,12 @@
 
 var sessions = new Sessions();
 CollabBookReader.setSessions(sessions);
-CollabBookReader.startWebSocketConnection();
+//CollabBookReader.startWebSocketConnection();
 
 
 $(document).ready(function () {
-    $(".list-group-item").click(function (event) {
-        $(".list-group-item").removeClass("active");
-        $(this).addClass("active");
+    $(document).on("click", ".list-group-item", function (event) {
+        // $(".list-group-item").removeClass("active");
+        // $(this).addClass("active");
     });
 });

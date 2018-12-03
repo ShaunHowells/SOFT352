@@ -56,6 +56,8 @@ module.exports = function (app, webSockets) {
     });
 
     sessionsRouter.post("/joinsession", function (request, response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         var sessionId = request.body.sessionId; //ID of the session to join
         var userId = request.body.userId; //ID of the user who wants to join the session
 
