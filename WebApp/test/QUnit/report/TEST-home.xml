@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite name="Sessions" errors="0" failures="0" tests="7" time="0.07">
+		<testcase classname="Sessions" name="Sessions #1 - Show Available Sessions List" assertions="1" time="0.01">
+		</testcase>
+		<testcase classname="Sessions" name="Sessions #2 - Show My Sessions List" assertions="1" time="0.01">
+		</testcase>
+		<testcase classname="Sessions" name="Sessions #3 - Add sessions to available session list" assertions="4" time="0.01">
+		</testcase>
+		<testcase classname="Sessions" name="Sessions #4 - Add new session to displayed available session list" assertions="3" time="0.01">
+		</testcase>
+		<testcase classname="Sessions" name="Session #5 - View session details" assertions="5" time="0.01">
+		</testcase>
+		<testcase classname="Sessions" name="Session #6 - Add sessions to current user sessions list" assertions="2" time="0.01">
+		</testcase>
+		<testcase classname="Sessions" name="Session #7 - Add new session to current user sessions list" assertions="2" time="0.01">
+		</testcase>
+	</testsuite>
+</testsuites>
