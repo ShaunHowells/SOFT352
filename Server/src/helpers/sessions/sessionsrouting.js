@@ -88,6 +88,8 @@ module.exports = function (app, webSockets) {
     });
 
     sessionsRouter.post("/createsession", function (request, response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         var sessionName = request.body.sessionName; //User friendly name of the session
         var userId = request.body.userId; //ID of the user creating the session
         var bookId = request.body.bookId; //ID of the book to be loaded into the session
@@ -112,18 +114,53 @@ module.exports = function (app, webSockets) {
     });
 
     sessionsRouter.post("/getusersessions", function (request, response) {
-        var sessionName = request.body.sessionName; //User friendly name of the session
         var userId = request.body.userId; //ID of the user creating the session
 
         sessionsdb.getUserSessions(userId, function (err) {
             if (err) {
                 //If an error has occured then write to console and inform caller of error
                 console.log(`Error in getUserSessions: ${err}`);
-                response.send("An error has occured attempting to get user sessions. Please try again.")
+                response.send({
+                    success: false,
+                    message: "An error has occured attempting to get user sessions. Please try again."
+                });
             } else {
                 //If successful then return result to caller
-                console.log(`Session: ${result._id} created`);
-                response.send(result);
+                response.send({
+                    success: true,
+                    result: result
+                });
+            }
+        });
+    });
+
+    sessionsRouter.post("/leavesession", function (request, response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        var sessionId = request.body.sessionId; //User friendly name of the session
+        var userId = request.body.userId; //ID of the user creating the session
+
+        sessionsdb.removeUserFromSession(sessionId, userId, function (err, result) {
+            if (err) {
+                //If an error has occured then write to console and inform caller of error
+                console.log(`Error in removeUserFromSession: ${err}`);
+                response.send({
+                    success: false,
+                    message: "An error has occured attempting to get leave this session. Please try again."
+                });
+            } else if (!result) {
+                //If database access successful, but no result found with the provided information then inform user
+                response.send({
+                    success: false,
+                    message: "No session with that id found."
+                });
+            } else {
+                //If successful then return result to caller
+                console.log(`User ${userId} has left session ${sessionId}`);
+                response.send({
+                    success: true,
+                    result: result
+                });
             }
         });
     });

@@ -53,15 +53,17 @@
         <!-- Sesssion Lists -->
         <div class="col-sm-3 sessionTabs">
             <ul id="sessionTabList" class="nav nav-tabs" role="tablist">
-                <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab" data-toggle="tab" class="nav-link active">Available
+                <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab"
+                        data-toggle="tab" class="nav-link active">Available
                         Sessions</a></li>
-                <li class="nav-item"><a id="currentUserSessionsTabHeading" href="#currentUserSessions" role="tab" data-toggle="tab" class="nav-link">My Sessions</a></li>
+                <li class="nav-item"><a id="currentUserSessionsTabHeading" href="#currentUserSessions" role="tab"
+                        data-toggle="tab" class="nav-link">My Sessions</a></li>
             </ul>
             <div class="tab-content sessionList">
                 <!-- Available Session List -->
                 <div id="availableSessions" ng-controller="availableSessionsCtrl" class="tab-pane active list-group">
                     <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action"
-                        id="availablesessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
+                        id="availableSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
                     <!-- Available Session Details Model Popup -->
                     <div class="modal" id="availableSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="availableSessionDetailsModalLabel"
                         aria-hidden="true">
@@ -81,8 +83,10 @@
                                     Do you wish to join this session?
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button id="availableSessionDetailsModalJoinSession" type="button" class="btn btn-primary" ng-click="joinSession(selectedSession)">Join Session</button>
+                                    <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
+                                    <button id="availableSessionDetailsModalJoinSession" type="button" class="btn btn-primary"
+                                        ng-click="joinSession(selectedSession)">Join Session</button>
                                 </div>
                             </div>
                         </div>
@@ -90,10 +94,73 @@
                 </div>
                 <!-- My Session List (Current User Sessions) -->
                 <div id="currentUserSessions" ng-controller="currentUserSessionsCtrl" class="tab-pane list-group">
-                    <div>
-                        <a href="" role="button" ng-repeat="session in currentUserSessions" class="list-group-item list-group-item-action"
-                            id=currentUserSessionId{{session.id}}">{{session.name}}</a>
-                        <button class="btn btn-primary createSession" id="createSession">Start new session</button>
+                    <a href="" role="button" ng-repeat="session in currentUserSessions" class="list-group-item list-group-item-action"
+                        id="currentUserSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
+                    <button class="btn btn-primary createNewSession" id="createNewSession" ng-click="displayCreateNewSessionDetails()">Create
+                        new session</button>
+                    <!-- My Session Details Modal -->
+                    <div class="modal" id="currentUserSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="currentUserSessionDetailsModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="currentUserSessionDetailsModalLabel">{{selectedSession.name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Currently reading: {{selectedSession.currentBook.name}}</p>
+                                    <p>Owner: {{selectedSession.owner}}</p>
+                                    <p>Number of users: {{selectedSession.users.length}}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="currentUserSessionDetailsModalClose" type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
+                                    <button id="currentUserSessionDetailsModalJoinSession" type="button" class="btn btn-primary"
+                                        ng-click="leaveSession(selectedSession)">Leave Session</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Create new Session details Modal -->
+                    <div class="modal" id="createNewSessionModal" tabindex="-1" role="dialog" aria-labelledby="createNewSessionModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="createNewSessionModalLabel">Create new Session</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Select the details for your new session below, the click "Create Session".</p>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Session Name</span>
+                                        </div>
+                                        <input id="createNewSessionName" type="text" placeholder="Name" class="form-control">
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Book</span>
+                                        </div>
+                                        <select id="createNewSessionBook" class="form-control">
+                                            <option value="" disabled selected>--Select a book--</option>
+                                            <option value="Book 1">Book 1</option>
+                                            <option value="Book 2">Book 2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="createNewSessionModalClose" type="button" class="btn btn-secondary"
+                                        data-dismiss="modal">Close</button>
+                                    <button id="createNewSessionModalJoinSession" type="button" class="btn btn-primary"
+                                        ng-click="createNewSession()">Create Session</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -124,7 +191,7 @@
             <!-- Chat message list -->
             <div id="chatMessages" ng-controller="chatMessagesCtrl" class="list-group chatMessages">
                 <li ng-repeat="message in chatMessages" class="list-group-item chatMessage"><b>{{message.user}}</b>:
-                    {{message.contents}}</a>
+                    {{message.contents}}
             </div>
             <!-- Chat message input -->
             <div class="chatInput row border">
@@ -136,7 +203,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <div id="qunit"></div>

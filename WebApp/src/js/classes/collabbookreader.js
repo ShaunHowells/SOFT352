@@ -34,6 +34,9 @@ var CollabBookReader = (function () {
                     this.sessions.pushAvailableSession(messageData.result);
                 }
                 break;
+            case "sessionremoved":
+                    this.sessions.removeAvailableSession(messageData.result.sessionId);
+                break;
             default:
                 break;
         }

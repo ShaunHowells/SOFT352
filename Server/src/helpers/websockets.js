@@ -53,6 +53,7 @@ module.exports = function (server, sessionsDatabaseFunctions) {
         var connection = request.accept(null, request.origin);
 
         connection.on("close", function (reasonCode, description) {
+            sessionsdb.removeUserFromAllSessions(connection.shaun_uniqueId);
             delete connectedUsers[connection.shaun_uniqueId];
             console.log("Connection closed - Total Connections: " + Object.keys(connectedUsers).length);
         });

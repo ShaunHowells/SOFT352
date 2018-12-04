@@ -19,6 +19,15 @@ function Sessions() {
         this.availableSessions.push(newSession);
         this.callAvailableSessionsCallback();
     }
+    //Given a session id, remove the session with that id from availableSessions
+    this.removeAvailableSession = function (sessionId) {
+        if (sessionId) {
+            this.availableSessions = this.availableSessions.filter(function (value, index, arr) {
+                return arr[index]._id !== sessionId;
+            });
+            this.callAvailableSessionsCallback();
+        }
+    };
     //Set availableSessionsCallback - Used to update angular model for displaying sessions
     //If this.availableSessions is already populated at this point then call the callback immediately
     this.setAvailableSessionsCallback = function (callback) {
@@ -40,20 +49,47 @@ function Sessions() {
         this.currentUserSessions = sessions.slice();
         this.callCurrentUserSessionsCallback();
     };
+    this.pushCurrentUserSession = function (newSession) {
+        this.currentUserSessions.push(newSession);
+        this.callCurrentUserSessionsCallback();
+    };
+    //Given a session id, remove the session with that id from currentUserSessions
+    this.removeCurrentUserSession = function (sessionId) {
+        if (sessionId) {
+            this.currentUserSessions = this.currentUserSessions.filter(function (value) {
+                return value._id !== sessionId;
+            });;
+            this.callCurrentUserSessionsCallback();
+        }
+    };
     this.setCurrentUserSessionsCallback = function (callback) {
         this.currentUserSessionsCallback = callback;
         this.callCurrentUserSessionsCallback();
     };
-    this.pushCurrentUserSession = function (newSession) {
-        this.currentUserSessions.push(newSession);
-        this.callCurrentUserSessionsCallback();
-    }
     this.callCurrentUserSessionsCallback = function () {
         if (this.currentUserSessionsCallback) {
             this.currentUserSessionsCallback(this.currentUserSessions);
         }
     }
 
+    this.createNewSession = function (sessionName, book, callback) {
+        if (this.currentUserId) {
+            var self = this;
+            $.post("http://localhost:9000/sessions/createsession", {
+                sessionName: sessionName,
+                bookId: book,
+                userId: this.currentUserId
+            }).done(function (data) {
+                if (data.success) {
+                    self.pushCurrentUserSession(data.result);
+                    callback(data);
+                } else {
+                    alert("An error has occured when creating a new session. Please try again");
+                    console.log(data);
+                }
+            });
+        }
+    };
     this.joinSession = function (sessionId, callback) {
         if (this.currentUserId) {
             var self = this;
@@ -65,10 +101,28 @@ function Sessions() {
                     self.pushCurrentUserSession(data.result);
                     callback(data);
                 } else {
-                    alert("An error has occured. Please try again");
+                    alert("An error has occured when joining a session. Please try again");
                     console.log(data);
                 }
-            })
+            });
         }
     };
+    this.leaveSession = function (sessionId, callback) {
+        if (this.currentUserId) {
+            var self = this;
+            $.post("http://localhost:9000/sessions/leavesession", {
+                sessionId: sessionId,
+                userId: this.currentUserId
+            }).done(function (data) {
+                if (data.success) {
+                    self.removeCurrentUserSession(data.result._id);
+                    callback(data);
+                } else {
+                    alert("An error has occured when leaving a session. Please try again");
+                    console.log(data);
+                }
+            });
+        }
+    }
+
 }

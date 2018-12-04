@@ -167,7 +167,7 @@ QUnit.test("Sessions #4 - Add new session to displayed available session list", 
     CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionList);
 });
 
-QUnit.test("Session #5 - View session details", function (assert) {
+QUnit.test("Sessions #5 - View session details", function (assert) {
     //Store previous values
     var previousAvailableSessionList = CollabBookReader.getSessions().getAvailableSessions();
     //Get currently active tab heading to set original heading back to active after test
@@ -190,7 +190,7 @@ QUnit.test("Session #5 - View session details", function (assert) {
     assert.equal(availableSessionsCount, 2, "2 sessions should be available");
 
     //Select the first session in the list to display the details
-    angular.element("#availablesessionId" + sampleAvailableSessionList[0]._id).click();
+    angular.element("#availableSessionId" + sampleAvailableSessionList[0]._id).click();
 
     assert.ok(angular.element("#availableSessionDetailsModal").is(":visible"), "Details are currently being displayed");
 
@@ -208,7 +208,7 @@ QUnit.test("Session #5 - View session details", function (assert) {
     currentlyActiveTabHeading.click();
 });
 
-QUnit.test("Session #6 - Add sessions to current user sessions list", function (assert) {
+QUnit.test("Sessions #6 - Add sessions to current user sessions list", function (assert) {
     //Store previous values
     var previousCurrentUserSessionList = CollabBookReader.getSessions().getCurrentUserSessions();
 
@@ -222,7 +222,7 @@ QUnit.test("Session #6 - Add sessions to current user sessions list", function (
     currentUserSessionsCount = currentUserSessionsCtrlScope.currentUserSessions.length;
     assert.equal(currentUserSessionsCount, 0, "0 sessions should be in the current user Sessions list");
 
-    //As I'm not testing the server functionality here, I'll use sample data to update mySessions can check the reponse is correct
+    //As I'm not testing the server functionality here, I'll use sample data to update currentUserSessions can check the reponse is correct
     CollabBookReader.getSessions().setCurrentUserSessions(sampleCurrentUserSessionList);
 
     //Check that the angular $scope is correctly updated
@@ -233,7 +233,7 @@ QUnit.test("Session #6 - Add sessions to current user sessions list", function (
     CollabBookReader.getSessions().setCurrentUserSessions(previousCurrentUserSessionList);
 });
 
-QUnit.test("Session #7 - Add new session to current user sessions list", function (assert) {
+QUnit.test("Sessions #7 - Add new session to current user sessions list", function (assert) {
     //Store previous values
     var previousCurrentUserSessionsList = CollabBookReader.getSessions().getCurrentUserSessions();
 
@@ -256,4 +256,148 @@ QUnit.test("Session #7 - Add new session to current user sessions list", functio
 
     //Reset session list to previous value
     CollabBookReader.getSessions().setCurrentUserSessions(previousCurrentUserSessionsList);
+});
+
+QUnit.test("Sessions #8 - Display details of session in MySessions list", function (assert) {
+    //Store previous values
+    var previousCurrentUserSessionsList = CollabBookReader.getSessions().getCurrentUserSessions();
+    var currentlyActiveTabHeading = angular.element("#sessionTabList").find("li .active");
+
+    var currentUserSessionsCount;
+    //Get required angular scope
+    var currentUserSessionsCtrlScope = angular.element($("#currentUserSessions")).scope();
+    //Set currentUserSessions so we have a session to click
+    CollabBookReader.getSessions().setCurrentUserSessions(sampleCurrentUserSessionList);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    currentUserSessionsCtrlScope.$apply();
+
+    //Click currentUserSessionsTabHeading
+    angular.element("#currentUserSessionsTabHeading").click();
+
+    //Check that the angular $scope is correctly updated
+    currentUserSessionsCount = currentUserSessionsCtrlScope.currentUserSessions.length;
+    assert.equal(currentUserSessionsCount, 1, "1 session should be in current user sessions list");
+
+    //Select the first session in the list to display the details
+    angular.element("#currentUserSessionId" + sampleCurrentUserSessionList[0]._id).click();
+    //Check that sessions detail modal is showing
+    assert.ok(angular.element("#currentUserSessionDetailsModal").is(":visible"), "Details are currently being displayed");
+
+    //Get selectedSession variable used in session details
+    var selectedSession = angular.element("#currentUserSessionDetailsModal").scope().selectedSession;
+    //Check values of selected session are the same as the session that was clicked
+    assert.equal(selectedSession._id, sampleCurrentUserSessionList[0]._id, "Session Details has correct _id");
+    assert.equal(selectedSession.name, sampleCurrentUserSessionList[0].name, "Session Details has correct name");
+    assert.equal(selectedSession.owner, sampleCurrentUserSessionList[0].owner, "Session Details has correct owner");
+
+    //Hide displayed details
+    $("#currentUserSessionDetailsModalClose").click();
+    assert.ok(!angular.element("#currentUserSessionDetailsModal").is(":visible"), "Details should now be hidden");
+
+    //Reset session list to previous value
+    CollabBookReader.getSessions().setCurrentUserSessions(previousCurrentUserSessionsList);
+    currentlyActiveTabHeading.click()
+});
+
+QUnit.test("Sessions #9 - Display 'Create new session' modal", function (assert) {
+    var currentlyActiveTabHeading = angular.element("#sessionTabList").find("li .active");
+
+    //Click currentUserSessionsTabHeading to display Create new session button
+    angular.element("#currentUserSessionsTabHeading").click();
+
+    angular.element("#createNewSession").click();
+    assert.ok(angular.element("#createNewSessionModal").is(":visible"), "Create new session modal is currently being displayed");
+
+    assert.equal(angular.element("#createNewSessionName").val(), "", "Session name should be empty");
+    assert.equal(angular.element("#createNewSessionBook").val(), null, "Session book should be empty");
+
+    //Set values in createNewSessionModal
+    angular.element("#createNewSessionName").val("QUnit Test Session");
+    angular.element("#createNewSessionBook").val("Book 1");
+
+    //Close createNewSessionModal
+    angular.element("#createNewSessionModalClose").click();
+    assert.ok(!angular.element("#createNewSessionModal").is(":visible"), "Create new session modal should now be hidden");
+
+    //Reopen createNewSessionModal to check that the values have been reset
+    angular.element("#createNewSession").click();
+
+    assert.equal(angular.element("#createNewSessionName").val(), "", "Session name should have been reset after re-opening the popup");
+    assert.equal(angular.element("#createNewSessionBook").val(), null, "Session book should have been reset after re-opening the popup");
+
+    //Close createNewSessionModal
+    angular.element("#createNewSessionModalClose").click();
+    currentlyActiveTabHeading.click()
+});
+
+QUnit.test("Sessions #10 - Update display when available session is no longer available", function (assert) {
+    //Store previous values
+    var currentlyActiveTabHeading = angular.element("#sessionTabList").find("li .active");
+    var previousAvailableSessionList = CollabBookReader.getSessions().getAvailableSessions();
+
+    angular.element("#availableSessionsTabHeading").click();
+
+    var availableSessionsCount;
+    //Get required angular scope
+    var availableSessionsCtrlScope = angular.element($("#availableSessions")).scope();
+
+    //As I'm not testing the server functionality here, I'll use sample data to update currentUserSessions can check the reponse is correct
+    CollabBookReader.getSessions().setAvailableSessions(sampleAvailableSessionList);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    availableSessionsCtrlScope.$apply();
+
+    //Check that the angular $scope is correctly updated
+    availableSessionsCount = availableSessionsCtrlScope.availableSessions.length;
+    assert.equal(availableSessionsCount, 2, "2 session should be in the session list");
+    assert.equal(angular.element("#availableSessions").children("a").length, 2, "2 sessions should be displayed")
+
+    //Remove first session in currentUserSessions
+    CollabBookReader.getSessions().removeAvailableSession(sampleAvailableSessionList[0]._id);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    availableSessionsCtrlScope.$apply();
+
+    //Check that the angular $scope is correctly updated
+    availableSessionsCount = availableSessionsCtrlScope.availableSessions.length;
+    assert.equal(availableSessionsCount, 1, "1 sessions should be in the session list");
+    assert.equal(angular.element("#availableSessions").children("a").length, 1, "1 sessions should be displayed")
+
+    //Reset session list to previous value
+    CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionList);
+    currentlyActiveTabHeading.click();
+});
+
+QUnit.test("Sessions #11 - Update display when leaving a session", function (assert) {
+    //Store previous values
+    var currentlyActiveTabHeading = angular.element("#sessionTabList").find("li .active");
+    var previousCurrentUserSessionList = CollabBookReader.getSessions().getCurrentUserSessions();
+
+    angular.element("#currentUserSessionsTabHeading").click();
+
+    var currentUserSessionsCount;
+    //Get required angular scope
+    var currentUserSessionsCtrlScope = angular.element($("#currentUserSessions")).scope();
+
+    //As I'm not testing the server functionality here, I'll use sample data to update currentUserSessions can check the reponse is correct
+    CollabBookReader.getSessions().setCurrentUserSessions(sampleCurrentUserSessionList);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    currentUserSessionsCtrlScope.$apply();
+
+    //Check that the angular $scope is correctly updated
+    currentUserSessionsCount = currentUserSessionsCtrlScope.currentUserSessions.length;
+    assert.equal(currentUserSessionsCount, 1, "1 session should be in the session list");
+    assert.equal(angular.element("#currentUserSessions").children("a").length, 1, "1 sessions should be displayed")
+
+    //Remove first session in currentUserSessions
+    CollabBookReader.getSessions().removeCurrentUserSession(sampleCurrentUserSessionList[0]._id);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    currentUserSessionsCtrlScope.$apply();
+
+    //Check that the angular $scope is correctly updated
+    currentUserSessionsCount = currentUserSessionsCtrlScope.currentUserSessions.length;
+    assert.equal(currentUserSessionsCount, 0, "0 sessions should be in the session list");
+    assert.equal(angular.element("#currentUserSessions").children("a").length, 0, "0 sessions should be displayed")
+
+    //Reset session list to previous value
+    CollabBookReader.getSessions().setCurrentUserSessions(previousCurrentUserSessionList);
+    currentlyActiveTabHeading.click();
 });

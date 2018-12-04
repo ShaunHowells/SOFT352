@@ -13,7 +13,7 @@
         owner: String,
         currentBook: {
             bookDetails: {
-                bookId: Number,
+                bookId: String,
                 bookName: String
             },
             pageNum: Number,
@@ -127,14 +127,101 @@
         }).exec(callback);
     };
 
+    /**
+     * Removes the specified user from the specified Session in MongoDB
+     *
+     * @param {String} sessionId - The id of the session that the user wants to leave
+     * @param {String} userId - The id of the user that wants to leave the session
+     * @param {sessionsCallback} callback - A callback to run after database access.
+     */
+    function removeUserFromSession(sessionId, userId, callback) {
+        var foundSession = Sessions.findOne({
+            "_id": sessionId
+        }).exec(function (err, result) {
+            if (err) {
+                callback(err, result);
+            } else if (!result) {
+                //If not result return
+                callback(err, result);
+            } else {
+                //If we have more than 1 user, then remove the user
+                //Otherwise delete the session (which will remove them and end the session)
+                if (result.users.length > 1) {
+                    Sessions.findOneAndUpdate({
+                        _id: sessionId
+                    }, {
+                        $pull: {
+                            users: {
+                                userId: userId
+                            }
+                        }
+                    }, callback);
 
-    function setWebSockets(test) {
-        webSockets = test;
+                } else {
+                    result.remove(callback);
+                    if (webSockets) {
+                        webSockets.notifyAllConnectedUsers({
+                            type: "sessionremoved",
+                            success: true,
+                            result: {
+                                sessionId: sessionId
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    };
+
+
+    /**
+     * Remove a given user all sessions
+     *
+     * @param {String} userId - The id of the user to remove from all sessons
+     * @param {sessionsCallback} callback - A callback to run after database access.
+     */
+    function removeUserFromAllSessions(userId) {
+        Sessions.find({
+            "users.userId": userId
+        }).exec(function (err, sessions) {
+            sessions.forEach(function (session) {
+                if (session.users.length > 1) {
+                    Sessions.findOneAndUpdate(session._id, {
+                        $pull: {
+                            users: {
+                                userId: userId
+                            }
+                        }
+                    });
+                } else {
+                    var sessionId = session._id;
+                    session.remove();
+                    if (webSockets) {
+                        webSockets.notifyAllConnectedUsers({
+                            type: "sessionremoved",
+                            success: true,
+                            result: {
+                                sessionId: sessionId
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+
+    };
+
+
+    function setWebSockets(newWebSockets) {
+        webSockets = newWebSockets;
     }
     module.exports = {
         getAllSessions: getAllSessions,
         getSessionById: getSessionById,
         joinSession: joinSession,
         createSession: createSession,
+        removeUserFromSession: removeUserFromSession,
+        removeUserFromAllSessions: removeUserFromAllSessions,
         setWebSockets: setWebSockets
     };
