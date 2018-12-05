@@ -1,10 +1,3 @@
-//Variables required to use Angular
-var injector = angular.injector(['ng', 'AngularMainApp']); // used to get dependencies like controllers / filters etc
-var ctrlScope = {}; // a clean scope to test
-var $controllers = injector.get('$controller'); //get injector that can retrieve controllers 
-var $filters = injector.get("$filter"); // get filter injector
-var someService; // define a global used in all tests
-
 //Variables used by multiple tests
 var testSessionName = "QUnit Test Session";
 var testSessionBook = "shauntestbook";
@@ -66,22 +59,22 @@ var sampleCurrentUserSessionList = [{
     "__v": 0
 }];
 
-QUnit.module('Sessions', { // define the module - qualify with QUnit namespace to avoid conflict with Angular
-    previousAvailableSessionList: null,
+// QUnit.module('Sessions', { // define the module - qualify with QUnit namespace to avoid conflict with Angular
+//     previousAvailableSessionList: null,
 
-    before: function () {
-        CollabBookReader.stopWebSocketConnection();
-    },
-    after: function () {
-        CollabBookReader.startWebSocketConnection();
-    }
-    // beforeEach: function () {
-    //     previousAvailableSessionList = CollabBookReader.getSessions().getAvailableSessions();
-    // },
-    // afterEach: function () {
-    //     CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionList);
-    // }
-});
+//     before: function () {
+//         CollabBookReader.stopWebSocketConnection();
+//     },
+//     after: function () {
+//         CollabBookReader.startWebSocketConnection();
+//     }
+//     // beforeEach: function () {
+//     //     previousAvailableSessionList = CollabBookReader.getSessions().getAvailableSessions();
+//     // },
+//     // afterEach: function () {
+//     //     CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionList);
+//     // }
+// });
 
 //TODO: See if I can remove calls to $apply. Currently using them as I'm using $applyAsync() in the actual code
 
@@ -313,7 +306,6 @@ QUnit.test("Sessions #9 - Display 'Create new session' modal", function (assert)
 
     //Set values in createNewSessionModal
     angular.element("#createNewSessionName").val("QUnit Test Session");
-    angular.element("#createNewSessionBook").val("Book 1");
 
     //Close createNewSessionModal
     angular.element("#createNewSessionModalClose").click();
@@ -323,11 +315,10 @@ QUnit.test("Sessions #9 - Display 'Create new session' modal", function (assert)
     angular.element("#createNewSession").click();
 
     assert.equal(angular.element("#createNewSessionName").val(), "", "Session name should have been reset after re-opening the popup");
-    assert.equal(angular.element("#createNewSessionBook").val(), null, "Session book should have been reset after re-opening the popup");
-
+    
     //Close createNewSessionModal
     angular.element("#createNewSessionModalClose").click();
-    currentlyActiveTabHeading.click()
+    currentlyActiveTabHeading.click();
 });
 
 QUnit.test("Sessions #10 - Update display when available session is no longer available", function (assert) {
@@ -398,6 +389,67 @@ QUnit.test("Sessions #11 - Update display when leaving a session", function (ass
     assert.equal(angular.element("#currentUserSessions").children("a").length, 0, "0 sessions should be displayed")
 
     //Reset session list to previous value
+    CollabBookReader.getSessions().setCurrentUserSessions(previousCurrentUserSessionList);
+    currentlyActiveTabHeading.click();
+});
+
+QUnit.test("Sessions #12 - Remove a session from Available Sessions when it's added to My Sessions", function (assert) {
+    //Store previous values
+    var currentlyActiveTabHeading = angular.element("#sessionTabList").find("li .active");
+    var previousAvailableSessionList = CollabBookReader.getSessions().getAvailableSessions();
+    var previousCurrentUserSessionList = CollabBookReader.getSessions().getCurrentUserSessions();
+
+    var availableSessionsCount, currentUserSessionsCount;
+    //Get required angular scope
+    var availableSessionsCtrlScope = angular.element($("#availableSessions")).scope();
+    var currentUserSessionsCtrlScope = angular.element($("#currentUserSessions")).scope();
+
+    //Set available sessions list to empty
+    CollabBookReader.getSessions().setAvailableSessions([]);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    availableSessionsCtrlScope.$apply();
+    //Check that the angular $scope is correctly updated
+    availableSessionsCount = availableSessionsCtrlScope.availableSessions.length;
+    assert.equal(availableSessionsCount, 0, "0 sessions should be in the Available Sessions list");
+    assert.equal(angular.element("#availableSessions").children("a").length, 0, "0 sessions should be displayed in the available sessions list");
+
+    //Set my sessions list
+    CollabBookReader.getSessions().setCurrentUserSessions([]);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    currentUserSessionsCtrlScope.$apply();
+    //Check that the angular $scope is correctly updated
+    currentUserSessionsCount = currentUserSessionsCtrlScope.currentUserSessions.length;
+    assert.equal(currentUserSessionsCount, 0, "0 sessions should be in the My Sessions list");
+    assert.equal(angular.element("#currentUserSessions").children("a").length, 0, "0 sessions should be displayed in the current user sessions list");
+
+    //Add session to Available Session list (to later add to My Sessions and check that it has been removed)
+    CollabBookReader.getSessions().pushAvailableSession(sampleSession);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    availableSessionsCtrlScope.$apply();
+    //Check that the angular $scope is correctly updated
+    availableSessionsCount = availableSessionsCtrlScope.availableSessions.length;
+    assert.equal(availableSessionsCount, 1, "1 session should be in the Available Sessions list");
+    assert.equal(angular.element("#availableSessions").children("a").length, 1, "1 session should be displayed in the available sessions list")
+
+    //Add that same session into My Sessions
+    CollabBookReader.getSessions().pushCurrentUserSession(sampleSession);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    currentUserSessionsCtrlScope.$apply();
+    //Check that the angular $scope is correctly updated
+    currentUserSessionsCount = currentUserSessionsCtrlScope.currentUserSessions.length;
+    assert.equal(currentUserSessionsCount, 1, "1 session should be in the My Sessions list");
+    assert.equal(angular.element("#currentUserSessions").children("a").length, 1, "1 session should be displayed in the current user sessions list");
+
+    availableSessionsCtrlScope.$apply();
+    //Check that the angular $scope is correctly updated
+    availableSessionsCount = availableSessionsCtrlScope.availableSessions.length;
+    assert.equal(availableSessionsCount, 0, "0 sessions should be in the Available Sessions list");
+    assert.equal(angular.element("#availableSessions").children("a").length, 0, "0 sessions should be displayed in the available sessions list")
+
+
+
+    //Reset session list to previous value
+    CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionList);
     CollabBookReader.getSessions().setCurrentUserSessions(previousCurrentUserSessionList);
     currentlyActiveTabHeading.click();
 });

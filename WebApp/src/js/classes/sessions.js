@@ -29,7 +29,6 @@ function Sessions() {
         }
     };
     //Set availableSessionsCallback - Used to update angular model for displaying sessions
-    //If this.availableSessions is already populated at this point then call the callback immediately
     this.setAvailableSessionsCallback = function (callback) {
         this.availableSessionsCallback = callback;
         this.callAvailableSessionsCallback();
@@ -38,8 +37,21 @@ function Sessions() {
     //Moved to a function to remove the number of times I have to check if it exists before calling it
     this.callAvailableSessionsCallback = function () {
         if (this.availableSessionsCallback) {
-            this.availableSessionsCallback(this.availableSessions);
+            this.availableSessionsCallback(this.filterAvailableSessions());
         }
+    };
+
+    this.filterAvailableSessions = function () {
+        var self = this;
+        var filteredList = self.availableSessions.filter(function(value){
+            for(var session in self.currentUserSessions){
+                if(self.currentUserSessions[session]._id == value._id){
+                    return false;
+                }
+            }
+            return true;
+        });
+        return filteredList;
     };
 
     this.getCurrentUserSessions = function () {
@@ -52,6 +64,7 @@ function Sessions() {
     this.pushCurrentUserSession = function (newSession) {
         this.currentUserSessions.push(newSession);
         this.callCurrentUserSessionsCallback();
+        this.callAvailableSessionsCallback();
     };
     //Given a session id, remove the session with that id from currentUserSessions
     this.removeCurrentUserSession = function (sessionId) {
@@ -59,6 +72,7 @@ function Sessions() {
             this.currentUserSessions = this.currentUserSessions.filter(function (value) {
                 return value._id !== sessionId;
             });;
+            this.callAvailableSessionsCallback();
             this.callCurrentUserSessionsCallback();
         }
     };
@@ -72,12 +86,12 @@ function Sessions() {
         }
     }
 
-    this.createNewSession = function (sessionName, book, callback) {
+    this.createNewSession = function (sessionName, bookId, callback) {
         if (this.currentUserId) {
             var self = this;
             $.post("http://localhost:9000/sessions/createsession", {
                 sessionName: sessionName,
-                bookId: book,
+                bookId: bookId,
                 userId: this.currentUserId
             }).done(function (data) {
                 if (data.success) {
@@ -124,5 +138,4 @@ function Sessions() {
             });
         }
     }
-
 }

@@ -6,24 +6,19 @@
 
     //Variable to store webSockets
     var webSockets;
+    //Access to booksdb to query book details
+    var booksdb
 
     //Create model for session
     var Sessions = mongoose.model("Sessions", {
         name: String,
         owner: String,
         currentBook: {
-            bookDetails: {
-                bookId: String,
-                bookName: String
-            },
-            pageNum: Number,
-            notes: [{
-                pageNum: Number,
-                note: String
-            }]
+            book_id: String,
+            title: String
         },
         users: [{
-            userId: String
+            user_id: String
         }]
     });
 
@@ -69,7 +64,7 @@
         }, {
             "$push": {
                 "users": {
-                    userId: userId
+                    user_id: userId
                 }
             }
         }, callback);
@@ -84,31 +79,35 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function createSession(sessionName, userId, bookId, callback) {
-        var newSession = new Sessions({
-            name: sessionName,
-            owner: userId,
-            currentBook: {
-                bookDetails: {
-                    bookId: bookId,
-                    bookName: bookId
-                },
-                pageNum: 0,
-                notes: []
-            },
-            users: [{
-                userId: userId
-            }]
-        });
+        booksdb.getBookById(bookId, function (err, result) {
+            if (err) {
+                console.log(`An error has occured while retrieving the details for Book ${bookId}`);
+                callback(err, result);
+            } else {
+                var bookTitle = result.title;
+                var newSession = new Sessions({
+                    name: sessionName,
+                    owner: userId,
+                    currentBook: {
+                        book_id: bookId,
+                        title: bookTitle
+                    },
+                    users: [{
+                        user_id: userId
+                    }]
+                });
 
-        newSession.save(function (err, result) {
-            callback(err, result);
+                newSession.save(function (err, result) {
+                    callback(err, result);
 
-            //Only notify users if new session creation was successful
-            if (!err && webSockets) {
-                webSockets.notifyAllConnectedUsers({
-                    type: "newsessioncreated",
-                    success: true,
-                    result: result
+                    //Only notify users if new session creation was successful
+                    if (!err && webSockets) {
+                        webSockets.notifyAllConnectedUsers({
+                            type: "newsessioncreated",
+                            success: true,
+                            result: result
+                        });
+                    }
                 });
             }
         });
@@ -123,7 +122,7 @@
      */
     function getUserSessions(userId, callback) {
         Sessions.find({
-            "users.userId": userId
+            "users.user_id": userId
         }).exec(callback);
     };
 
@@ -152,7 +151,7 @@
                     }, {
                         $pull: {
                             users: {
-                                userId: userId
+                                user_id: userId
                             }
                         }
                     }, callback);
@@ -182,14 +181,14 @@
      */
     function removeUserFromAllSessions(userId) {
         Sessions.find({
-            "users.userId": userId
+            "users.user_id": userId
         }).exec(function (err, sessions) {
             sessions.forEach(function (session) {
                 if (session.users.length > 1) {
                     Sessions.findOneAndUpdate(session._id, {
                         $pull: {
                             users: {
-                                userId: userId
+                                user_id: userId
                             }
                         }
                     });
@@ -212,9 +211,21 @@
 
     };
 
-
+    /**
+     * Set webSockets variable so that sessions can update websocket connections
+     *
+     * @param {object} newWebSockets - The value to set webSockets to
+     */
     function setWebSockets(newWebSockets) {
         webSockets = newWebSockets;
+    }
+    /**
+     * Set booksdb variable so that sessions can query book details
+     *
+     * @param {object} newBooksDb - The value to set booksdb to
+     */
+    function setBooksDb(newBooksDb) {
+        booksdb = newBooksDb;
     }
     module.exports = {
         getAllSessions: getAllSessions,
@@ -223,5 +234,6 @@
         createSession: createSession,
         removeUserFromSession: removeUserFromSession,
         removeUserFromAllSessions: removeUserFromAllSessions,
-        setWebSockets: setWebSockets
+        setWebSockets: setWebSockets,
+        setBooksDb: setBooksDb
     };

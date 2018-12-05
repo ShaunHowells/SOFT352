@@ -1,7 +1,4 @@
-
-var sessions = new Sessions();
-CollabBookReader.setSessions(sessions);
-//CollabBookReader.startWebSocketConnection();
+CollabBookReader.startWebSocketConnection();
 
 
 $(document).ready(function () {

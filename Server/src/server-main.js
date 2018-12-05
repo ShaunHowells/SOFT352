@@ -20,5 +20,8 @@ var server = app.listen(port, function () {
 
 var webSockets = require("./helpers/websockets")(server, sessionsRouting.sessionsdb);
 
+//Give sessionsdb access to webSockets
 sessionsRouting.sessionsdb.setWebSockets(webSockets);
+//Give sessionsdb access to booksdb
+sessionsRouting.sessionsdb.setBooksDb(booksRouting.booksdb);
 

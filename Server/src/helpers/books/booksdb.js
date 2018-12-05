@@ -21,7 +21,7 @@ var Books = mongoose.model("Books", {
  * @param {object} result - The result returned from MongoDB access
  */
 
- /**
+/**
  * Adds a new book to the collection
  *
  * @param {string} title - The title of the book to be added
@@ -45,7 +45,7 @@ var addNewBook = function (title, pageFiles, callback) {
     newBook.save(callback);
 };
 
- /**
+/**
  * Gets all of the Books from MongoDB
  *
  * @param {booksCallback} callback - A callback to run after database access.
@@ -74,12 +74,14 @@ var getPageFromBook = function (bookId, pageNum, callback) {
     Books.findOne({
         "_id": bookId,
         "pages.pageNum": pageNum
-    }).select( { "pages.$": 1 }).exec(callback);
+    }).select({
+        "pages.$": 1
+    }).exec(callback);
 }
 
 module.exports = {
-        addNewBook: addNewBook,
-        getAllBooks: getAllBooks,
-        getBookById: getBookById,
-        getPageFromBook: getPageFromBook
+    addNewBook: addNewBook,
+    getAllBooks: getAllBooks,
+    getBookById: getBookById,
+    getPageFromBook: getPageFromBook
 };

@@ -14,10 +14,10 @@
     <script src="http://cdn.jsdelivr.net/npm/pouchdb@7.0.0/dist/pouchdb.min.js"></script>
 
     <!-- Get classes -->
-    <script src="../js/classes/collabbookreader.js"></script>
     <script src="../js/classes/sessions.js"></script>
     <script src="../js/classes/book.js"></script>
     <script src="../js/classes/chat.js"></script>
+    <script src="../js/classes/collabbookreader.js"></script>
 
     <!-- Set up angular -->
     <script src="../js/angular/angularmainapp.js"></script>
@@ -27,7 +27,8 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qunit/2.8.0/qunit.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qunit/2.8.0/qunit.min.js"></script>
-    <script src="../../test/Qunit/tests/sessionqunit.js"></script>
+    <script src="../../test/Qunit/tests/sessionsqunit.js"></script>
+    <script src="../../test/Qunit/tests/booksqunit.js"></script>
 
     <!-- Start main.js after unit tests are complete -->
     <script src="../js/main.js"></script>
@@ -77,9 +78,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Currently reading: {{selectedSession.currentBook.name}}</p>
+                                    <p>Currently reading: {{selectedSession.currentBook.title}}</p>
                                     <p>Owner: {{selectedSession.owner}}</p>
-                                    <p>Number of users: {{selectedSession.users.length}}</p>
                                     <br>
                                     Do you wish to join this session?
                                 </div>
@@ -111,9 +111,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Currently reading: {{selectedSession.currentBook.name}}</p>
+                                    <p>Currently reading: {{selectedSession.currentBook.title}}</p>
                                     <p>Owner: {{selectedSession.owner}}</p>
-                                    <p>Number of users: {{selectedSession.users.length}}</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button id="currentUserSessionDetailsModalClose" type="button" class="btn btn-secondary"
@@ -147,10 +146,9 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Book</span>
                                         </div>
-                                        <select id="createNewSessionBook" class="form-control">
+                                        <select id="createNewSessionBook" class="form-control" ng-controller="bookListCtrl">
                                             <option value="" disabled selected>--Select a book--</option>
-                                            <option value="Book 1">Book 1</option>
-                                            <option value="Book 2">Book 2</option>
+                                            <option ng-repeat="book in bookList" value="{{book._id}}">{{book.title}}</option>>
                                         </select>
                                     </div>
                                 </div>
@@ -170,7 +168,7 @@
             <!-- Book page display -->
             <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" id="bookPage{{page.pageNum}}" ng-controller="bookCtlr">
+                    <div class="carousel-item active" id="bookPage{{page.pageNum}}" ng-controller="bookCtrl">
                         <img class="img-fluid border bookPageImg" ng-src="{{page.src}}" alt="Page {{page.pageNum}} could not be found" />
                     </div>
                 </div>
@@ -186,7 +184,7 @@
         </div>
         <div class="col-sm-3 chatArea border">
             <!-- Book details -->
-            <div class="bookdetails" ng-controller="bookCtlr">
+            <div class="bookdetails" ng-controller="bookCtrl">
                 <p class="text-center"><strong>Currently Reading: {{book.title}} - Page: {{page.pageNum}}</strong></p>
             </div>
             <!-- Chat message list -->

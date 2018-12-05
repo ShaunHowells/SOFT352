@@ -1,18 +1,21 @@
 var CollabBookReader = (function () {
-    var websocket;
-    var sessions;
-    var clientId;
+    this.websocket = null;
+    this.sessions = new Sessions();
+    this.books = new Books();
+    this.clientId = null;
 
     function startWebSocketConnection() {
-        this.websocket = new WebSocket("ws://localhost:9000");
+        if (!websocket) {
+            websocket = new WebSocket("ws://localhost:9000");
 
-        this.websocket.onmessage = handleWebSocketMessage.bind(this);
+            websocket.onmessage = handleWebSocketMessage.bind(this);
+        }
     }
 
     function stopWebSocketConnection() {
-        if (this.websocket) {
-            this.websocket.close();
-            this.websocket = null;
+        if (websocket) {
+            websocket.close();
+            websocket = null;
         }
     }
 
@@ -22,43 +25,41 @@ var CollabBookReader = (function () {
 
         switch (messageData.type) {
             case "connected":
-                this.sessions.currentUserId = messageData.clientId;
+                sessions.currentUserId = messageData.clientId;
                 break;
             case "allsessions":
                 if (messageData.success) {
-                    this.sessions.setAvailableSessions(messageData.result);
+                    sessions.setAvailableSessions(messageData.result);
                 }
                 break;
             case "newsessioncreated":
                 if (messageData.success) {
-                    this.sessions.pushAvailableSession(messageData.result);
+                    sessions.pushAvailableSession(messageData.result);
                 }
                 break;
             case "sessionremoved":
-                    this.sessions.removeAvailableSession(messageData.result.sessionId);
+                sessions.removeAvailableSession(messageData.result.sessionId);
                 break;
             default:
                 break;
         }
     }
 
-    function setSessions(sessions) {
-        if (sessions) {
-            this.sessions = sessions;
-        }
+    function getSessions() {
+        return sessions;
     }
 
-    function getSessions() {
-        return this.sessions;
+    function getBooks() {
+        return books;
     }
 
     function getClientId() {
-        return this.clientId;
+        return clientId;
     }
 
     return {
         getSessions: getSessions,
-        setSessions: setSessions,
+        getBooks: getBooks,
         startWebSocketConnection: startWebSocketConnection,
         stopWebSocketConnection: stopWebSocketConnection,
         getClientId: getClientId

@@ -29,6 +29,7 @@ module.exports = function (app) {
     });
 
     booksRouter.post("/getallbooks", function (request, response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
         //Get all books
         booksdb.getAllBooks(function (err, result) {
             if (err) {
@@ -105,7 +106,7 @@ module.exports = function (app) {
         });
     });
 
-    booksRouter.use(function(request, response, next) {
+    booksRouter.use(function (request, response, next) {
         response.setHeader("Content-Type", "application/json");
         next();
     });
