@@ -191,6 +191,12 @@
                                 user_id: userId
                             }
                         }
+                    }, function(err, result){
+                        if(err){
+                            console.log(err);
+                        } else {
+                            console.log(`User ${userId} has been removed from Session ${result._id}`);
+                        }
                     });
                 } else {
                     var sessionId = session._id;

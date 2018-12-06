@@ -1,9 +1,10 @@
-function Sessions() {
+function Sessions() { // eslint-disable-line no-unused-vars
+    
     this.currentUserId = null;
     this.availableSessions = [];
     this.availableSessionsCallback = null;
-    this.currentUserSessions = [];
-    this.currentUserSessionsCallback = null;
+    this.currentUserSession = {};
+    this.currentUserSessionCallback = null;
 
     //Return availableSessions array
     this.getAvailableSessions = function () {
@@ -18,7 +19,7 @@ function Sessions() {
     this.pushAvailableSession = function (newSession) {
         this.availableSessions.push(newSession);
         this.callAvailableSessionsCallback();
-    }
+    };
     //Given a session id, remove the session with that id from availableSessions
     this.removeAvailableSession = function (sessionId) {
         if (sessionId) {
@@ -43,48 +44,37 @@ function Sessions() {
 
     this.filterAvailableSessions = function () {
         var self = this;
-        var filteredList = self.availableSessions.filter(function(value){
-            for(var session in self.currentUserSessions){
-                if(self.currentUserSessions[session]._id == value._id){
-                    return false;
-                }
-            }
+        var filteredList = self.availableSessions.filter(function (value) {
+            if (self.currentUserSession._id == value._id)
+                return false;
             return true;
         });
         return filteredList;
     };
 
-    this.getCurrentUserSessions = function () {
-        return this.currentUserSessions;
+    this.getCurrentUserSession = function () {
+        return this.currentUserSession;
     };
-    this.setCurrentUserSessions = function (sessions) {
-        this.currentUserSessions = sessions.slice();
-        this.callCurrentUserSessionsCallback();
-    };
-    this.pushCurrentUserSession = function (newSession) {
-        this.currentUserSessions.push(newSession);
-        this.callCurrentUserSessionsCallback();
+    this.setCurrentUserSession = function (session) {
+        this.currentUserSession = session;
+        this.callCurrentUserSessionCallback();
         this.callAvailableSessionsCallback();
     };
-    //Given a session id, remove the session with that id from currentUserSessions
-    this.removeCurrentUserSession = function (sessionId) {
-        if (sessionId) {
-            this.currentUserSessions = this.currentUserSessions.filter(function (value) {
-                return value._id !== sessionId;
-            });;
-            this.callAvailableSessionsCallback();
-            this.callCurrentUserSessionsCallback();
+    //Given a session id, remove the session with that id from currentUserSession
+    this.removeCurrentUserSession = function () {
+        this.currentUserSession = {};
+        this.callAvailableSessionsCallback();
+        this.callCurrentUserSessionCallback();
+    };
+    this.setCurrentUserSessionCallback = function (callback) {
+        this.currentUserSessionCallback = callback;
+        this.callCurrentUserSessionCallback();
+    };
+    this.callCurrentUserSessionCallback = function () {
+        if (this.currentUserSessionCallback) {
+            this.currentUserSessionCallback(this.currentUserSession);
         }
     };
-    this.setCurrentUserSessionsCallback = function (callback) {
-        this.currentUserSessionsCallback = callback;
-        this.callCurrentUserSessionsCallback();
-    };
-    this.callCurrentUserSessionsCallback = function () {
-        if (this.currentUserSessionsCallback) {
-            this.currentUserSessionsCallback(this.currentUserSessions);
-        }
-    }
 
     this.createNewSession = function (sessionName, bookId, callback) {
         if (this.currentUserId) {
@@ -95,7 +85,7 @@ function Sessions() {
                 userId: this.currentUserId
             }).done(function (data) {
                 if (data.success) {
-                    self.pushCurrentUserSession(data.result);
+                    self.setCurrentUserSession(data.result);
                     callback(data);
                 } else {
                     alert("An error has occured when creating a new session. Please try again");
@@ -112,7 +102,7 @@ function Sessions() {
                 userId: this.currentUserId
             }).done(function (data) {
                 if (data.success) {
-                    self.pushCurrentUserSession(data.result);
+                    self.setCurrentUserSession(data.result);
                     callback(data);
                 } else {
                     alert("An error has occured when joining a session. Please try again");
@@ -129,7 +119,7 @@ function Sessions() {
                 userId: this.currentUserId
             }).done(function (data) {
                 if (data.success) {
-                    self.removeCurrentUserSession(data.result._id);
+                    self.removeCurrentUserSession();
                     callback(data);
                 } else {
                     alert("An error has occured when leaving a session. Please try again");
@@ -137,5 +127,5 @@ function Sessions() {
                 }
             });
         }
-    }
+    };
 }

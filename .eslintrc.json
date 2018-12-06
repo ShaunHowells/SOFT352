@@ -1,16 +1,27 @@
 {
     "env": {
         "browser": true,
-        "node": true
+        "node": true,
+        "es6": true,
+        "jquery": true,
+        "qunit": true
     },
+    "plugins": ["angular"],
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 5
+        "ecmaVersion": 6
+    },
+    "globals": {
+        "angular": false,
+        "CollabBookReader": false,
+        "Books": false,
+        "Sessions": false,
+        "AngularMainApp": false
     },
     "rules": {
         "indent": [
             "error",
-            "tab"
+            4
         ],
         "linebreak-style": [
             "error",
@@ -23,6 +34,7 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-console": "off"
     }
 }

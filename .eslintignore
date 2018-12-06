@@ -1,0 +1,7 @@
+/WebApp/test/QUnit/report/**
+/WebApp/test/Cucumber/report/**
+/WebApp/test/Cucumber/features/**
+/WebApp/test/Cucumber/features/**
+/WebApp/src/html/**
+/WebApp/src/css/**
+.eslintrc.json

@@ -1,11 +1,13 @@
+/* Main div containing everything */
 .main {
     max-width: 100%;
 }
 
+/* Left-side tabs containing 'Available Sessions' and 'My Session' */
 .sessionTabs{
     height: 80%;
 }
-
+/* Angular generated list of sessions */
 .sessionList {
     flex: 1 1 0;
     display: flex;
@@ -13,17 +15,18 @@
     overflow-y: scroll;
     height: 95%;
 }
-
-.createNewSession {
+/* Buttons displayed in 'My Session' */
+.createNewSession, .leaveSession {
     width: 100%
 }
 
+/* Right-side chat area */
 .chatArea {
     background-color: darkgray;
     height: 80%;
     padding-right:0;
 }
-
+/* Chat messages in right-side chat area */
 .chatMessages {
     flex: 1 1 0;
     display: flex;
@@ -31,13 +34,13 @@
     overflow-y: scroll;
     height: 80%;
 }
-
+/* Individual chat messages */
 .chatMessage {
     background-color: lightgray;
     margin-top: 2px;
     margin-bottom: 2px;
 }
-
+/* Input to send chat messages */
 .chatInput {
     position: absolute;
     bottom: 0;
@@ -46,7 +49,7 @@
     width: 100%;
     height: 10%;
 }
-
+/* Text input for sending chat messages */
 .chatInputMessage {
     border: 0;
     padding: 10px;
@@ -57,25 +60,32 @@
     width: 100%;
 }
 
+/* Left button on book carousel */
 .carousel-control-prev-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
 }
-
+/* Right button on book carousel */
 .carousel-control-next-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
 }
-
+/* Images displayed on book carousel */
 .carousel-inner>.carousel-item>img,
 .carousel-inner>.carousel-item>a>img {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    height: 100%;
 }
-
+/* Item on book carousel */
 .carousel-item {
     max-height: 80%;
 }
 
-.bookPageImg {
-    height: 100%;
+button[disabled] {
+    cursor: not-allowed;
+    pointer-events: all !important;
+}
+
+#currentUserSessionDetailList {
+    margin:10px;
 }

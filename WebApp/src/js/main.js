@@ -1,9 +1,8 @@
+//Start the websocket connection
 CollabBookReader.startWebSocketConnection();
 
-
+//When document is ready
 $(document).ready(function () {
-    $(document).on("click", ".list-group-item", function (event) {
-        // $(".list-group-item").removeClass("active");
-        // $(this).addClass("active");
-    });
+    //Hide currentUserSessionDetails - As we've just joined, we won't be in a session
+    $("#currentUserSessionDetails").hide();
 });

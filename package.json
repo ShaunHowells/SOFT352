@@ -10,6 +10,7 @@
   "devDependencies": {
     "cucumber": "^5.0.2",
     "cucumber-junit": "^1.7.1",
+    "eslint-plugin-angular": "^4.0.0",
     "grunt": "^1.0.3",
     "grunt-contrib-qunit": "^3.0.1",
     "grunt-qunit-istanbul": "^1.0.0",

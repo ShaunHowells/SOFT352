@@ -27,6 +27,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/qunit/2.8.0/qunit.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qunit/2.8.0/qunit.min.js"></script>
+
     <script src="../../test/Qunit/tests/sessionsqunit.js"></script>
     <script src="../../test/Qunit/tests/booksqunit.js"></script>
 
@@ -58,70 +59,56 @@
                 <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab"
                         data-toggle="tab" class="nav-link active">Available
                         Sessions</a></li>
-                <li class="nav-item"><a id="currentUserSessionsTabHeading" href="#currentUserSessions" role="tab"
-                        data-toggle="tab" class="nav-link">My Sessions</a></li>
+                <li class="nav-item"><a id="currentUserSessionTabHeading" href="#currentUserSession" role="tab"
+                        data-toggle="tab" class="nav-link">My Session</a></li>
             </ul>
             <div class="tab-content sessionList">
                 <!-- Available Session List -->
-                <div id="availableSessions" ng-controller="availableSessionsCtrl" class="tab-pane active list-group">
+                <div id="availableSessions" ng-controller="availableSessionsCtrl" class="tab-pane active list-3-+group">
                     <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action"
                         id="availableSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
-                    <!-- Available Session Details Model Popup -->
+                    <!-- Available Session Details Modal Popup -->
                     <div class="modal" id="availableSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="availableSessionDetailsModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel">{{selectedSession.name}}</h5>
+                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel"><span id="displayedSessionName">{{displaySession.name}}</span></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Currently reading: {{selectedSession.currentBook.title}}</p>
-                                    <p>Owner: {{selectedSession.owner}}</p>
+                                    <p>Currently reading: <span id="displayedSessionBookTitle">{{displaySession.currentBook.title}}</span></p>
+                                    <p>Owner: <span id="displayedSessionOwner">{{displaySession.owner}}</span></p>
                                     <br>
-                                    Do you wish to join this session?
+                                    <span id="canJoinSession"></span>
                                 </div>
                                 <div class="modal-footer">
                                     <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary"
                                         data-dismiss="modal">Close</button>
                                     <button id="availableSessionDetailsModalJoinSession" type="button" class="btn btn-primary"
-                                        ng-click="joinSession(selectedSession)">Join Session</button>
+                                        ng-click="joinSession(displaySession)">Join Session</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- My Session List (Current User Sessions) -->
-                <div id="currentUserSessions" ng-controller="currentUserSessionsCtrl" class="tab-pane list-group">
-                    <a href="" role="button" ng-repeat="session in currentUserSessions" class="list-group-item list-group-item-action"
-                        id="currentUserSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
-                    <button class="btn btn-primary createNewSession" id="createNewSession" ng-click="displayCreateNewSessionDetails()">Create
-                        new session</button>
-                    <!-- My Session Details Modal -->
-                    <div class="modal" id="currentUserSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="currentUserSessionDetailsModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="currentUserSessionDetailsModalLabel">{{selectedSession.name}}</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Currently reading: {{selectedSession.currentBook.title}}</p>
-                                    <p>Owner: {{selectedSession.owner}}</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button id="currentUserSessionDetailsModalClose" type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                    <button id="currentUserSessionDetailsModalJoinSession" type="button" class="btn btn-primary"
-                                        ng-click="leaveSession(selectedSession)">Leave Session</button>
-                                </div>
-                            </div>
+                <!-- Current User Session -->
+                <div id="currentUserSession" ng-controller="currentUserSessionCtrl" class="tab-pane list-group">
+                    <div id="currentUserSessionDetails">
+                        <div id="currentUserSessionDetailList">
+                            <input type="hidden" id="currentUserSessionId{{session._id}}">
+                            <p>Current Session: <span id="currentUserSessionName">{{currentUserSession.name}}</span></p>
+                            <p>Currently reading: <span id="currentUserSessionBookTitle">{{currentUserSession.currentBook.title}}</span></p>
+                            <p>Owner: <span id="currentUserSessionOwner">{{currentUserSession.owner}}</span></p>
                         </div>
+                        <button id="currentUserSessionDetailsLeaveSession" type="button" class="btn btn-primary leaveSession"
+                            ng-click="leaveSession(currentUserSession)">Leave Session</button>
+                    </div>
+                    <div id="currentUserSessionJoin">
+                        <button class="btn btn-primary createNewSession" id="createNewSession" ng-click="displayCreateNewSessionDetails()">Create
+                            a new session</button>
                     </div>
                     <!-- Create new Session details Modal -->
                     <div class="modal" id="createNewSessionModal" tabindex="-1" role="dialog" aria-labelledby="createNewSessionModalLabel"
@@ -166,9 +153,9 @@
         </div>
         <div class="col-sm-6">
             <!-- Book page display -->
-            <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel">
+            <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel" ng-controller="bookCtrl">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" id="bookPage{{page.pageNum}}" ng-controller="bookCtrl">
+                    <div class="carousel-item active" id="bookPage{{page.pageNum}}">
                         <img class="img-fluid border bookPageImg" ng-src="{{page.src}}" alt="Page {{page.pageNum}} could not be found" />
                     </div>
                 </div>

@@ -1,17 +1,4 @@
-var AngularMainApp = (function () {
-    var angularMainApp;
-
-    function createInstance(){
-        angularMainApp = angular.module("AngularMainApp", []);
-        return angularMainApp;
-    }
-
-    return {
-        getInstance: function (){
-            if(!angularMainApp){
-                angularMainApp = createInstance();
-            } 
-            return angularMainApp;
-        }
-    };
-})();
+/**
+ * AngularMainApp - Angular app for entire CollabBookReader application
+ */
+var AngularMainApp = angular.module("AngularMainApp", []); // eslint-disable-line no-unused-vars

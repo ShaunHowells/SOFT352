@@ -1,9 +1,3 @@
-function Chat(){
-    this.chatConnection;
-    this.chatChannel;
+function Chat(){ // eslint-disable-line no-unused-vars
 
-    this.startRTCPeerConnection = function(){
-        this.chatConnection = new RTCPeerConnection();
-        this.chatChannel = this.chatConnection.createDataChannel("chatChannel");
-    }
 }
