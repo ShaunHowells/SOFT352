@@ -15,7 +15,8 @@
         owner: String,
         currentBook: {
             book_id: String,
-            title: String
+            title: String,
+            pageNum: Number
         },
         users: [{
             user_id: String
@@ -90,7 +91,8 @@
                     owner: userId,
                     currentBook: {
                         book_id: bookId,
-                        title: bookTitle
+                        title: bookTitle,
+                        pageNum: 0
                     },
                     users: [{
                         user_id: userId
@@ -191,8 +193,8 @@
                                 user_id: userId
                             }
                         }
-                    }, function(err, result){
-                        if(err){
+                    }, function (err, result) {
+                        if (err) {
                             console.log(err);
                         } else {
                             console.log(`User ${userId} has been removed from Session ${result._id}`);

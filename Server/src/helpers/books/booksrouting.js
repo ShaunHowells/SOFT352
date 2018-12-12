@@ -78,6 +78,8 @@ module.exports = function (app) {
     });
 
     booksRouter.post("/getpagefrombook", function (request, response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        
         var bookId = request.body.bookId; //ID of the book containing the page
         var pageNum = request.body.pageNum; //Number of the page within the book
 

@@ -17,13 +17,19 @@ AngularMainApp.controller("bookListCtrl", function ($scope) {
 /**
  * bookListCtrl - Controller for displaying Book contents in centre carousel
  */
-AngularMainApp.controller("bookCtrl", function ($scope) {
+AngularMainApp.controller("pageCtrl", function ($scope) {
+
+    //Set $scope.pageNum and $scope.pageImage and update the display ($applyAsync)
+    $scope.updatePage = function (data) {
+        $scope.pageNum = data.pageNum;
+        $scope.pageImage = data.src;
+        $scope.$applyAsync();
+    };
+    //Set $scope.updatePage as callback in CollabBookReader.getBooks() - Called when currentPage is updated
+    CollabBookReader.getBooks().setUpdatePageCallback($scope.updatePage);
+
     $scope.book = {
         title: "Shaun's Test Book"
     };
-    $scope.page = {
-        pageNum: 1,
-        pageImage: null,
-        src: "testimage.jpg"
-    };
+
 });

@@ -13,6 +13,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.js"></script>
     <script src="http://cdn.jsdelivr.net/npm/pouchdb@7.0.0/dist/pouchdb.min.js"></script>
 
+    <!-- Set up util classes -->
+    <script src="../js/util.js"></script>
+
     <!-- Get classes -->
     <script src="../js/classes/sessions.js"></script>
     <script src="../js/classes/book.js"></script>
@@ -153,10 +156,10 @@
         </div>
         <div class="col-sm-6">
             <!-- Book page display -->
-            <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel" ng-controller="bookCtrl">
+            <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel" ng-controller="pageCtrl">
                 <div class="carousel-inner">
-                    <div class="carousel-item active" id="bookPage{{page.pageNum}}">
-                        <img class="img-fluid border bookPageImg" ng-src="{{page.src}}" alt="Page {{page.pageNum}} could not be found" />
+                    <div class="carousel-item active" id="bookPage">
+                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{pageImage}}" alt="Page {{pageNum}} could not be found" />
                     </div>
                 </div>
                 <a class="carousel-control-prev" href="#bookPageCarousel" role="button" data-slide="prev">
@@ -171,7 +174,8 @@
         </div>
         <div class="col-sm-3 chatArea border">
             <!-- Book details -->
-            <div class="bookdetails" ng-controller="bookCtrl">
+            <!-- TODO: ADD A CONTROLLER HERE -->
+            <div class="bookdetails">
                 <p class="text-center"><strong>Currently Reading: {{book.title}} - Page: {{page.pageNum}}</strong></p>
             </div>
             <!-- Chat message list -->
