@@ -174,8 +174,6 @@ const Books = (function () { // eslint-disable-line no-unused-vars
      * @param {Session} Session to retrieve book details from
      * @memberof Books
      */
-    function
-
     function getSessionBookPage(session) {
         if (session) {
             getBookPage(session.currentBook.book_id, session.currentBook.pageNum);
