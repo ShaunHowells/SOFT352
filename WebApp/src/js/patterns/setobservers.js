@@ -1,0 +1,1 @@
+CollabBookReader.getSessions().getCurrentUserSessionObserver().subscribe(CollabBookReader.getBooks().getSessionBookPage);

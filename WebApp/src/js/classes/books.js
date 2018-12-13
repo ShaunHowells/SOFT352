@@ -114,11 +114,10 @@ const Books = (function () { // eslint-disable-line no-unused-vars
      */
     function getBookPage(bookId, pageNum) {
         if (bookId && pageNum != null) {
-            var self = this;
             for (var book in bookList) {
                 if (bookList[book]._id == bookId) {
                     bookList[book].getPageData(pageNum, function (data) {
-                        self.updateDisplayedPage(data);
+                        updateDisplayedPage(data);
                     });
                     break;
                 }
@@ -169,6 +168,23 @@ const Books = (function () { // eslint-disable-line no-unused-vars
         setCurrentPage(defaultPage);
     }
 
+    /**
+     * Given a session, find the details of the book/page and retrieve the page from the book.
+     * 
+     * @param {Session} Session to retrieve book details from
+     * @memberof Books
+     */
+    function
+
+    function getSessionBookPage(session) {
+        if (session) {
+            getBookPage(session.currentBook.book_id, session.currentBook.pageNum);
+        } else {
+            resetPage();
+        }
+    }
+
+
     return {
         getBookListObserver: getBookListObserver,
         getUpdatePageObserver: getUpdatePageObserver,
@@ -181,7 +197,8 @@ const Books = (function () { // eslint-disable-line no-unused-vars
         updateDisplayedPage: updateDisplayedPage,
         setCurrentPage: setCurrentPage,
         getCurrentPage: getCurrentPage,
-        resetPage: resetPage
+        resetPage: resetPage,
+        getSessionBookPage: getSessionBookPage
     };
 })();
 

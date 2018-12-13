@@ -161,9 +161,6 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
         currentUserSession = null;
         availableSessionsObserver.notify(availableSessions);
         currentUserSessionObserver.notify(currentUserSession);
-
-        //Reset page to default page
-        CollabBookReader.getBooks().resetPage();
     };
 
     /**
@@ -184,7 +181,6 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
             }).done(function (data) {
                 if (data.success) {
                     self.setCurrentUserSession(data.result);
-                    CollabBookReader.getBooks().getBookPage(data.result.currentBook.book_id, data.result.currentBook.pageNum);
                     callback(data);
                 } else {
                     alert("An error has occured when creating a new session. Please try again");
@@ -203,11 +199,10 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
     function joinSession(sessionId, callback) {
         if (currentUserId) {
             for (var session in availableSessions) {
-                if (ts.availableSessions[session]._id == sessionId) {
+                if (availableSessions[session]._id == sessionId) {
                     var self = this;
                     availableSessions[session].joinSession(currentUserId, function (data) {
                         self.setCurrentUserSession(data);
-                        CollabBookReader.getBooks().getBookPage(data.currentBook.book_id, data.currentBook.pageNum);
                         callback(data);
                     });
                     break;
