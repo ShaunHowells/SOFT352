@@ -9,7 +9,7 @@ AngularMainApp.controller("availableSessionsCtrl", function ($scope) {
         $scope.$applyAsync();
     };
     //Set $scope.setAvailableSessions as callback in CollabBookReader.getSessions() - Called when availableSession list is updated
-    CollabBookReader.getSessions().setAvailableSessionsCallback($scope.setAvailableSessions);
+    CollabBookReader.getSessions().getAvailableSessionsObserver().subscribe($scope.setAvailableSessions);
 
     //Display session details popup with given a given sessions details
     $scope.showSessionDetails = function (session) {
@@ -60,7 +60,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function ($scope) {
         $scope.$applyAsync();
     };
     //Set $scope.setCurrentUserSession as callback in CollabBookReader.getSessions() - Called when currentUserSession is updated
-    CollabBookReader.getSessions().setCurrentUserSessionCallback($scope.setCurrentUserSession);
+    CollabBookReader.getSessions().getCurrentUserSessionObserver().subscribe($scope.setCurrentUserSession);
 
     //Called from createNewSession - Display 'Create a new session' modal popup
     $scope.displayCreateNewSessionDetails = function () {
