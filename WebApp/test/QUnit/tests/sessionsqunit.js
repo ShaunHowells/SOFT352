@@ -302,8 +302,8 @@ QUnit.test("Set current user session", function (assert) {
     //Get Angular scope for the 'My Session'
     var currentUserSessionCtrlScope = angular.element("#currentUserSession").scope();
 
-    //Set the currentUserSession to empty - No session
-    CollabBookReader.getSessions().setCurrentUserSession({});
+    //Remove current user session
+    CollabBookReader.getSessions().removeCurrentUserSession();
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
@@ -370,7 +370,7 @@ QUnit.test("Remove current user session", function (assert) {
 
     //Check that the value Angular scope are is empty
     var currentUserSession = currentUserSessionCtrlScope.currentUserSession;
-    assert.equal(Object.keys(currentUserSession).length, 0, "Current session should be empty");
+    assert.ok(!currentUserSession, "Current session should be null");
 
     //RESET TO PREVIOUS VALUES
     //Set currentUserSession back to previous value
@@ -441,8 +441,8 @@ QUnit.test("Remove session from 'Available Sessions' when the user is in that se
     //Get Angular scope for the 'My Session'
     var currentUserSessionCtrlScope = angular.element("#currentUserSession").scope();
 
-    //Set the currentUserSession to empty - No session
-    CollabBookReader.getSessions().setCurrentUserSession({});
+    //Remove current user session
+    CollabBookReader.getSessions().removeCurrentUserSession();
 
     //Set availableSessions to our sample session list
     CollabBookReader.getSessions().setAvailableSessions(sampleAvailableSessionList);

@@ -1,13 +1,12 @@
 /**
  * CollabBookReader - Container that that is used to access instances of other class
  * Also handles general functions that affect multiple classes like websocket messages
- * @constructor
  */
-var CollabBookReader = (function () { // eslint-disable-line no-unused-vars
+const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
 
     var websocket = null; //Websocket for receiving data from server
-    var sessions = new Sessions(); //Sessions object for performing operations on Sessions
-    var books = new Books(); //Books object for performing operations on Books
+    var sessions = Sessions; //Sessions object for performing operations on Sessions
+    var books = Books; //Books object for performing operations on Books
     var clientId = null; //Client id received from the server - Used to uniquely identify the current user
 
     /**

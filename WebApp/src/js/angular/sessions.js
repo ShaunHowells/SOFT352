@@ -15,7 +15,7 @@ AngularMainApp.controller("availableSessionsCtrl", function ($scope) {
     $scope.showSessionDetails = function (session) {
         $scope.displaySession = session;
         $scope.$applyAsync();
-        if (Object.keys(CollabBookReader.getSessions().getCurrentUserSession()).length) {
+        if (CollabBookReader.getSessions().getCurrentUserSession()) {
             angular.element("#availableSessionDetailsModalJoinSession").prop("disabled", true);
             angular.element("#canJoinSession").html("<b>You cannot join another session while you are already in one!</b>");
         } else {
@@ -43,14 +43,14 @@ AngularMainApp.controller("availableSessionsCtrl", function ($scope) {
  * availableSessionsCtrl - Controller for handling 'My Session'/Current User Session
  */
 AngularMainApp.controller("currentUserSessionCtrl", function ($scope) {
-    $scope.currentUserSession = {};
+    $scope.currentUserSession = null;
     //Set $scope.currentUserSession and update display ($applyAsync)
     $scope.setCurrentUserSession = function (data) {
         $scope.currentUserSession = data;
         //If data is populated then we have a session
         //Hide 'Create a new session' button, and show currentUserSession details
         // Otherwise we don't have a session, so show the 'Create a new session' button and hide currentUserSession details
-        if (data && Object.keys(data).length) {
+        if (data) {
             $("#currentUserSessionJoin").hide();
             $("#currentUserSessionDetails").show();
         } else {
@@ -94,7 +94,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function ($scope) {
 
     //Called by currentUserSessionDetailsLeaveSession - Leave current session
     $scope.leaveSession = function (session) {
-        CollabBookReader.getSessions().leaveSession(session._id, function () { //Can take data
+        CollabBookReader.getSessions().leaveCurrentSession(function () { //Can take data
             $("#currentUserSessionDetailsModalClose").click();
         });
     };

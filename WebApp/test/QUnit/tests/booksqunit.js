@@ -37,7 +37,7 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
     //Click 'My Session' tab heading
     angular.element("#currentUserSessionTabHeading").click();
     //Set the currentUserSession to empty to ensure we have the 'Create a new session' button
-    CollabBookReader.getSessions().setCurrentUserSession({});
+    CollabBookReader.getSessions().removeCurrentUserSession();
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
