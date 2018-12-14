@@ -96,6 +96,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function ($scope) {
     $scope.leaveSession = function (session) {
         CollabBookReader.getSessions().leaveCurrentSession(function () { //Can take data
             $("#currentUserSessionDetailsModalClose").click();
+            angular.element("#availableSessionsTabHeading").click();
         });
     };
 });

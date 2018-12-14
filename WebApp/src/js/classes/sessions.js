@@ -108,7 +108,7 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
     };
 
     /**
-     * filterAvailableSessions - Filter availableSessions so that the currentUserSession isn't displayed as we don't want to display our current session as an available session
+     * Filter availableSessions so that the currentUserSession isn't displayed as we don't want to display our current session as an available session
      * 
      * @return {Session[]} The list of available sessions where the current user session has been filtered out
      * @memberof Sessions
@@ -202,7 +202,7 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
                 if (availableSessions[session]._id == sessionId) {
                     var self = this;
                     availableSessions[session].joinSession(currentUserId, function (data) {
-                        self.setCurrentUserSession(data);
+                        self.setCurrentUserSession(data.result);
                         callback(data);
                     });
                     break;
@@ -228,6 +228,23 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
         }
     };
 
+    /**
+     * Updates the page number in current the session
+     * 
+     * @param {Integer} pageNum - The number of the page to set in the session
+     * @memberof Sessions
+     */
+    function updateCurrentSessionBookPage(pageNum) {
+        $.post("http://localhost:9000/sessions/updatecurrentpage", {
+            sessionId: currentUserSession._id,
+            pageNum: pageNum
+        }, function (data) {
+            if (!data.success) {
+                console.error("An error has occured trying to update the current session page");
+            }
+        })
+    }
+
     return {
         setCurrentUserId: setCurrentUserId,
         getCurrentUserId: getCurrentUserId,
@@ -243,7 +260,8 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
         removeCurrentUserSession: removeCurrentUserSession,
         createNewSession: createNewSession,
         joinSession: joinSession,
-        leaveCurrentSession: leaveCurrentSession
+        leaveCurrentSession: leaveCurrentSession,
+        updateCurrentSessionBookPage: updateCurrentSessionBookPage
     };
 })();
 
@@ -256,6 +274,7 @@ function Session(sessionDetails) {
     this.name = sessionDetails.name;
     this.owner = sessionDetails.owner;
     this.users = sessionDetails.users;
+    this.currentPageNum = sessionDetails.currentPageNum
     this.currentBook = sessionDetails.currentBook;
 
 

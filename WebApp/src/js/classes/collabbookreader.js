@@ -67,6 +67,10 @@ const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
             case "sessionremoved":
                 sessions.removeAvailableSession(messageData.result.sessionId);
                 break;
+                //Message received when the page in the current session has changed
+            case "pagechanged":
+                books.getSessionBookPage(messageData.result);
+                break;
             default:
                 break;
         }

@@ -1,27 +1,8 @@
-    //Set up database connections
-    var mongoose = require("mongoose");
-    mongoose.connect("mongodb://localhost/collaborativereader", {
-        useNewUrlParser: true
-    });
-
     //Variable to store webSockets
     var webSockets;
-    //Access to booksdb to query book details
-    var booksdb
 
-    //Create model for session
-    var Sessions = mongoose.model("Sessions", {
-        name: String,
-        owner: String,
-        currentBook: {
-            book_id: String,
-            title: String,
-            pageNum: Number
-        },
-        users: [{
-            user_id: String
-        }]
-    });
+    //Mongoose Models
+    var models;
 
     /**
      * Callback used when accessing Sessions from MongoDB
@@ -37,7 +18,10 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function getAllSessions(callback) {
-        Sessions.find().exec(callback);
+        models.Sessions.find().populate({
+            path: "currentBook",
+            select: "_id title"
+        }).exec(callback);
     };
 
     /**
@@ -47,8 +31,11 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function getSessionById(sessionId, callback) {
-        Sessions.findOne({
+        models.Sessions.findOne({
             _id: sessionId
+        }).populate({
+            path: "currentBook",
+            select: "_id title"
         }).exec(callback);
     };
 
@@ -60,7 +47,7 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function joinSession(sessionId, userId, callback) {
-        Sessions.findOneAndUpdate({
+        models.Sessions.findOneAndUpdate({
             _id: sessionId
         }, {
             "$push": {
@@ -68,7 +55,14 @@
                     user_id: userId
                 }
             }
-        }, callback);
+        }, function (err, result) {
+            result.populate({
+                path: "currentBook",
+                select: "_id title"
+            }, function (err, result) {
+                callback(err, result);
+            });
+        });
     };
 
     /**
@@ -80,53 +74,33 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function createSession(sessionName, userId, bookId, callback) {
-        booksdb.getBookById(bookId, function (err, result) {
-            if (err) {
-                console.log(`An error has occured while retrieving the details for Book ${bookId}`);
+        var newSession = new models.Sessions({
+            name: sessionName,
+            owner: userId,
+            currentPageNum: 0,
+            currentBook: bookId,
+            users: [{
+                user_id: userId
+            }]
+        });
+        newSession.save(function (err, result) {
+            //Get currentBook _id and title to return
+            result.populate({
+                path: "currentBook",
+                select: "_id title"
+            }, function (err, result) {
                 callback(err, result);
-            } else {
-                var bookTitle = result.title;
-                var newSession = new Sessions({
-                    name: sessionName,
-                    owner: userId,
-                    currentBook: {
-                        book_id: bookId,
-                        title: bookTitle,
-                        pageNum: 0
-                    },
-                    users: [{
-                        user_id: userId
-                    }]
-                });
-
-                newSession.save(function (err, result) {
-                    callback(err, result);
-
-                    //Only notify users if new session creation was successful
-                    if (!err && webSockets) {
-                        webSockets.notifyAllConnectedUsers({
-                            type: "newsessioncreated",
-                            success: true,
-                            result: result
-                        });
-                    }
-                });
-            }
+                //Only notify users if new session creation was successful
+                if (!err && webSockets) {
+                    webSockets.notifyAllConnectedUsers({
+                        type: "newsessioncreated",
+                        success: true,
+                        result: result
+                    });
+                }
+            });
         });
     }
-
-
-    /**
-     * Gets all of the Sessions from MongoDB for a given user
-     *
-     * @param {String} userId - The id of the user to retrieve all sessions of
-     * @param {sessionsCallback} callback - A callback to run after database access.
-     */
-    function getUserSessions(userId, callback) {
-        Sessions.find({
-            "users.user_id": userId
-        }).exec(callback);
-    };
 
     /**
      * Removes the specified user from the specified Session in MongoDB
@@ -136,7 +110,7 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function removeUserFromSession(sessionId, userId, callback) {
-        var foundSession = Sessions.findOne({
+        var foundSession = models.Sessions.findOne({
             "_id": sessionId
         }).exec(function (err, result) {
             if (err) {
@@ -148,7 +122,7 @@
                 //If we have more than 1 user, then remove the user
                 //Otherwise delete the session (which will remove them and end the session)
                 if (result.users.length > 1) {
-                    Sessions.findOneAndUpdate({
+                    models.Sessions.findOneAndUpdate({
                         _id: sessionId
                     }, {
                         $pull: {
@@ -182,12 +156,12 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function removeUserFromAllSessions(userId) {
-        Sessions.find({
+        models.Sessions.find({
             "users.user_id": userId
         }).exec(function (err, sessions) {
             sessions.forEach(function (session) {
                 if (session.users.length > 1) {
-                    Sessions.findOneAndUpdate(session._id, {
+                    models.Sessions.findOneAndUpdate(session._id, {
                         $pull: {
                             users: {
                                 user_id: userId
@@ -215,26 +189,81 @@
                 }
             });
         });
-
-
     };
+
+    /**
+     *Get all users in a given session
+     *
+     * @param {String} sessionId ID of the session to retrieve the users from
+     * @param {Integer} pageNum Number of the page to navigate to
+     * @param {Function} callback to execute after users have been retrieved
+     */
+    var changeSessionPage = function (sessionId, pageNum, callback) {
+        models.Sessions.findOneAndUpdate({
+            _id: sessionId
+        }, {
+            "$set": {
+                "currentPageNum": pageNum
+            }
+        }, {
+            new: true,
+            fields: {
+                "currentBook.pages": false
+            }
+        }, function (err, result) {
+            result.populate({
+                path: "currentBook",
+                select: "_id title"
+            }, function (err, result) {
+                callback(err, result);
+                if (!err && webSockets) {
+                    webSockets.notifyUsers(result.users, {
+                        type: "pagechanged",
+                        success: true,
+                        result: result
+                    });
+                }
+            });
+        });
+    };
+
+    /**
+     *Get all users in a given session
+     *
+     * @param {String} sessionId ID of the session to retrieve the users from
+     * @param {Function} callback to execute after users have been retrieved
+     */
+    var getSessionUsers = function (sessionId, callback) {
+        models.Sessions.findOneAndUpdate({
+            _id: sessionId
+        }, "users", function (err, result) {
+            if (err) {
+                console.log(err);
+            } else {
+                callback(result);
+            }
+        })
+    }
+
+    /**
+     * Sets available mongoose models
+     *
+     * @param {object} mongooseModels Available Mongoose models
+     */
+    var setMongooseModels = function (mongooseModels) {
+        models = mongooseModels;
+    }
 
     /**
      * Set webSockets variable so that sessions can update websocket connections
      *
-     * @param {object} newWebSockets - The value to set webSockets to
+     * @param {object} newWebSockets The value to set webSockets to
      */
     function setWebSockets(newWebSockets) {
         webSockets = newWebSockets;
     }
-    /**
-     * Set booksdb variable so that sessions can query book details
-     *
-     * @param {object} newBooksDb - The value to set booksdb to
-     */
-    function setBooksDb(newBooksDb) {
-        booksdb = newBooksDb;
-    }
+
+
     module.exports = {
         getAllSessions: getAllSessions,
         getSessionById: getSessionById,
@@ -242,6 +271,8 @@
         createSession: createSession,
         removeUserFromSession: removeUserFromSession,
         removeUserFromAllSessions: removeUserFromAllSessions,
-        setWebSockets: setWebSockets,
-        setBooksDb: setBooksDb
+        changeSessionPage: changeSessionPage,
+        getSessionUsers: getSessionUsers,
+        setMongooseModels: setMongooseModels,
+        setWebSockets: setWebSockets
     };

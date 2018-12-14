@@ -2,13 +2,37 @@
 var sampleBookList = [{
     "_id": "5bf59ade4cb1550530740989",
     "title": "Shaun's Test Book",
+    "pages": [{
+            "_id": "5bf59ade4cb155053074098a",
+            "pageNum": 0,
+            "contentType": "image/jpeg"
+        },
+        {
+            "_id": "5bf59ade4cb155053074098b",
+            "pageNum": 1,
+            "contentType": "image/png"
+        },
+        {
+            "_id": "5bf59ade4cb155053074098c",
+            "pageNum": 2,
+            "contentType": "image/png"
+        }
+    ],
     "__v": 0
 }];
 
-var samplePage = {
-    src: "../../../test/QUnit/resources/testBookPage.png",
-    pageNum: 0
+var sampleBookPage = {
+    "_id": "5bf59ade4cb1550530740989",
+    "title": "Shaun's Test Book",
+    "pageCount": 4,
+    "currentPage": {
+        "_id": "5bf59ade4cb155053074098a",
+        "src": "../../../test/QUnit/resources/testBookPage.png",
+        "pageNum": 0
+    }
 };
+
+
 
 /**
  * The 'Books' module contains all of the tests directly relating to the use of Books. This does not test the functionality of the books themselves, only show the UI interactions with them
@@ -71,23 +95,23 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
  */
 QUnit.test("Display book page in book carousel", function (assert) {
     //STORE PREVIOUS VALUES
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentPage();
+    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
 
     //Get Angular scope for the the currentPage
     var pageCtrlScope = angular.element("#bookPageCarousel").scope();
 
-    CollabBookReader.getBooks().setCurrentPage(samplePage);
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
     //Manually call .$apply() as it normally uses $applyAsync()
     pageCtrlScope.$apply();
 
     //Check that the currentPage scope was correctly updated
-    assert.equal(pageCtrlScope.pageImage, samplePage.src, "The currentPage Angular scope has the correct image src");
-    assert.equal(pageCtrlScope.pageNum, samplePage.pageNum, "The currentPage Angular scope has the correct page number");
+    assert.equal(pageCtrlScope.currentBookPage.currentPage.src, sampleBookPage.currentPage.src, "The currentPage Angular scope has the correct image src");
+    assert.equal(pageCtrlScope.currentBookPage.currentPage.pageNum, sampleBookPage.currentPage.pageNum, "The currentPage Angular scope has the correct page number");
 
     //Check that the UI has been udpated to display the correct image
-    assert.equal(angular.element("#bookPageImage").attr("src"), samplePage.src, "Book Page Carousel src should be set to " + samplePage.src);
+    assert.equal(angular.element("#bookPageImage").attr("src"), sampleBookPage.currentPage.src, "Book Page Carousel src should be set to " + sampleBookPage.currentPage.src);
     assert.equal(angular.element("#bookPageImage").attr("alt"), "Page 0 could not be found", "Book Page Carousel alt should be set to \"Page 0 could not be found\"");
 
     //RESET TO PREVIOUS VALUES
-    CollabBookReader.getBooks().setCurrentPage(previousCurrentPage);
+    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
 });

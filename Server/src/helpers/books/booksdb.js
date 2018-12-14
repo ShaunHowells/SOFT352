@@ -1,17 +1,5 @@
-//Set up database connections
-var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/collaborativereader", {
-    useNewUrlParser: true
-});
-
-var Books = mongoose.model("Books", {
-    title: String,
-    pages: [{
-        pageNum: Number,
-        contentType: String,
-        data: Buffer
-    }]
-});
+//Mongoose Models
+var models;
 
 /**
  * Callback used when accessing Books from MongoDB
@@ -29,19 +17,19 @@ var Books = mongoose.model("Books", {
  * @param {booksCallback} callback - A callback to run after database access.
  */
 var addNewBook = function (title, pageFiles, callback) {
-    var newBook = new Books({
+    var newBook = new models.Books({
         title: title,
         pages: []
     });
-    var page = {};
+
     for (var page in pageFiles) {
-        page = {
+        newBook.pages.push({
             pageNum: page,
             contentType: pageFiles[page].mimetype,
             data: pageFiles[page].buffer
-        };
-        newBook.pages.push(page);
+        });
     }
+    newBook.pageCount = newBook.pages.length;
     newBook.save(callback);
 };
 
@@ -51,7 +39,7 @@ var addNewBook = function (title, pageFiles, callback) {
  * @param {booksCallback} callback - A callback to run after database access.
  */
 var getAllBooks = function (callback) {
-    Books.find().select("-pages").exec(callback);
+    models.Books.find().select("-pages.data").exec(callback);
 };
 
 /**
@@ -60,9 +48,9 @@ var getAllBooks = function (callback) {
  * @param {booksCallback} callback - A callback to run after database access.
  */
 var getBookById = function (bookId, callback) {
-    Books.findOne({
+    models.Books.findOne({
         _id: bookId
-    }).select("-pages").exec(callback);
+    }).select("-pages.data").exec(callback);
 }
 
 /**
@@ -71,17 +59,24 @@ var getBookById = function (bookId, callback) {
  * @param {booksCallback} callback - A callback to run after database access.
  */
 var getPageFromBook = function (bookId, pageNum, callback) {
-    Books.findOne({
+    models.Books.findOne({
         "_id": bookId,
         "pages.pageNum": pageNum
     }).select({
+        "title": true,
+        "pageCount": true,
         "pages.$": 1
     }).exec(callback);
+}
+
+var setMongooseModels = function (mongooseModels) {
+    models = mongooseModels;
 }
 
 module.exports = {
     addNewBook: addNewBook,
     getAllBooks: getAllBooks,
     getBookById: getBookById,
-    getPageFromBook: getPageFromBook
+    getPageFromBook: getPageFromBook,
+    setMongooseModels: setMongooseModels
 };

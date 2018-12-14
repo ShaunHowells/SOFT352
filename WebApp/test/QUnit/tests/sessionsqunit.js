@@ -1,7 +1,7 @@
 //Sample sessions for use in Sessions tests
 var sampleAvailableSessionList = [{
     "currentBook": {
-        "book_id": "5bf59ade4cb1550530740989",
+        "book_id": null,
         "title": "Shaun's Test Book"
     },
     "_id": "5c0936db8a7aa44ea0adf4be",
@@ -10,12 +10,11 @@ var sampleAvailableSessionList = [{
     "users": [{
         "_id": "5c0936db8a7aa44ea0adf4bf",
         "user_id": "753b5e0e-2c07"
-    }],
-    "__v": 0
+    }]
 },
 {
     "currentBook": {
-        "book_id": "5bf59ade4cb1550530740989",
+        "book_id": null,
         "title": "Shaun's Test Book"
     },
     "_id": "5c0936e68a7aa44ea0adf4c0",
@@ -24,13 +23,12 @@ var sampleAvailableSessionList = [{
     "users": [{
         "_id": "5c0936e68a7aa44ea0adf4c1",
         "user_id": "65382863-fe2c"
-    }],
-    "__v": 0
+    }]
 }
 ];
 var sampleSession = {
     "currentBook": {
-        "book_id": "5bf59ade4cb1550530740989",
+        "book_id": null,
         "title": "Shaun's Test Book"
     },
     "_id": "5c0936bd8a7aa44ea0adf4bc",
@@ -39,12 +37,11 @@ var sampleSession = {
     "users": [{
         "_id": "5c0936bd8a7aa44ea0adf4bd",
         "user_id": "036438b0-2515"
-    }],
-    "__v": 0
+    }]
 };
 var sampleCurrentUserSession = {
     "currentBook": {
-        "book_id": "5bf59ade4cb1550530740989",
+        "book_id": null,
         "title": "Shaun's Test Book"
     },
     "_id": "5c091af0f5659f1ff48f6b8f",
@@ -53,8 +50,7 @@ var sampleCurrentUserSession = {
     "users": [{
         "_id": "5c091af0f5659f1ff48f6b90",
         "user_id": "ad3ccf43-ea77"
-    }],
-    "__v": 0
+    }]
 };
 
 /**

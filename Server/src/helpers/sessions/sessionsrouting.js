@@ -165,6 +165,36 @@ module.exports = function (app, webSockets) {
         });
     });
 
+    sessionsRouter.post("/updatecurrentpage", function (request, response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
+        var sessionId = request.body.sessionId; //User friendly name of the session
+        var pageNum = request.body.pageNum; //ID of the user creating the session
+
+        sessionsdb.changeSessionPage(sessionId, pageNum, function (err, result) {
+            if (err) {
+                //If an error has occured then write to console and inform caller of error
+                console.log(`Error in changeSessionPage: ${err}`);
+                response.send({
+                    success: false,
+                    message: "An error has occured attempting to get change the page of this session. Please try again."
+                });
+            } else if (!result) {
+                //If database access successful, but no result found with the provided information then inform user
+                response.send({
+                    success: false,
+                    message: "No session with that id found."
+                });
+            } else {
+                //If successful then return result to caller
+                response.send({
+                    success: true,
+                    result: result
+                });
+            }
+        });
+    });
+
     sessionsRouter.use(function (request, response, next) {
         response.setHeader("Content-Type", "application/json");
         next();

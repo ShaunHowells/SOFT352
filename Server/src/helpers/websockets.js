@@ -1,8 +1,8 @@
-module.exports = function (server, sessionsDatabaseFunctions) {
+module.exports = function (server) {
     var http = require("http");
     var express = require("express");
     var WebSocketServer = require("websocket").server;
-    var sessionsdb = sessionsDatabaseFunctions;
+    var sessionsdb = require("../helpers/sessions/sessionsdb.js");
 
     //Store connected users in an object so I can easily refer to them by their unique id
     var connectedUsers = {};
@@ -12,6 +12,21 @@ module.exports = function (server, sessionsDatabaseFunctions) {
         var message = JSON.stringify(messageToSend);
         for (var user in connectedUsers) {
             connectedUsers[user].sendUTF(message);
+        }
+    }
+
+    //Function to send messages to all users in a given session
+    function notifyUsers(sessionUsers, messageToSend) {
+        sessionUsers = sessionUsers;
+        var message = JSON.stringify(messageToSend);
+        for (var user in connectedUsers) {
+            for (var sessionUser in sessionUsers) {
+                if (connectedUsers[user].shaun_uniqueId == sessionUsers[sessionUser].user_id) {
+                    connectedUsers[user].sendUTF(message);
+                    break;
+                }
+            }
+
         }
     }
     //Function to get a unique for a user
@@ -76,6 +91,7 @@ module.exports = function (server, sessionsDatabaseFunctions) {
     });
 
     return {
-        notifyAllConnectedUsers: notifyAllConnectedUsers
+        notifyAllConnectedUsers: notifyAllConnectedUsers,
+        notifyUsers: notifyUsers
     }
 }
