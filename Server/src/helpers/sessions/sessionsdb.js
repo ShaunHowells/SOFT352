@@ -55,6 +55,8 @@
                     user_id: userId
                 }
             }
+        }, {
+            new: true,
         }, function (err, result) {
             result.populate({
                 path: "currentBook",
@@ -119,31 +121,36 @@
                 //If not result return
                 callback(err, result);
             } else {
-                //If we have more than 1 user, then remove the user
-                //Otherwise delete the session (which will remove them and end the session)
-                if (result.users.length > 1) {
-                    models.Sessions.findOneAndUpdate({
-                        _id: sessionId
-                    }, {
-                        $pull: {
-                            users: {
-                                user_id: userId
-                            }
+                models.Sessions.findOneAndUpdate({
+                    _id: sessionId
+                }, {
+                    $pull: {
+                        users: {
+                            user_id: userId
                         }
-                    }, callback);
-
-                } else {
-                    result.remove(callback);
-                    if (webSockets) {
-                        webSockets.notifyAllConnectedUsers({
-                            type: "sessionremoved",
-                            success: true,
-                            result: {
-                                sessionId: sessionId
-                            }
-                        });
                     }
-                }
+                }, {
+                    new: true
+                }, function (err, result) {
+                    if (err || !result) {
+                        callback(err, result);
+                    } else {
+                        if (result.users.length == 0) {
+                            result.remove(callback);
+                        } else {
+                            callback(err, result);
+                        }
+                        if (webSockets) {
+                            webSockets.notifyAllConnectedUsers({
+                                type: "sessionremoved",
+                                success: true,
+                                result: {
+                                    sessionId: sessionId
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     };

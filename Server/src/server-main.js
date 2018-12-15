@@ -2,9 +2,7 @@ var http = require("http");
 var express = require("express");
 var bodyParser = require('body-parser');
 
-var app = express();
-var port = 9000;
-
+//Get commandline arguments
 var myArgs = process.argv.slice(2);
 var test = false;
 switch (myArgs[0]) {
@@ -15,6 +13,16 @@ switch (myArgs[0]) {
     default:
         break;
 }
+
+var app = express();
+var port;
+if (test) {
+    port = 9001;
+} else {
+    port = 9000;
+}
+
+
 
 //Set up body parser
 app.use(bodyParser.json());

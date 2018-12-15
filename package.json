@@ -5,7 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "eslint": "^5.9.0",
-    "qunit": "^2.8.0"
+    "qunit": "^2.8.0",
+    "request": "^2.88.0",
+    "sync-request": "^6.0.0"
   },
   "devDependencies": {
     "cucumber": "^5.0.2",
