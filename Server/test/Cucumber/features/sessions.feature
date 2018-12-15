@@ -3,9 +3,8 @@ Feature: Sessions
   Users should be able to view, create, join, and leave sessions
 
   Scenario: Viewing all available session
-    Given there are available sessions
     When I ask to see all available sessions
-    Then I should be shown the available session
+    Then I should be shown the available sessions
 
   Scenario: Creating a session
     When I try to create a session

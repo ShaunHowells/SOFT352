@@ -179,7 +179,7 @@ QUnit.test("Update BookPage details when changing book/page", function (assert) 
 
     //Check that the UI has been udpated to display the correct image
     //Page Num will be displayed as + 1 as it makes more sense to the user
-    assert.equal(angular.element("#pBookPageDetails").html(), "<strong>Currently Reading: " + sampleBookPage.title + " - Page: " + (sampleBookPage.currentPage.pageNum + 1) + "</strong>", "Current Book/Page details displays \"Currently Reading: " + sampleBookPage.title + " - Page: " + sampleBookPage.currentPage.pageNum + "\"");
+    assert.equal(angular.element("#pBookPageDetails").html(), "<strong class=\"ng-binding\">Currently Reading: " + sampleBookPage.title + " - Page: " + (sampleBookPage.currentPage.pageNum + 1) + "</strong>", "Current Book/Page details displays \"Currently Reading: " + sampleBookPage.title + " - Page: " + sampleBookPage.currentPage.pageNum + "\"");
 
     //RESET TO PREVIOUS VALUES
     CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
