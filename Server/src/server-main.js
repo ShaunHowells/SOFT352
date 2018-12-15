@@ -38,6 +38,10 @@ var sessionsRouting = require("./helpers/sessions/sessionsrouting.js")(app);
 var server = app.listen(port, function () {
     console.log(`Listening on port ${port}`)
 });
+//Set root page
+app.get('/', function (req, res) {
+    res.send('CollabBookReader Server');
+  })
 
 //Setup mongoonse models
 var mongooseModels = require("./helpers/mongoose.js")(test);

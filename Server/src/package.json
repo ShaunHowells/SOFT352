@@ -12,9 +12,13 @@
     "pouchdb": "^7.0.0",
     "websocket": "^1.0.28"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "start-server-and-test": "^1.7.11"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server-main.js test",
+    "test": "..\\..\\node_modules\\.bin\\cucumber-js ..\\test\\Cucumber\\features\\ --format=json | ..\\..\\node_modules\\.bin\\cucumber-junit > ../../Server/test/Cucumber/report/Test_Cucumber.xml",
+    "ci": "start-server-and-test 9001"
   },
   "author": "",
   "license": "ISC"
