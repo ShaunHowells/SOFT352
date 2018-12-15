@@ -125,7 +125,7 @@ const Books = (function () { // eslint-disable-line no-unused-vars
      * @param {Object} data - Data of the book + page
      */
     function setCurrentBookPage(data) {
-        if (data) {
+        if (data && Object.keys(data).length) {
             currentBookPage = new BookPage({
                 _id: data._id,
                 title: data.title,

@@ -1,30 +1,30 @@
 //Sample books for use in Sessions tests
 var sampleBookList = [{
-    "_id": "5bf59ade4cb1550530740989",
+    "_id": "5c13c247aca73c02600de352",
     "title": "Shaun's Test Book",
     "pages": [{
-            "_id": "5bf59ade4cb155053074098a",
+            "_id": "5c13c247aca73c02600de353",
             "pageNum": 0,
             "contentType": "image/jpeg"
         },
         {
-            "_id": "5bf59ade4cb155053074098b",
+            "_id": "5c13c247aca73c02600de354",
             "pageNum": 1,
-            "contentType": "image/png"
+            "contentType": "image/jpeg"
         },
         {
-            "_id": "5bf59ade4cb155053074098c",
+            "_id": "5c13c247aca73c02600de355",
             "pageNum": 2,
             "contentType": "image/png"
         }
     ],
-    "__v": 0
+    "pageCount": 3
 }];
 
 var sampleBookPage = {
     "_id": "5bf59ade4cb1550530740989",
     "title": "Shaun's Test Book",
-    "pageCount": 4,
+    "pageCount": 1,
     "currentPage": {
         "_id": "5bf59ade4cb155053074098a",
         "src": "../../../test/QUnit/resources/testBookPage.png",
@@ -98,19 +98,88 @@ QUnit.test("Display book page in book carousel", function (assert) {
     var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
 
     //Get Angular scope for the the currentPage
-    var pageCtrlScope = angular.element("#bookPageCarousel").scope();
+    var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
 
     CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
     //Manually call .$apply() as it normally uses $applyAsync()
-    pageCtrlScope.$apply();
+    bookPageCtrlScope.$apply();
 
     //Check that the currentPage scope was correctly updated
-    assert.equal(pageCtrlScope.currentBookPage.currentPage.src, sampleBookPage.currentPage.src, "The currentPage Angular scope has the correct image src");
-    assert.equal(pageCtrlScope.currentBookPage.currentPage.pageNum, sampleBookPage.currentPage.pageNum, "The currentPage Angular scope has the correct page number");
+    assert.equal(bookPageCtrlScope.currentBookPage.currentPage.src, sampleBookPage.currentPage.src, "The currentPage Angular scope has the correct image src");
+    assert.equal(bookPageCtrlScope.currentBookPage.currentPage.pageNum, sampleBookPage.currentPage.pageNum, "The currentPage Angular scope has the correct page number");
 
     //Check that the UI has been udpated to display the correct image
     assert.equal(angular.element("#bookPageImage").attr("src"), sampleBookPage.currentPage.src, "Book Page Carousel src should be set to " + sampleBookPage.currentPage.src);
     assert.equal(angular.element("#bookPageImage").attr("alt"), "Page 0 could not be found", "Book Page Carousel alt should be set to \"Page 0 could not be found\"");
+
+    //RESET TO PREVIOUS VALUES
+    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+});
+
+/**
+ * Check that alerts are correctly displayed when attempting to navigate to a page that doesn't exist
+ */
+QUnit.test("Display alerts when attempted to navigate to a page that doesn't exist", function (assert) {
+    //STORE PREVIOUS VALUES
+    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+
+    //Get Angular scope for the the currentPage
+    var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
+
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    bookPageCtrlScope.$apply();
+
+    //As our current book only has one page, we shouldn't be able to navigate forward or back, so check that alerts appear on both
+    angular.element("#bookPageCarouselPrev").click();
+    assert.ok(angular.element("#prevPageWarning").is(":visible"), "Previous page warning should be visible");
+
+    angular.element("#prevPageWarningClose").click();
+    assert.ok(!angular.element("#prevPageWarning").is(":visible"), "Previous page warning should be hidden after the button is clicked");
+
+    angular.element("#bookPageCarouselNext").click();
+    assert.ok(angular.element("#nextPageWarning").is(":visible"), "Next page warning should be visible");
+
+    angular.element("#nextPageWarningClose").click();
+    assert.ok(!angular.element("#nextPageWarning").is(":visible"), "Next page warning should be hidden after the button is clicked");
+
+    //RESET TO PREVIOUS VALUES
+    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+});
+
+/**
+ * Check book details are displaying correctly
+ */
+QUnit.test("Update BookPage details when changing book/page", function (assert) {
+    //STORE PREVIOUS VALUES
+    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+
+    //Get Angular scope for the the currentPage
+    var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
+    var bookPageDetailsCtrlScope = angular.element("#bookDetails").scope();
+
+    //Remove the current book
+    CollabBookReader.getBooks().setCurrentBookPage({});
+    //Manually call .$apply() as it normally uses $applyAsync()
+    bookPageCtrlScope.$apply();
+
+    //Check that the currentPage scope was correctly updated
+    assert.equal(bookPageDetailsCtrlScope.currentBookPage._id, null, "The _id of the currentBookPage in the Angular scope should be null (no current book)");
+
+    //Check that the UI has been udpated to display the correct image
+    assert.equal(angular.element("#pBookPageDetails").html(), "<strong>Currently Reading: Nothing</strong>", "Current Book/Page details displays \"Currently Reading: Nothing \"");
+
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    //Manually call .$apply() as it normally uses $applyAsync()
+    bookPageCtrlScope.$apply();
+
+    //Check that the currentPage scope was correctly updated
+    assert.equal(bookPageDetailsCtrlScope.currentBookPage.title, sampleBookPage.title, "The bookPageDetails Angular scope has the correct title");
+    assert.equal(bookPageDetailsCtrlScope.currentBookPage.currentPage.pageNum, sampleBookPage.currentPage.pageNum, "The bookPageDetails Angular scope has the correct page number");
+
+    //Check that the UI has been udpated to display the correct image
+    //Page Num will be displayed as + 1 as it makes more sense to the user
+    assert.equal(angular.element("#pBookPageDetails").html(), "<strong>Currently Reading: " + sampleBookPage.title + " - Page: " + (sampleBookPage.currentPage.pageNum + 1) + "</strong>", "Current Book/Page details displays \"Currently Reading: " + sampleBookPage.title + " - Page: " + sampleBookPage.currentPage.pageNum + "\"");
 
     //RESET TO PREVIOUS VALUES
     CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);

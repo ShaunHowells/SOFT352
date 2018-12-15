@@ -161,17 +161,35 @@
         </div>
         <div class="col-sm-6">
             <!-- Book page display -->
-            <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel" ng-controller="pageCtrl">
-                <div class="carousel-inner">
-                    <div class="carousel-item active" id="bookPage">
-                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{currentBookPage.currentPage.src}}" alt="Page {{currentBookPage.currentPage.pageNum}} could not be found" />
+            <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel" ng-controller="bookPageCtrl">
+                <!-- Book Carousel Warnings -->
+                <div class="alerts">
+                    <div id="prevPageWarning" class="alert alert-warning fade show" role="alert">
+                        There are no more previous pages
+                        <button id="prevPageWarningClose" type="button" class="close" ng-click="hidePrevPageWarning()" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="nextPageWarning" class="alert alert-warning fade show" role="alert">
+                        There are no more pages
+                        <button id="nextPageWarningClose" type="button" class="close" ng-click="hideNextPageWarning()" aria-label=" Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 </div>
-                <a class="carousel-control-prev" href="#bookPageCarousel" role="button" data-slide="prev" ng-click="getPreviousPage(currentBookPage)">
+                <div class="carousel-inner">
+                    <div class="carousel-item active" id="bookPage">
+                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{currentBookPage.currentPage.src}}"
+                            alt="Page {{currentBookPage.currentPage.pageNum}} could not be found" />
+                    </div>
+                </div>
+                <a id="bookPageCarouselPrev" class="carousel-control-prev" href="#bookPageCarousel" role="button"
+                    data-slide="prev" ng-click="getPreviousPage(currentBookPage)">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a class="carousel-control-next" href="#bookPageCarousel" role="button" data-slide="next" ng-click="getNextPage(currentBookPage)">
+                <a id="bookPageCarouselNext" class="carousel-control-next" href="#bookPageCarousel" role="button"
+                    data-slide="next" ng-click="getNextPage(currentBookPage)">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -180,8 +198,11 @@
         <div class="col-sm-3 chatArea border">
             <!-- Book details -->
             <!-- TODO: ADD A CONTROLLER HERE -->
-            <div class="bookdetails">
-                <p class="text-center"><strong>Currently Reading: {{book.title}} - Page: {{page.pageNum}}</strong></p>
+            <div id="bookDetails" class="bookdetails" ng-controller="bookPageDetailsCtrl">
+                <!-- if reading a book, then display book details -->
+                <!-- else display "Nothing" -->
+                <p id="pBookPageDetails" ng-if="currentBookPage._id" class="text-center"><strong>Currently Reading: {{currentBookPage.title}} - Page: {{currentBookPage.currentPage.pageNum + 1}}</strong></p>
+                <p id="pBookPageDetails" ng-if="!currentBookPage._id" class="text-center"><strong>Currently Reading: Nothing</strong></p>
             </div>
             <!-- Chat message list -->
             <div id="chatMessages" ng-controller="chatMessagesCtrl" class="list-group chatMessages">
