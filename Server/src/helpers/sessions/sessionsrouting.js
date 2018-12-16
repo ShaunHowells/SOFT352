@@ -170,7 +170,7 @@ module.exports = function(app, test) {
                 success: false,
                 message: "You must supply a sessionId"
             });
-        } else if (!pageNum) {
+        } else if (pageNum == null) {
             response.send({
                 success: false,
                 message: "You must supply a pageNum"

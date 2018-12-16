@@ -5,7 +5,7 @@
  * @class
  * @hideconstructor
  */
-const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
+const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
 
     var websocket = null; //Websocket for receiving data from server
     var sessions = Sessions; //Sessions object for performing operations on Sessions
@@ -74,6 +74,20 @@ const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
                 break;
             case "chatmessagereceived":
                 chat.addNewChatMessage(messageData.result);
+                break;
+            case "userjoinedsession":
+                chat.addNewChatMessage({
+                    user: messageData.user,
+                    message: messageData.user + " has joined the session",
+                    notification: true
+                });
+                break;
+            case "userleftsession":
+                chat.addNewChatMessage({
+                    user: messageData.user,
+                    message: messageData.user + " has left the session",
+                    notification: true
+                });
                 break;
             default:
                 break;

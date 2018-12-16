@@ -15,7 +15,11 @@ AngularMainApp.controller("chatMessagesCtrl", function($scope) {
 
     //Send user input chat message and clear display
     $scope.sendChatMessage = function(message) {
-        CollabBookReader.getChat().sendChatMessage(message);
+        if (CollabBookReader.getSessions().getCurrentUserSession()) {
+            CollabBookReader.getChat().sendChatMessage(message);
+        } else {
+            alert("You aren't currently in a session");
+        }
         $scope.messageToSend = "";
     };
 

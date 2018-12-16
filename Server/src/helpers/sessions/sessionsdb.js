@@ -58,6 +58,12 @@
                             }, function(err, result) {
                                 callback(err, result);
                             });
+                            if (webSockets) {
+                                webSockets.notifyUsers(result.users, {
+                                    type: "userjoinedsession",
+                                    user: userId
+                                });
+                            }
                         });
                     } else {
                         callback("User is already in another session");
@@ -112,6 +118,10 @@
                                         type: "newsessioncreated",
                                         success: true,
                                         result: result
+                                    });
+                                    webSockets.notifyUsers(result.users, {
+                                        type: "userjoinedsession",
+                                        user: userId
                                     });
                                 }
                             });
@@ -173,6 +183,12 @@
                                     }
                                 } else {
                                     callback(err, result);
+                                    if (webSockets) {
+                                        webSockets.notifyUsers(result.users, {
+                                            type: "userleftsession",
+                                            user: userId
+                                        });
+                                    }
                                 }
                             }
                         });

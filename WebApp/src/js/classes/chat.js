@@ -103,4 +103,10 @@ function ChatMessage(messageDetails) {
      * @member {Integer}
      */
     this.message = messageDetails.message;
+
+    if(messageDetails.notification){
+        this.notification = true;
+    } else {
+        this.notification = false;
+    }
 }

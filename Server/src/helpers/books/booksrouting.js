@@ -81,7 +81,7 @@ module.exports = function(app) {
                 success: false,
                 message: "You must supply a bookId"
             });
-        } else if (!pageNum) {
+        } else if (pageNum == null) {
             response.send({
                 success: false,
                 message: "You must supply a pageNum"

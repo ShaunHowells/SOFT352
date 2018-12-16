@@ -196,8 +196,14 @@
             <div id="chatMessageArea" ng-controller="chatMessagesCtrl">
                 <!-- Chat message list -->
                 <div id="chatMessages" class="list-group chatMessages">
-                    <li ng-repeat="message in chatMessages" class="list-group-item chatMessage"><b>{{message.user}}</b>:
-                        {{message.message}}
+                    <div ng-repeat="message in chatMessages">
+                        <li ng-if="!message.notification" class="list-group-item chatMessage"><b>{{message.user}}</b>:
+                            {{message.message}}
+                        </li>
+                        <li ng-if="message.notification" class="list-group-item chatMessage">
+                            <b>{{message.message}}</b>
+                        </li>
+                    </div>
                 </div>
                 <!-- Chat message input -->
                 <div class="chatInput row border">
