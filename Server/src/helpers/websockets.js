@@ -1,4 +1,4 @@
-module.exports = function (server) {
+module.exports = function(server) {
     var http = require("http");
     var express = require("express");
     var WebSocketServer = require("websocket").server;
@@ -39,22 +39,29 @@ module.exports = function (server) {
 
     function sendSessionList(uniqueId) {
         //Send user all current sessions
-        sessionsdb.getAllSessions(function (err, result) {
+        sessionsdb.getAllSessions(function(err, result) {
             if (err) {
                 //If an error has occured then write to console and inform caller of error
                 console.log(`Error in getAllSessions: ${err}`);
-                connectedUsers[uniqueId].sendUTF(JSON.stringify({
-                    type: "allsessions",
-                    success: false,
-                    message: "An error has occured trying to get all of the sessions. Please try again."
-                }));
+
+                //Check that our user is still here - Added for cases where a user joins and leaves instantly
+                if (connectedUsers[uniqueId]) {
+                    connectedUsers[uniqueId].sendUTF(JSON.stringify({
+                        type: "allsessions",
+                        success: false,
+                        message: "An error has occured trying to get all of the sessions. Please try again."
+                    }));
+                }
             } else {
-                //If successful then return result to caller
-                connectedUsers[uniqueId].sendUTF(JSON.stringify({
-                    type: "allsessions",
-                    success: true,
-                    result: result
-                }));
+                //Check that our user is still here - Added for cases where a user joins and leaves instantly
+                if (connectedUsers[uniqueId]) {
+                    //If successful then return result to caller
+                    connectedUsers[uniqueId].sendUTF(JSON.stringify({
+                        type: "allsessions",
+                        success: true,
+                        result: result
+                    }));
+                }
             }
         });
     }
@@ -64,16 +71,16 @@ module.exports = function (server) {
         httpServer: server
     });
 
-    socket.on("request", function (request) {
+    socket.on("request", function(request) {
         var connection = request.accept(null, request.origin);
 
-        connection.on("close", function (reasonCode, description) {
+        connection.on("close", function(reasonCode, description) {
             sessionsdb.removeUserFromAllSessions(connection.shaun_uniqueId);
             delete connectedUsers[connection.shaun_uniqueId];
             console.log("Connection closed - Total Connections: " + Object.keys(connectedUsers).length);
         });
 
-        connection.on("message", function (message) {
+        connection.on("message", function(message) {
             console.log(message);
         });
 

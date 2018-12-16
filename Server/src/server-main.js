@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 
 //Set up routing + set database connection
 var booksRouting = require("./helpers/books/booksrouting.js")(app);
-var sessionsRouting = require("./helpers/sessions/sessionsrouting.js")(app);
+var sessionsRouting = require("./helpers/sessions/sessionsrouting.js")(app, test);
 var chatRouting = require("./helpers/chat/chatrouting.js")(app);
 
 //Set up http server

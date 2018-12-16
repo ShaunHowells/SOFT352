@@ -43,17 +43,6 @@ var getAllBooks = function (callback) {
 };
 
 /**
- * Returns the book with a given id.
- *
- * @param {booksCallback} callback - A callback to run after database access.
- */
-var getBookById = function (bookId, callback) {
-    models.Books.findOne({
-        _id: bookId
-    }).select("-pages.data").exec(callback);
-}
-
-/**
  * Returns the a page from a book with a given id.
  *
  * @param {booksCallback} callback - A callback to run after database access.
@@ -80,7 +69,6 @@ var setMongooseModels = function (mongooseModels) {
 module.exports = {
     addNewBook: addNewBook,
     getAllBooks: getAllBooks,
-    getBookById: getBookById,
     getPageFromBook: getPageFromBook,
     setMongooseModels: setMongooseModels
 };

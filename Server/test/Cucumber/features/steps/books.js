@@ -1,5 +1,4 @@
 const {
-    Before,
     Given,
     When,
     Then
@@ -11,14 +10,14 @@ var sampleBookId = "5c152300e70cc20a1032c994";
 var samplePageNum = 0;
 
 //1) Scenario: View all books # features\books.feature:3
-When('I ask to see the list of all books', function () {
+When('I ask to see the list of all books', function() {
     //Query the server to return all books
     var response = request("POST", "http://localhost:9001/books/getallbooks", );
     var result = JSON.parse(response.getBody("utf8"));
     this.allBooksResult = result
 });
 
-Then('I should be shown all of the books', function () {
+Then('I should be shown all of the books', function() {
     //Check that that the returned result contains the list of books
     assert(this.allBooksResult, "The server should have sent back a response");
     assert(!this.allBooksResult.err, "No error should be returned")
@@ -36,17 +35,17 @@ Then('I should be shown all of the books', function () {
 
 
 //2) Scenario: Get a page from a book # features\books.feature:8
-Given('I know what book I want to see', function () {
+Given('I know what book I want to see', function() {
     //Use the sample bookId as our book
     this.bookId = sampleBookId;
 });
 
-Given('I know what page I want to see', function () {
+Given('I know what page I want to see', function() {
     //Use the sample pageNum as our pageNum
     this.pageNum = samplePageNum;
 });
 
-Then('when I ask to see the page from a book', function () {
+Then('when I ask to see the page from a book', function() {
     //Query the server to the page from that book
     var response = request("POST", "http://localhost:9001/books/getpagefrombook", {
         json: {
@@ -58,7 +57,7 @@ Then('when I ask to see the page from a book', function () {
     this.bookPageResult = result
 });
 
-Then('I should be shown the page from that book', function () {
+Then('I should be shown the page from that book', function() {
     //Check that that the returned result contains the data for the page
     assert(this.bookPageResult, "The server should have sent back a response");
     assert(!this.bookPageResult.err, "No error should be returned")

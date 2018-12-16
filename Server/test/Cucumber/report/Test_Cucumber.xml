@@ -5,12 +5,12 @@
             <property name="URI" value="..\test\Cucumber\features\books.feature">
             </property>
         </properties>
-        <testcase name="When I ask to see the list of all books" classname="books;view-all-books" time="0.163">
+        <testcase name="When I ask to see the list of all books" classname="books;view-all-books" time="0.186">
         </testcase>
         <testcase name="Then I should be shown all of the books" classname="books;view-all-books">
         </testcase>
     </testsuite>
-    <testsuite name="books;get-a-page-from-a-book" tests="4" failures="0" skipped="0">
+    <testsuite name="books;get-a-page-from-a-book" tests="4" failures="1" skipped="0">
         <properties>
             <property name="URI" value="..\test\Cucumber\features\books.feature">
             </property>
@@ -19,9 +19,16 @@
         </testcase>
         <testcase name="And I know what page I want to see" classname="books;get-a-page-from-a-book">
         </testcase>
-        <testcase name="Then when I ask to see the page from a book" classname="books;get-a-page-from-a-book" time="0.152">
+        <testcase name="Then when I ask to see the page from a book" classname="books;get-a-page-from-a-book" time="0.184">
         </testcase>
-        <testcase name="Then I should be shown the page from that book" classname="books;get-a-page-from-a-book">
+        <testcase name="Then I should be shown the page from that book" classname="books;get-a-page-from-a-book" time="0.001">
+            <failure message="AssertionError [ERR_ASSERTION]: Book page should have successfully retrieved">AssertionError [ERR_ASSERTION]: Book page should have successfully retrieved
+    + expected - actual
+
+    -false
+    +true
+
+    at World.&lt;anonymous&gt; (F:\Documents\SOFT352\Server\test\Cucumber\features\steps\books.js:64:5)</failure>
         </testcase>
     </testsuite>
     <testsuite name="sessions;viewing-all-available-sessions" tests="3" failures="0" skipped="0">
@@ -29,11 +36,11 @@
             <property name="URI" value="..\test\Cucumber\features\sessions.feature">
             </property>
         </properties>
-        <testcase name="Given there are available sessions" classname="sessions;viewing-all-available-sessions" time="0.145">
+        <testcase name="Given there are available sessions" classname="sessions;viewing-all-available-sessions" time="1.839">
         </testcase>
-        <testcase name="When I ask to see all available sessions" classname="sessions;viewing-all-available-sessions" time="0.147">
+        <testcase name="When I ask to see all available sessions" classname="sessions;viewing-all-available-sessions" time="0.15">
         </testcase>
-        <testcase name="Then I should be shown the available sessions" classname="sessions;viewing-all-available-sessions">
+        <testcase name="Then I should be shown the available sessions" classname="sessions;viewing-all-available-sessions" time="0.001">
         </testcase>
     </testsuite>
     <testsuite name="sessions;creating-a-session" tests="6" failures="0" skipped="0">
@@ -47,7 +54,7 @@
         </testcase>
         <testcase name="And I have a user id" classname="sessions;creating-a-session">
         </testcase>
-        <testcase name="When I try to create a session" classname="sessions;creating-a-session" time="0.142">
+        <testcase name="When I try to create a session" classname="sessions;creating-a-session" time="0.181">
         </testcase>
         <testcase name="Then my session should be created" classname="sessions;creating-a-session">
         </testcase>
@@ -59,9 +66,9 @@
             <property name="URI" value="..\test\Cucumber\features\sessions.feature">
             </property>
         </properties>
-        <testcase name="Given there are available sessions to join" classname="sessions;joining-an-available-session" time="0.137">
+        <testcase name="Given there are available sessions to join" classname="sessions;joining-an-available-session" time="0.151">
         </testcase>
-        <testcase name="When I try to join a session" classname="sessions;joining-an-available-session" time="0.148">
+        <testcase name="When I try to join a session" classname="sessions;joining-an-available-session" time="0.149">
         </testcase>
         <testcase name="Then I should be added to the session" classname="sessions;joining-an-available-session">
         </testcase>
@@ -73,9 +80,9 @@
             <property name="URI" value="..\test\Cucumber\features\sessions.feature">
             </property>
         </properties>
-        <testcase name="Given that I am in a session" classname="sessions;leaving-a-session" time="0.136">
+        <testcase name="Given that I am in a session" classname="sessions;leaving-a-session" time="0.14">
         </testcase>
-        <testcase name="When I try to leave the session" classname="sessions;leaving-a-session" time="0.146">
+        <testcase name="When I try to leave the session" classname="sessions;leaving-a-session" time="0.139">
         </testcase>
         <testcase name="Then I should removed from the session" classname="sessions;leaving-a-session">
         </testcase>

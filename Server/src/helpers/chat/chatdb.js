@@ -7,7 +7,7 @@ var websockets;
 /**
  * Callback used when accessing Books from MongoDB
  * 
- * @callback booksCallback
+ * @callback chatCallback
  * @param {object} err - The error returned from MongoDB access
  * @param {object} result - The result returned from MongoDB access
  */
@@ -15,20 +15,20 @@ var websockets;
 /**
  * Adds a new book to the collection
  *
- * @param {string} title - The title of the book to be added
- * @param {array} pageFiles - An array of files containing the images for each page (in order)
- * @param {booksCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session the message is being sent in
+ * @param {array} userId -The id of the user sending the message
+ * @param {chatCallback} callback - A callback to run after database access.
  */
-var sendChatMessage = function (sessionId, userId, message, callback) {
+var sendChatMessage = function(sessionId, userId, message, callback) {
     if (!webSockets) {
         console.error("Web sockets not set up.");
         callback(new Error("Web sockets not set up"), null);
     } else {
         models.Sessions.findOne({
             _id: sessionId
-        }).exec(function (err, result) {
+        }).exec(function(err, result) {
             callback(err, result);
-
+            //Notify this sessions users
             webSockets.notifyUsers(result.users, {
                 type: "chatmessagereceived",
                 success: true,
@@ -46,7 +46,7 @@ var sendChatMessage = function (sessionId, userId, message, callback) {
  *
  * @param {object} mongooseModels Available Mongoose models
  */
-var setMongooseModels = function (mongooseModels) {
+var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
 }
 
