@@ -159,7 +159,7 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
      */
     function removeCurrentUserSession() {
         currentUserSession = null;
-        availableSessionsObserver.notify(availableSessions);
+        availableSessionsObserver.notify(filterAvailableSessions());
         currentUserSessionObserver.notify(currentUserSession);
     };
 
@@ -235,14 +235,12 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
      * @memberof Sessions
      */
     function updateCurrentSessionBookPage(pageNum) {
-        $.post("http://localhost:9000/sessions/updatecurrentpage", {
-            sessionId: currentUserSession._id,
-            pageNum: pageNum
-        }, function (data) {
-            if (!data.success) {
-                console.error("An error has occured trying to update the current session page");
-            }
-        })
+        if (currentUserId && currentUserSession) {
+            var self = this;
+            currentUserSession.updateBookPage(pageNum);
+        } else {
+            console.error("You aren't in a session. Please try again when you're in a session");
+        }
     }
 
     return {
@@ -284,7 +282,8 @@ function Session(sessionDetails) {
             userId: userID
         }).done(function (data) {
             if (data.success) {
-                callback(data);
+                if (callback)
+                    callback(data);
             } else {
                 alert("An error has occured when joining a session. Please try again");
                 console.log(data);
@@ -304,10 +303,31 @@ function Session(sessionDetails) {
             userId: userId
         }).done(function (data) {
             if (data.success) {
-                callback(data.result);
+                if (callback)
+                    callback(data.result);
             } else {
                 alert("An error has occured when leaving a session. Please try again");
                 console.log(data);
+            }
+        });
+    };
+
+    /**
+     * Updates the page number in current the session
+     * 
+     * @param {Integer} pageNum - The number of the page to set in the session
+     * @memberof Sessions
+     */
+    this.updateBookPage = function (pageNum, callback) {
+        $.post("http://localhost:9000/sessions/updatecurrentpage", {
+            sessionId: this._id,
+            pageNum: pageNum
+        }, function (data) {
+            if (data.success) {
+                if (callback)
+                    callback(data);
+            } else {
+                console.error("An error has occured trying to update the current session page");
             }
         });
     }

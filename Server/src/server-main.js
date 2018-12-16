@@ -22,8 +22,6 @@ if (test) {
     port = 9000;
 }
 
-
-
 //Set up body parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -33,6 +31,7 @@ app.use(bodyParser.urlencoded({
 //Set up routing + set database connection
 var booksRouting = require("./helpers/books/booksrouting.js")(app);
 var sessionsRouting = require("./helpers/sessions/sessionsrouting.js")(app);
+var chatRouting = require("./helpers/chat/chatrouting.js")(app);
 
 //Set up http server
 var server = app.listen(port, function () {
@@ -47,8 +46,8 @@ app.get('/', function (req, res) {
 var mongooseModels = require("./helpers/mongoose.js")(test);
 sessionsRouting.sessionsdb.setMongooseModels(mongooseModels.models);
 booksRouting.booksdb.setMongooseModels(mongooseModels.models);
-
+chatRouting.chatdb.setMongooseModels(mongooseModels.models);
 
 var webSockets = require("./helpers/websockets")(server);
-
 sessionsRouting.sessionsdb.setWebSockets(webSockets);
+chatRouting.chatdb.setWebSockets(webSockets);

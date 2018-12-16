@@ -38,6 +38,7 @@
 
     <script src="../../test/Qunit/tests/sessionsqunit.js"></script>
     <script src="../../test/Qunit/tests/booksqunit.js"></script>
+    <script src="../../test/Qunit/tests/chatqunit.js"></script>
 
     <!-- Start main.js after unit tests are complete -->
     <script src="../js/main.js"></script>
@@ -64,20 +65,16 @@
         <!-- Sesssion Lists -->
         <div class="col-sm-3 sessionTabs">
             <ul id="sessionTabList" class="nav nav-tabs" role="tablist">
-                <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab"
-                        data-toggle="tab" class="nav-link active">Available
+                <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab" data-toggle="tab" class="nav-link active">Available
                         Sessions</a></li>
-                <li class="nav-item"><a id="currentUserSessionTabHeading" href="#currentUserSession" role="tab"
-                        data-toggle="tab" class="nav-link">My Session</a></li>
+                <li class="nav-item"><a id="currentUserSessionTabHeading" href="#currentUserSession" role="tab" data-toggle="tab" class="nav-link">My Session</a></li>
             </ul>
             <div class="tab-content sessionList">
                 <!-- Available Session List -->
                 <div id="availableSessions" ng-controller="availableSessionsCtrl" class="tab-pane active list-3-+group">
-                    <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action"
-                        id="availableSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
+                    <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action" id="availableSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
                     <!-- Available Session Details Modal Popup -->
-                    <div class="modal" id="availableSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="availableSessionDetailsModalLabel"
-                        aria-hidden="true">
+                    <div class="modal" id="availableSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="availableSessionDetailsModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -93,10 +90,8 @@
                                     <span id="canJoinSession"></span>
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                    <button id="availableSessionDetailsModalJoinSession" type="button" class="btn btn-primary"
-                                        ng-click="joinSession(displaySession)">Join Session</button>
+                                    <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button id="availableSessionDetailsModalJoinSession" type="button" class="btn btn-primary" ng-click="joinSession(displaySession)">Join Session</button>
                                 </div>
                             </div>
                         </div>
@@ -111,16 +106,14 @@
                             <p>Currently reading: <span id="currentUserSessionBookTitle">{{currentUserSession.currentBook.title}}</span></p>
                             <p>Owner: <span id="currentUserSessionOwner">{{currentUserSession.owner}}</span></p>
                         </div>
-                        <button id="currentUserSessionDetailsLeaveSession" type="button" class="btn btn-primary leaveSession"
-                            ng-click="leaveSession(currentUserSession)">Leave Session</button>
+                        <button id="currentUserSessionDetailsLeaveSession" type="button" class="btn btn-primary leaveSession" ng-click="leaveSession(currentUserSession)">Leave Session</button>
                     </div>
                     <div id="currentUserSessionJoin">
                         <button class="btn btn-primary createNewSession" id="createNewSession" ng-click="displayCreateNewSessionDetails()">Create
                             a new session</button>
                     </div>
                     <!-- Create new Session details Modal -->
-                    <div class="modal" id="createNewSessionModal" tabindex="-1" role="dialog" aria-labelledby="createNewSessionModalLabel"
-                        aria-hidden="true">
+                    <div class="modal" id="createNewSessionModal" tabindex="-1" role="dialog" aria-labelledby="createNewSessionModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -148,10 +141,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button id="createNewSessionModalClose" type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Close</button>
-                                    <button id="createNewSessionModalJoinSession" type="button" class="btn btn-primary"
-                                        ng-click="createNewSession()">Create Session</button>
+                                    <button id="createNewSessionModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button id="createNewSessionModalJoinSession" type="button" class="btn btn-primary" ng-click="createNewSession()">Create Session</button>
                                 </div>
                             </div>
                         </div>
@@ -177,19 +168,17 @@
                         </button>
                     </div>
                 </div>
+                <!-- Book Carousel -->
                 <div class="carousel-inner">
                     <div class="carousel-item active" id="bookPage">
-                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{currentBookPage.currentPage.src}}"
-                            alt="Page {{currentBookPage.currentPage.pageNum}} could not be found" />
+                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{currentBookPage.currentPage.src}}" alt="Page {{currentBookPage.currentPage.pageNum}} could not be found" />
                     </div>
                 </div>
-                <a id="bookPageCarouselPrev" class="carousel-control-prev" href="#bookPageCarousel" role="button"
-                    data-slide="prev" ng-click="getPreviousPage(currentBookPage)">
+                <a id="bookPageCarouselPrev" class="carousel-control-prev" href="#bookPageCarousel" role="button" data-slide="prev" ng-click="getPreviousPage(currentBookPage)">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="sr-only">Previous</span>
                 </a>
-                <a id="bookPageCarouselNext" class="carousel-control-next" href="#bookPageCarousel" role="button"
-                    data-slide="next" ng-click="getNextPage(currentBookPage)">
+                <a id="bookPageCarouselNext" class="carousel-control-next" href="#bookPageCarousel" role="button" data-slide="next" ng-click="getNextPage(currentBookPage)">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="sr-only">Next</span>
                 </a>
@@ -197,25 +186,26 @@
         </div>
         <div class="col-sm-3 chatArea border">
             <!-- Book details -->
-            <!-- TODO: ADD A CONTROLLER HERE -->
             <div id="bookDetails" class="bookdetails" ng-controller="bookPageDetailsCtrl">
                 <!-- if reading a book, then display book details -->
                 <!-- else display "Nothing" -->
                 <p id="pBookPageDetails" ng-if="currentBookPage._id" class="text-center"><strong>Currently Reading: {{currentBookPage.title}} - Page: {{currentBookPage.currentPage.pageNum + 1}}</strong></p>
                 <p id="pBookPageDetails" ng-if="!currentBookPage._id" class="text-center"><strong>Currently Reading: Nothing</strong></p>
             </div>
-            <!-- Chat message list -->
-            <div id="chatMessages" ng-controller="chatMessagesCtrl" class="list-group chatMessages">
-                <li ng-repeat="message in chatMessages" class="list-group-item chatMessage"><b>{{message.user}}</b>:
-                    {{message.contents}}
-            </div>
-            <!-- Chat message input -->
-            <div class="chatInput row border">
-                <div class="col-sm-10">
-                    <input type="text" placeholder="Enter your message here" class="chatInputMessage">
+            <div id="chatMessageArea" ng-controller="chatMessagesCtrl">
+                <!-- Chat message list -->
+                <div id="chatMessages" class="list-group chatMessages">
+                    <li ng-repeat="message in chatMessages" class="list-group-item chatMessage"><b>{{message.user}}</b>:
+                        {{message.message}}
                 </div>
-                <div class="col-sm-2">
-                    <button class="btn">Send</button>
+                <!-- Chat message input -->
+                <div class="chatInput row border">
+                    <div class="col-sm-10">
+                        <input type="text" placeholder="Enter your message here" class="chatInputMessage" ng-model="messageToSend" ng-keypress="chatMessageEnter($event)">
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn" ng-click="sendChatMessage(messageToSend)">Send</button>
+                    </div>
                 </div>
             </div>
         </div>

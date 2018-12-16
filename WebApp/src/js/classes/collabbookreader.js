@@ -10,6 +10,7 @@ const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
     var websocket = null; //Websocket for receiving data from server
     var sessions = Sessions; //Sessions object for performing operations on Sessions
     var books = Books; //Books object for performing operations on Books
+    var chat = Chat; //Chat object for performing operations on Books
 
     /**
      * Initialise websocket, connect to server, and set onmessage
@@ -71,6 +72,9 @@ const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
             case "pagechanged":
                 books.getSessionBookPage(messageData.result);
                 break;
+            case "chatmessagereceived":
+                chat.addNewChatMessage(messageData.result);
+                break;
             default:
                 break;
         }
@@ -96,9 +100,21 @@ const CollabBookReader = (function () { // eslint-disable-line no-unused-vars
         return books;
     }
 
+    /**
+     * Returns Chat object
+     * 
+     * @returns {Chat} Chat Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getChat() {
+        return chat;
+    }
+
     return {
         getSessions: getSessions,
         getBooks: getBooks,
+        getChat,
+        getChat,
         startWebSocketConnection: startWebSocketConnection,
         stopWebSocketConnection: stopWebSocketConnection
     };

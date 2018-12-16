@@ -68,7 +68,11 @@ var getPageFromBook = function (bookId, pageNum, callback) {
         "pages.$": 1
     }).exec(callback);
 }
-
+/**
+ * Sets available mongoose models
+ *
+ * @param {object} mongooseModels Available Mongoose models
+ */
 var setMongooseModels = function (mongooseModels) {
     models = mongooseModels;
 }

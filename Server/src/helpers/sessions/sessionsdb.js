@@ -137,17 +137,18 @@
                     } else {
                         if (result.users.length == 0) {
                             result.remove(callback);
+
+                            if (webSockets) {
+                                webSockets.notifyAllConnectedUsers({
+                                    type: "sessionremoved",
+                                    success: true,
+                                    result: {
+                                        sessionId: sessionId
+                                    }
+                                });
+                            }
                         } else {
                             callback(err, result);
-                        }
-                        if (webSockets) {
-                            webSockets.notifyAllConnectedUsers({
-                                type: "sessionremoved",
-                                success: true,
-                                result: {
-                                    sessionId: sessionId
-                                }
-                            });
                         }
                     }
                 });

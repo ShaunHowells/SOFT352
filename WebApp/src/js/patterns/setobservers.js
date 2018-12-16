@@ -1,1 +1,2 @@
 CollabBookReader.getSessions().getCurrentUserSessionObserver().subscribe(CollabBookReader.getBooks().getSessionBookPage);
+CollabBookReader.getSessions().getCurrentUserSessionObserver().subscribe(CollabBookReader.getChat().removeAllChatMessages);

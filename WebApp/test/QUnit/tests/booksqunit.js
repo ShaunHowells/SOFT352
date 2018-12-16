@@ -1,4 +1,4 @@
-//Sample books for use in Sessions tests
+//Sample books for use in Books tests
 var sampleBookList = [{
     "_id": "5c13c247aca73c02600de352",
     "title": "Shaun's Test Book",
@@ -167,7 +167,7 @@ QUnit.test("Update BookPage details when changing book/page", function (assert) 
     assert.equal(bookPageDetailsCtrlScope.currentBookPage._id, null, "The _id of the currentBookPage in the Angular scope should be null (no current book)");
 
     //Check that the UI has been udpated to display the correct image
-    assert.equal(angular.element("#pBookPageDetails").html(), "<strong>Currently Reading: Nothing</strong>", "Current Book/Page details displays \"Currently Reading: Nothing \"");
+    assert.equal(angular.element("#pBookPageDetails").text(), "Currently Reading: Nothing", "Current Book/Page details displays \"Currently Reading: Nothing \"");
 
     CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
     //Manually call .$apply() as it normally uses $applyAsync()
@@ -179,7 +179,7 @@ QUnit.test("Update BookPage details when changing book/page", function (assert) 
 
     //Check that the UI has been udpated to display the correct image
     //Page Num will be displayed as + 1 as it makes more sense to the user
-    assert.equal(angular.element("#pBookPageDetails").html(), "<strong class=\"ng-binding\">Currently Reading: " + sampleBookPage.title + " - Page: " + (sampleBookPage.currentPage.pageNum + 1) + "</strong>", "Current Book/Page details displays \"Currently Reading: " + sampleBookPage.title + " - Page: " + sampleBookPage.currentPage.pageNum + "\"");
+    assert.equal(angular.element("#pBookPageDetails").text(), "Currently Reading: " + sampleBookPage.title + " - Page: " + (sampleBookPage.currentPage.pageNum + 1), "Current Book/Page details displays \"Currently Reading: " + sampleBookPage.title + " - Page: " + sampleBookPage.currentPage.pageNum + "\"");
 
     //RESET TO PREVIOUS VALUES
     CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);

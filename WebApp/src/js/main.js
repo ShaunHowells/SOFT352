@@ -8,4 +8,6 @@ CollabBookReader.getBooks().retrieveBookList();
 $(document).ready(function () {
     //Hide currentUserSessionDetails - As we've just joined, we won't be in a session
     $("#currentUserSessionDetails").hide();
+
+    
 });
