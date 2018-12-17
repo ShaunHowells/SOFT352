@@ -236,7 +236,7 @@
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log(`User ${userId} has been removed from Session ${result._id}`);
+                            console.log(`User: ${userId} has been removed from Session: ${result._id}`);
                         }
                     });
                 } else {

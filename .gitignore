@@ -1,2 +1,4 @@
 node_modules
 Documentation/JSDoc
+Server/test/Cucumber/report/
+WebApp/test/Qunit/report/
