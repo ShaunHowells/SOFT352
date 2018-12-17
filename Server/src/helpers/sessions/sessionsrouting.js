@@ -35,7 +35,7 @@ module.exports = function(app, test) {
 
     sessionsRouter.post("/joinsession", function(request, response) {
         var sessionId = request.body.sessionId; //ID of the session to join
-        var userId = request.body.userId; //ID of the user who wants to join the session
+        var user = request.body.user; //The details of the user who wants to join the session
 
         //Check all required values have been supplied
         if (!sessionId) {
@@ -43,14 +43,14 @@ module.exports = function(app, test) {
                 success: false,
                 message: "You must supply a sessionId"
             });
-        } else if (!userId) {
+        } else if (!user || !user.userId || !user.username) {
             response.send({
                 success: false,
-                message: "You must supply a userId"
+                message: "You must supply a userId and a username"
             });
         } else {
             //Have user join session
-            sessionsdb.joinSession(sessionId, userId, function(err, result) {
+            sessionsdb.joinSession(sessionId, user, function(err, result) {
                 if (err) {
                     //If an error has occured then write to console and inform caller of error
                     console.log(`Error in joinSession: ${err}`);
@@ -66,7 +66,7 @@ module.exports = function(app, test) {
                     });
                 } else {
                     //If successful then return result to caller
-                    console.log(`User: ${userId} joined Session: ${result._id}`);
+                    console.log(`User: ${user.userId} joined Session: ${result._id}`);
                     response.send({
                         success: true,
                         result: result
@@ -78,7 +78,7 @@ module.exports = function(app, test) {
 
     sessionsRouter.post("/createsession", function(request, response) {
         var sessionName = request.body.sessionName; //User friendly name of the session
-        var userId = request.body.userId; //ID of the user creating the session
+        var user = request.body.user; //The details of the user creating the session
         var bookId = request.body.bookId; //ID of the book to be loaded into the session
 
         //Check all required values have been supplied
@@ -87,10 +87,10 @@ module.exports = function(app, test) {
                 success: false,
                 message: "You must supply a sessionName"
             });
-        } else if (!userId) {
+        } else if (!user || !user.userId || !user.username) {
             response.send({
                 success: false,
-                message: "You must supply a userId"
+                message: "You must supply a userId and a username"
             });
         } else if (!bookId) {
             response.send({
@@ -98,7 +98,7 @@ module.exports = function(app, test) {
                 message: "You must supply a bookId"
             });
         } else {
-            sessionsdb.createSession(sessionName, userId, bookId, function(err, result) {
+            sessionsdb.createSession(sessionName, user, bookId, function(err, result) {
                 if (err) {
                     //If an error has occured then write to console and inform caller of error
                     console.log(`Error in createSession: ${err}`);
@@ -108,7 +108,7 @@ module.exports = function(app, test) {
                     });
                 } else {
                     //If successful then return result to caller
-                    console.log(`Session: ${result._id} created`);
+                    console.log(`User: ${user.userId} created Session: ${result._id}`);
                     response.send({
                         success: true,
                         result: result
@@ -150,7 +150,7 @@ module.exports = function(app, test) {
                     });
                 } else {
                     //If successful then return result to caller
-                    console.log(`User ${userId} has left session ${sessionId}`);
+                    console.log(`User: ${userId} has left Session: ${sessionId}`);
                     response.send({
                         success: true,
                         result: result

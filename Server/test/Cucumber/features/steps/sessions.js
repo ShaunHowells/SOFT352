@@ -13,6 +13,7 @@ var WebSocket = require("../../../../src/node_modules/websocket").client;
 
 var sampleSessionName = "My Test Session";
 var sampleBookId = "5c152300e70cc20a1032c994";
+var sampleUsername = "ShaunTest";
 
 var world;
 Before(function(testCase, callback) {
@@ -41,6 +42,13 @@ After(function() {
     world.websocket = null;
 });
 
+After({
+    tags: "@AdditionalUserRequired"
+}, function() {
+    world.extraWebsocketConnection.close();
+    world.extraWebsocket = null;
+})
+
 // var this.clientId; = "1q2w3e-4r5t";
 //1) Scenario: Viewing all available session # features\sessions.feature:5
 Given('there are available sessions', function() {
@@ -49,7 +57,10 @@ Given('there are available sessions', function() {
         json: {
             sessionName: sampleSessionName,
             bookId: sampleBookId,
-            userId: this.clientId
+            user: {
+                userId: this.clientId,
+                username: sampleUsername
+            }
         }
     });
     var result = JSON.parse(response.getBody("utf8"));
@@ -86,7 +97,7 @@ Then('I should be shown the available sessions', function() {
 
 
 //2) Scenario: Creating a session# features\ sessions.feature: 10 ?
-Given('I have supplied a name', function() {
+Given('I have supplied a name for the session', function() {
     //Use the sampleSessionName as our sessionName
     this.sessionName = sampleSessionName;
 });
@@ -99,7 +110,12 @@ Given('I have chosen a book', function() {
 Given('I have a user id', function() {
     //Use the this.clientId; as our user id
     this.userId = this.clientId;;
-})
+});
+
+Given('I have supplied a username', function() {
+    //Use the sampleUsername as our username
+    this.username = sampleUsername
+});
 
 When('I try to create a session', function() {
     // Write code here that turns the phrase above into concrete actions
@@ -107,7 +123,10 @@ When('I try to create a session', function() {
         json: {
             sessionName: this.sessionName,
             bookId: this.bookId,
-            userId: this.userId
+            user: {
+                userId: this.userId,
+                username: this.username
+            }
         }
     });
     var result = JSON.parse(response.getBody("utf8"));
@@ -135,13 +154,17 @@ Then('I should be joined to that session', function() {
 
 //3) Scenario: Joining an available session# features\ sessions.feature: 17 ?
 var sampleJoinUserId = "0o9i8u-7y6t"
+var sampleJoinUsername = "JoinUser";
 Given('there are available sessions to join', function() {
     // Create a session using a dummy user so that there's at least 1 available session to join
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
             bookId: sampleBookId,
-            userId: this.clientId
+            user: {
+                userId: this.clientId,
+                username: sampleUsername
+            }
         }
     });
     var result = JSON.parse(response.getBody("utf8"));
@@ -153,13 +176,43 @@ Given('there are available sessions to join', function() {
     this.sessionId = result.result._id;
 });
 
+Given('I have a user id to join the session with', function(callback) {
+    //Connect to the server to get another userId to join the session with
+    world = this;
+    world.extraWebsocket = new WebSocket();
+    world.extraWebsocket.on("connect", function(connection) {
+        world.extraWebsocketConnection = connection;
+        connection.on("message", function(message) {
+            var messageData = JSON.parse(message.utf8Data);
+            switch (messageData.type) {
+                // Message received containing our unique client id
+                case "connected":
+                    world.joinUserId = messageData.clientId;
+                    callback();
+                    break;
+                default:
+                    break;
+            }
+        });
+    });
+    world.extraWebsocket.connect("ws://localhost:9001");
+});
+
+Given('I have supplied a username to join the session with', function() {
+    //Use sampleJoinUsername as our username
+    this.joinUsername = sampleJoinUsername;
+});
+
 When('I try to join a session', function() {
     // Join the previously created session with another user
     // Create a session using a dummy user so that there's at least 1 available session to join
     var response = request("POST", "http://localhost:9001/sessions/joinsession", {
         json: {
             sessionId: this.sessionId,
-            userId: sampleJoinUserId
+            user: {
+                userId: this.joinUserId,
+                username: this.joinUsername
+            }
         }
     });
     var result = JSON.parse(response.getBody("utf8"));
@@ -177,7 +230,7 @@ Then('I should be added to the session', function() {
 
     var foundUser = false;
     for (var user in users) {
-        if (users[user].user_id == sampleJoinUserId) {
+        if (users[user].user_id == this.joinUserId) {
             foundUser = true;
             break;
         }
@@ -204,7 +257,10 @@ Given('that I am in a session', function() {
         json: {
             sessionName: sampleSessionName,
             bookId: sampleBookId,
-            userId: this.clientId
+            user: {
+                userId: this.clientId,
+                username: sampleUsername
+            }
         }
     });
     var result = JSON.parse(response.getBody("utf8"));

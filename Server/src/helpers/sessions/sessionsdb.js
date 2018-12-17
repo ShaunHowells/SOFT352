@@ -18,7 +18,7 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function getAllSessions(callback) {
-        models.Sessions.find().populate({
+        models.Sessions.find().select().populate({
             path: "currentBook",
             select: "_id title"
         }).exec(callback);
@@ -31,13 +31,13 @@
      * @param {string} userId - The id of the user that is attempting to join the session
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
-    function joinSession(sessionId, userId, callback) {
+    function joinSession(sessionId, user, callback) {
         //First check that user isn't already in the sesssion
-        isUserInSession(sessionId, userId, function(err, inSession) {
+        isUserInSession(sessionId, user.userId, function(err, inSession) {
             if (err) {
                 callback(err, null);
             } else if (!inSession) {
-                isUserInAnySession(userId, function(err, inAnySession) {
+                isUserInAnySession(user.userId, function(err, inAnySession) {
                     if (err) {
                         callback(err, null);
                     } else if (!inAnySession) {
@@ -46,11 +46,12 @@
                         }, {
                             "$push": {
                                 "users": {
-                                    user_id: userId
+                                    user_id: user.userId,
+                                    username: user.username
                                 }
                             }
                         }, {
-                            new: true,
+                            new: true
                         }, function(err, result) {
                             result.populate({
                                 path: "currentBook",
@@ -61,7 +62,7 @@
                             if (webSockets) {
                                 webSockets.notifyUsers(result.users, {
                                     type: "userjoinedsession",
-                                    user: userId
+                                    user: user.username
                                 });
                             }
                         });
@@ -79,11 +80,11 @@
      * Creates a new session
      *
      * @param {string} sessionName - The user input name of the new session
-     * @param {string} userId - The id of the user that is attempting to create the session. Will be set as the owner of the session
+     * @param {Object} user - The id and username of the user that is attempting to create the session. Will be set as the owner of the session
      * @param {string} bookId - The id of the book being to be viewed in the session.
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
-    function createSession(sessionName, userId, bookId, callback) {
+    function createSession(sessionName, user, bookId, callback) {
         models.Books.findOne({
             _id: bookId
         }, function(err, result) {
@@ -92,17 +93,18 @@
             } else if (!result) {
                 callback("A book with this Id does not exist");
             } else {
-                isUserInAnySession(userId, function(err, inAnySession) {
+                isUserInAnySession(user.userId, function(err, inAnySession) {
                     if (err) {
                         callback(err, null);
                     } else if (!inAnySession) {
                         var newSession = new models.Sessions({
                             name: sessionName,
-                            owner: userId,
+                            owner: user.username,
                             currentPageNum: 0,
                             currentBook: bookId,
                             users: [{
-                                user_id: userId
+                                user_id: user.userId,
+                                username: user.username
                             }]
                         });
                         newSession.save(function(err, result) {
@@ -121,7 +123,7 @@
                                     });
                                     webSockets.notifyUsers(result.users, {
                                         type: "userjoinedsession",
-                                        user: userId
+                                        user: user.username
                                     });
                                 }
                             });
@@ -156,6 +158,15 @@
                         //If not result return
                         callback(err, result);
                     } else {
+                        //Find username before we remove the user
+                        var userList = result.users.toObject();
+                        var username;
+                        for (var i = 0; i < userList.length; i++) {
+                            if (userList[i].user_id == userId) {
+                                username = userList[i].username;
+                                break;
+                            }
+                        }
                         models.Sessions.findOneAndUpdate({
                             _id: sessionId
                         }, {
@@ -183,10 +194,11 @@
                                     }
                                 } else {
                                     callback(err, result);
+
                                     if (webSockets) {
                                         webSockets.notifyUsers(result.users, {
                                             type: "userleftsession",
-                                            user: userId
+                                            user: username
                                         });
                                     }
                                 }

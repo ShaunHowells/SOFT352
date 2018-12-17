@@ -48,9 +48,11 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * 
      * @memberof Chat
      */
-    function removeAllChatMessages() {
-        chatMessages = [];
-        chatMessageObserver.notify(chatMessages);
+    function removeAllChatMessages(session) {
+        if(!session){
+            chatMessages = [];
+            chatMessageObserver.notify(chatMessages);
+        }
     }
 
     /**

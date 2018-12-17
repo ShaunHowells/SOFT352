@@ -17,7 +17,6 @@ module.exports = function(server) {
 
     //Function to send messages to all users in a given session
     function notifyUsers(sessionUsers, messageToSend) {
-        sessionUsers = sessionUsers;
         var message = JSON.stringify(messageToSend);
         for (var user in connectedUsers) {
             for (var sessionUser in sessionUsers) {

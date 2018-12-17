@@ -4,7 +4,7 @@
  * @class
  * @hideconstructor
  */
-const Sessions = (function () { // eslint-disable-line no-unused-vars
+const Sessions = (function() { // eslint-disable-line no-unused-vars
 
     var currentUserId = null; //ID of the current user
     var availableSessions = []; //List of available sessions
@@ -100,7 +100,7 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
      */
     function removeAvailableSession(sessionId) {
         if (sessionId) {
-            availableSessions = availableSessions.filter(function (value, index, arr) {
+            availableSessions = availableSessions.filter(function(value, index, arr) {
                 return arr[index]._id !== sessionId;
             });
             availableSessionsObserver.notify(filterAvailableSessions());
@@ -117,7 +117,7 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
         //If currentUserSession exists then filter it out, otherwise return available sessions
         if (currentUserSession) {
             var userSession = currentUserSession;
-            var filteredList = availableSessions.filter(function (value) {
+            var filteredList = availableSessions.filter(function(value) {
                 if (userSession._id == value._id)
                     return false;
                 return true;
@@ -171,14 +171,17 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
      * @param {Function} callback - The callback to be executed after the session is created
      * @memberof Sessions
      */
-    function createNewSession(sessionName, bookId, callback) {
+    function createNewSession(sessionUsername, sessionName, bookId, callback) {
         if (currentUserId) {
             var self = this;
             $.post("http://localhost:9000/sessions/createsession", {
                 sessionName: sessionName,
                 bookId: bookId,
-                userId: currentUserId
-            }).done(function (data) {
+                user: {
+                    userId: currentUserId,
+                    username: sessionUsername
+                }
+            }).done(function(data) {
                 if (data.success) {
                     self.setCurrentUserSession(data.result);
                     callback(data);
@@ -196,12 +199,12 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
      * @param {Function} callback - The callback to be executed after the session is joined
      * @memberof Sessions
      */
-    function joinSession(sessionId, callback) {
-        if (currentUserId) {
+    function joinSession(sessionUsername, sessionId, callback) {
+        if (currentUserId && sessionUsername) {
             for (var session in availableSessions) {
                 if (availableSessions[session]._id == sessionId) {
                     var self = this;
-                    availableSessions[session].joinSession(currentUserId, function (data) {
+                    availableSessions[session].joinSession(sessionUsername, currentUserId, function(data) {
                         self.setCurrentUserSession(data.result);
                         callback(data);
                     });
@@ -219,7 +222,7 @@ const Sessions = (function () { // eslint-disable-line no-unused-vars
     function leaveCurrentSession(callback) {
         if (currentUserId && currentUserSession) {
             var self = this;
-            currentUserSession.leaveSession(currentUserId, function (data) {
+            currentUserSession.leaveSession(currentUserId, function(data) {
                 self.removeCurrentUserSession();
                 callback(data);
             });
@@ -276,11 +279,14 @@ function Session(sessionDetails) {
     this.currentBook = sessionDetails.currentBook;
 
 
-    this.joinSession = function (userID, callback) {
+    this.joinSession = function(sessionUsername, userId, callback) {
         $.post("http://localhost:9000/sessions/joinsession", {
             sessionId: this._id,
-            userId: userID
-        }).done(function (data) {
+            user: {
+                userId: userId,
+                username: sessionUsername
+            }
+        }).done(function(data) {
             if (data.success) {
                 if (callback)
                     callback(data);
@@ -297,11 +303,11 @@ function Session(sessionDetails) {
      * @param {String} userId - ID of the user to leaving the session
      * @param {Function} callback - The callback to be executed when the session is left
      */
-    this.leaveSession = function (userId, callback) {
+    this.leaveSession = function(userId, callback) {
         $.post("http://localhost:9000/sessions/leavesession", {
             sessionId: this._id,
             userId: userId
-        }).done(function (data) {
+        }).done(function(data) {
             if (data.success) {
                 if (callback)
                     callback(data.result);
@@ -318,11 +324,11 @@ function Session(sessionDetails) {
      * @param {Integer} pageNum - The number of the page to set in the session
      * @memberof Sessions
      */
-    this.updateBookPage = function (pageNum, callback) {
+    this.updateBookPage = function(pageNum, callback) {
         $.post("http://localhost:9000/sessions/updatecurrentpage", {
             sessionId: this._id,
             pageNum: pageNum
-        }, function (data) {
+        }, function(data) {
             if (data.success) {
                 if (callback)
                     callback(data);

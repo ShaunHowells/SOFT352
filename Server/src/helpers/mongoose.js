@@ -33,7 +33,8 @@ module.exports = function (testMode) {
             ref: "Books"
         },
         users: [{
-            user_id: String
+            user_id: String,
+            username: String
         }]
     });
 

@@ -28,12 +28,21 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
             _id: sessionId
         }).exec(function(err, result) {
             callback(err, result);
+
+            var userList = result.users.toObject();
+            var username;
+            for (var i = 0; i < userList.length; i++) {
+                if (userList[i].user_id == userId) {
+                    username = userList[i].username;
+                    break;
+                }
+            }
             //Notify this sessions users
-            webSockets.notifyUsers(result.users, {
+            webSockets.notifyUsers(userList, {
                 type: "chatmessagereceived",
                 success: true,
                 result: {
-                    user: userId,
+                    user: username,
                     message: message
                 }
             });
