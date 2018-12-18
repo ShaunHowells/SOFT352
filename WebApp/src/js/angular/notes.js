@@ -9,8 +9,8 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
     //Set $scope.setAvailableSessions as callback in CollabBookReader.getSessions() - Called when availableSession list is updated
     CollabBookReader.getNotes().getNoteObserver().subscribe($scope.setNoteList);
 
-    $scope.refreshNoteList = function(bookPage) {
-        if(bookPage && bookPage._id){
+    $scope.refreshNoteList = function() {
+        if(CollabBookReader.getBooks().getCurrentBookPage() && CollabBookReader.getBooks().getCurrentBookPage()._id){
             angular.element("#notesDisplay").show();
         } else {
             angular.element("#notesDisplay").hide();
