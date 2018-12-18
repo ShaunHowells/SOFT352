@@ -247,22 +247,22 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     }
 
     return {
-        setCurrentUserId: setCurrentUserId,
-        getCurrentUserId: getCurrentUserId,
-        getAvailableSessionsObserver: getAvailableSessionsObserver,
-        getCurrentUserSessionObserver: getCurrentUserSessionObserver,
-        getAvailableSessions: getAvailableSessions,
-        setAvailableSessions: setAvailableSessions,
-        pushAvailableSession: pushAvailableSession,
-        removeAvailableSession: removeAvailableSession,
-        filterAvailableSessions: filterAvailableSessions,
-        getCurrentUserSession: getCurrentUserSession,
-        setCurrentUserSession: setCurrentUserSession,
-        removeCurrentUserSession: removeCurrentUserSession,
-        createNewSession: createNewSession,
-        joinSession: joinSession,
-        leaveCurrentSession: leaveCurrentSession,
-        updateCurrentSessionBookPage: updateCurrentSessionBookPage
+        setCurrentUserId,
+        getCurrentUserId,
+        getAvailableSessionsObserver,
+        getCurrentUserSessionObserver,
+        getAvailableSessions,
+        setAvailableSessions,
+        pushAvailableSession,
+        removeAvailableSession,
+        filterAvailableSessions,
+        getCurrentUserSession,
+        setCurrentUserSession,
+        removeCurrentUserSession,
+        createNewSession,
+        joinSession,
+        leaveCurrentSession,
+        updateCurrentSessionBookPage
     };
 })();
 
@@ -277,6 +277,7 @@ function Session(sessionDetails) {
     this.users = sessionDetails.users;
     this.currentPageNum = sessionDetails.currentPageNum
     this.currentBook = sessionDetails.currentBook;
+    this.test = sessionDetails.test ? sessionDetails.test : false; // Used to identify sessions used for unit tests
 
 
     this.joinSession = function(sessionUsername, userId, callback) {

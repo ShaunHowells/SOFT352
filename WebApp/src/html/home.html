@@ -22,6 +22,7 @@
     <script src="../js/classes/sessions.js"></script>
     <script src="../js/classes/books.js"></script>
     <script src="../js/classes/chat.js"></script>
+    <script src="../js/classes/notes.js"></script>
     <script src="../js/classes/collabbookreader.js"></script>
 
     <!-- Set up angular -->
@@ -29,6 +30,7 @@
     <script src="../js/angular/book.js"></script>
     <script src="../js/angular/chat.js"></script>
     <script src="../js/angular/sessions.js"></script>
+    <script src="../js/angular/notes.js"></script>
 
     <!-- Set up observers -->
     <script src="../js/patterns/setobservers.js"></script>
@@ -40,6 +42,7 @@
     <script src="../../test/Qunit/tests/sessionsqunit.js"></script>
     <script src="../../test/Qunit/tests/booksqunit.js"></script>
     <script src="../../test/Qunit/tests/chatqunit.js"></script>
+    <script src="../../test/Qunit/tests/notesqunit.js"></script>
 
     <!-- Start main.js after unit tests are complete -->
     <script src="../js/main.js"></script>
@@ -73,20 +76,20 @@
             <div class="tab-content sessionList">
                 <!-- Available Session List -->
                 <div id="availableSessions" ng-controller="availableSessionsCtrl" class="tab-pane active list-3-+group">
-                    <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action" id="availableSessionId{{session._id}}" ng-click="showSessionDetails(session)">{{session.name}}</a>
+                    <a href="" role="button" ng-repeat="session in availableSessions" class="list-group-item list-group-item-action" id="availableSessionId{{session._id}}" ng-click="showSessionDetails(session)" ng-bind="session.name"></a>
                     <!-- Available Session Details Modal Popup -->
                     <div class="modal" id="availableSessionDetailsModal" tabindex="-1" role="dialog" aria-labelledby="availableSessionDetailsModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel"><span id="displayedSessionName">{{displaySession.name}}</span></h5>
+                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel"><span id="displayedSessionName" ng-bind="displaySession.name"></span></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Currently reading: <span id="displayedSessionBookTitle">{{displaySession.currentBook.title}}</span></p>
-                                    <p>Owner: <span id="displayedSessionOwner">{{displaySession.owner}}</span></p>
+                                    <p>Currently reading: <span id="displayedSessionBookTitle" ng-bind="displaySession.currentBook.title"></span></p>
+                                    <p>Owner: <span id="displayedSessionOwner" ng-bind="displaySession.owner"></span></p>
                                     <br>
                                     <span id="canJoinSession"></span>
                                     <div class="input-group">
@@ -109,13 +112,13 @@
                     <div id="currentUserSessionDetails">
                         <div id="currentUserSessionDetailList">
                             <input type="hidden" id="currentUserSessionId{{session._id}}">
-                            <p>Current Session: <span id="currentUserSessionName">{{currentUserSession.name}}</span></p>
-                            <p>Currently reading: <span id="currentUserSessionBookTitle">{{currentUserSession.currentBook.title}}</span></p>
-                            <p>Owner: <span id="currentUserSessionOwner">{{currentUserSession.owner}}</span></p>
+                            <p>Current Session: <span id="currentUserSessionName" ng-bind="currentUserSession.name"></span></p>
+                            <p>Currently reading: <span id="currentUserSessionBookTitle" ng-bind="currentUserSession.currentBook.title"></span></p>
+                            <p>Owner: <span id="currentUserSessionOwner" ng-bind="currentUserSession.owner"></span></p>
                         </div>
                         <button id="currentUserSessionDetailsLeaveSession" type="button" class="btn btn-primary leaveSession" ng-click="leaveSession(currentUserSession)">Leave Session</button>
                     </div>
-                    <div id="currentUserSessionJoin">
+                    <div id="currentUserSessionCreate">
                         <button class="btn btn-primary createNewSession" id="createNewSession" ng-click="displayCreateNewSessionDetails()">Create
                             a new session</button>
                     </div>
@@ -149,7 +152,7 @@
                                         </div>
                                         <select id="createNewSessionBook" class="form-control" ng-controller="bookListCtrl">
                                             <option value="" disabled selected>--Select a book--</option>
-                                            <option ng-repeat="book in bookList" value="{{book._id}}">{{book.title}}</option>>
+                                            <option ng-repeat="book in bookList" value="{{book._id}}">{{book.title}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -184,7 +187,7 @@
                 <!-- Book Carousel -->
                 <div class="carousel-inner">
                     <div class="carousel-item active" id="bookPage">
-                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{currentBookPage.currentPage.src}}" alt="Page {{currentBookPage.currentPage.pageNum}} could not be found" />
+                        <img id="bookPageImage" class="img-fluid border bookPageImg" ng-src="{{currentBookPage.currentPage.src}}" alt="Page could not be found" />
                     </div>
                 </div>
                 <a id="bookPageCarouselPrev" class="carousel-control-prev" href="#bookPageCarousel" role="button" data-slide="prev" ng-click="getPreviousPage(currentBookPage)">
@@ -202,28 +205,116 @@
             <div id="bookDetails" class="bookdetails" ng-controller="bookPageDetailsCtrl">
                 <!-- if reading a book, then display book details -->
                 <!-- else display "Nothing" -->
-                <p id="pBookPageDetails" ng-if="currentBookPage._id" class="text-center"><strong>Currently Reading: {{currentBookPage.title}} - Page: {{currentBookPage.currentPage.pageNum + 1}}</strong></p>
+                <p id="pBookPageDetails" ng-if="currentBookPage._id" class="text-center" ng-cloak><strong>Currently Reading: {{currentBookPage.title}} - Page: {{currentBookPage.currentPage.pageNum + 1}}</strong></p>
                 <p id="pBookPageDetails" ng-if="!currentBookPage._id" class="text-center"><strong>Currently Reading: Nothing</strong></p>
             </div>
-            <div id="chatMessageArea" ng-controller="chatMessagesCtrl">
-                <!-- Chat message list -->
-                <div id="chatMessages" class="list-group chatMessages">
-                    <div ng-repeat="message in chatMessages">
-                        <li ng-if="!message.notification" class="list-group-item chatMessage"><b>{{message.user}}</b>:
-                            {{message.message}}
-                        </li>
-                        <li ng-if="message.notification" class="list-group-item chatMessage">
-                            <b>{{message.message}}</b>
-                        </li>
+            <div class="chatNoteTabs">
+                <ul id="chatNotesTabList" class="nav nav-tabs" role="tablist">
+                    <li class="nav-item active"><a id="chatHeading" href="#chatMessageArea" role="tab" data-toggle="tab" class="nav-link active">Chat</a></li>
+                    <li class="nav-item"><a id="notesHeading" href="#notesArea" role="tab" data-toggle="tab" class="nav-link">Notes</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="chatMessageArea" ng-controller="chatMessagesCtrl" class="tab-pane active list-3-+group">
+                        <!-- Chat message list -->
+                        <div id="chatMessages" class="list-group chatMessages">
+                            <div ng-repeat="message in chatMessages">
+                                <li ng-if="!message.notification" class="list-group-item chatMessage" ng-cloak><b>{{message.user}}</b>:
+                                    {{message.message}}
+                                </li>
+                                <li ng-if="message.notification" class="list-group-item chatMessage" ng-cloak>
+                                    <b>{{message.message}}</b>
+                                </li>
+                            </div>
+                        </div>
+                        <!-- Chat message input -->
+                        <div class="chatInput row border">
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="Enter your message here" class="chatInputMessage" ng-model="messageToSend" ng-keypress="chatMessageEnter($event)">
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn" ng-click="sendChatMessage(messageToSend)">Send</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <!-- Chat message input -->
-                <div class="chatInput row border">
-                    <div class="col-sm-10">
-                        <input type="text" placeholder="Enter your message here" class="chatInputMessage" ng-model="messageToSend" ng-keypress="chatMessageEnter($event)">
-                    </div>
-                    <div class="col-sm-2">
-                        <button class="btn" ng-click="sendChatMessage(messageToSend)">Send</button>
+                    <!-- Notes List  -->
+                    <div id="notesArea" ng-controller="noteListCtrl" class="tab-pane list-3-+group">
+                        <div id="notesDisplay" class="list-group">
+                            <div class="accordion" id="notesAccordion">
+                                <!-- All Pages Notes -->
+                                <div class="card">
+                                    <div class="card-header" id="allPagesNotesHeading">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#allPagesNotes" aria-expanded="true" aria-controls="allPagesNotes">
+                                                All Pages ({{noteList.length}})
+                                            </button>
+                                        </h5>
+                                    </div>
+                                    <div id="allPagesNotes" class="collapse notelist" aria-labelledby="allPagesNotesHeading" data-parent="#notesAccordion">
+                                        <div id="allPagesNotesBody" class="card-body">
+                                            <div ng-repeat="note in noteList">
+                                                <li class="list-group-item chatMessage"><b>{{note.user}} - Page {{note.pageNum + 1}}</b>:
+                                                    {{note.note}}
+                                                </li>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Current Page Notes -->
+                                <div class="card">
+                                    <div class="card-header" id="currentPageNotesHeading">
+                                        <h5 class="mb-0">
+                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#currentPageNotes" aria-expanded="false" aria-controls="currentPageNotes">
+                                                Current Page: {{currentPageNum + 1}} ({{currentPageNoteList.length}})
+                                            </button>
+                                        </h5>
+                                    </div>
+                                    <div id="currentPageNotes" class="collapse notelist" aria-labelledby="currentPageNotesHeading" data-parent="#notesAccordion">
+                                        <div id="currentPageNotesBody" class="card-body">
+                                            <div ng-repeat="note in currentPageNoteList">
+                                                <li class="list-group-item chatMessage"><b>{{note.user}}</b>:
+                                                    {{note.note}}
+                                                </li>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="noteCreate">
+                                <button class="btn btn-primary createNewNote" id="createNewNote" ng-click="displayCreateNewNoteDetails()">Add a note</button>
+                            </div>
+                            <!-- Create new Note details Modal -->
+                            <div class="modal" id="createNewNoteModal" tabindex="-1" role="dialog" aria-labelledby="createNewNoteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="createNewSessionNoteLabel">Add a note</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Please enter the details for your new note</p>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Page Number</span>
+                                                </div>
+                                                <input id="createNewNotePageNum" type="number" class="form-control">
+                                            </div>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Note</span>
+                                                </div>
+                                                <textarea id="createNewNoteDetails" placeholder="Enter your note here..." class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button id="createNewNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button id="createNewNoteModalJoinSession" type="button" class="btn btn-primary" ng-click="createNote()">Create note</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

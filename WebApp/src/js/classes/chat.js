@@ -1,3 +1,9 @@
+/**
+ * @classdesc Handles all of the functionality relating to the handling of the "Chat".
+ * 
+ * @class
+ * @hideconstructor
+ */
 var Chat = (function() { // eslint-disable-line no-unused-vars
     var chatMessages = [];
 
@@ -19,7 +25,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * @memberof Chat
      * @param {Object} chatMessage - The details of the message to add
      */
-    function addNewChatMessage(chatMessage) {
+    function addChatMessage(chatMessage) {
         chatMessages.push(new ChatMessage(chatMessage));
 
         chatMessageObserver.notify(chatMessages);
@@ -49,7 +55,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * @memberof Chat
      */
     function removeAllChatMessages(session) {
-        if(!session){
+        if (!session) {
             chatMessages = [];
             chatMessageObserver.notify(chatMessages);
         }
@@ -69,7 +75,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Sets the list of chat messages
      * 
      * @memberof Chat
-     * @param {Object} messages Contains the data for for the chat messages
+     * @param {Object} messages Contains the data for the chat messages
      */
     function setChatMessages(messages) {
         chatMessages = [];
@@ -81,12 +87,12 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
     }
 
     return {
-        getChatMessageObserver: getChatMessageObserver,
-        addNewChatMessage: addNewChatMessage,
-        sendChatMessage: sendChatMessage,
-        removeAllChatMessages: removeAllChatMessages,
-        getChatMessages: getChatMessages,
-        setChatMessages: setChatMessages
+        getChatMessageObserver,
+        addChatMessage,
+        sendChatMessage,
+        removeAllChatMessages,
+        getChatMessages,
+        setChatMessages
     };
 })();
 
@@ -97,16 +103,20 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
 function ChatMessage(messageDetails) {
     /**
      * The user who sent the message
-     * @member {Integer}
+     * @member {String}
      */
     this.user = messageDetails.user;
     /**
      * The contents of the message
-     * @member {Integer}
+     * @member {String}
      */
     this.message = messageDetails.message;
-
-    if(messageDetails.notification){
+    /**
+     * A boolean indictating if the message is a notification or not
+     * @member {Boolean}
+     */
+    this.notification;
+    if (messageDetails.notification) {
         this.notification = true;
     } else {
         this.notification = false;

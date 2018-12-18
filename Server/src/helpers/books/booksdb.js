@@ -5,15 +5,15 @@ var models;
  * Callback used when accessing Books from MongoDB
  * 
  * @callback booksCallback
- * @param {object} err - The error returned from MongoDB access
- * @param {object} result - The result returned from MongoDB access
+ * @param {Object} err - The error returned from MongoDB access
+ * @param {Object} result - The result returned from MongoDB access
  */
 
 /**
  * Adds a new book to the collection
  *
- * @param {string} title - The title of the book to be added
- * @param {array} pageFiles - An array of files containing the images for each page (in order)
+ * @param {String} title - The title of the book to be added
+ * @param {Object[]} pageFiles - An array of files containing the images for each page (in order)
  * @param {booksCallback} callback - A callback to run after database access.
  */
 var addNewBook = function (title, pageFiles, callback) {
@@ -60,7 +60,7 @@ var getPageFromBook = function (bookId, pageNum, callback) {
 /**
  * Sets available mongoose models
  *
- * @param {object} mongooseModels Available Mongoose models
+ * @param {Object} mongooseModels Available Mongoose models
  */
 var setMongooseModels = function (mongooseModels) {
     models = mongooseModels;

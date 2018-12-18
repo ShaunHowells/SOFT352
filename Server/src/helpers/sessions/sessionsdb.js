@@ -8,8 +8,8 @@
      * Callback used when accessing Sessions from MongoDB
      * 
      * @callback sessionsCallback
-     * @param {object} err - The error returned from MongoDB access
-     * @param {object} result - The result returned from MongoDB access
+     * @param {Object} err - The error returned from MongoDB access
+     * @param {Object} result - The result returned from MongoDB access
      */
 
     /**
@@ -18,7 +18,7 @@
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function getAllSessions(callback) {
-        models.Sessions.find().select().populate({
+        models.Sessions.find().select("-notes -users").populate({
             path: "currentBook",
             select: "_id title"
         }).exec(callback);
@@ -27,8 +27,8 @@
     /**
      * Join a session
      *
-     * @param {string} sessionId - The id of the session to be joined
-     * @param {string} userId - The id of the user that is attempting to join the session
+     * @param {String} sessionId - The id of the session to be joined
+     * @param {String} userId - The id of the user that is attempting to join the session
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function joinSession(sessionId, user, callback) {
@@ -79,9 +79,9 @@
     /**
      * Creates a new session
      *
-     * @param {string} sessionName - The user input name of the new session
+     * @param {String} sessionName - The user input name of the new session
      * @param {Object} user - The id and username of the user that is attempting to create the session. Will be set as the owner of the session
-     * @param {string} bookId - The id of the book being to be viewed in the session.
+     * @param {String} bookId - The id of the book being to be viewed in the session.
      * @param {sessionsCallback} callback - A callback to run after database access.
      */
     function createSession(sessionName, user, bookId, callback) {
@@ -391,7 +391,7 @@
     /**
      * Sets available mongoose models
      *
-     * @param {object} mongooseModels Available Mongoose models
+     * @param {Object} mongooseModels Available Mongoose models
      */
     var setMongooseModels = function(mongooseModels) {
         models = mongooseModels;
@@ -400,7 +400,7 @@
     /**
      * Set webSockets variable so that sessions can update websocket connections
      *
-     * @param {object} newWebSockets The value to set webSockets to
+     * @param {Object} newWebSockets The value to set webSockets to
      */
     function setWebSockets(newWebSockets) {
         webSockets = newWebSockets;
@@ -415,6 +415,7 @@
         changeSessionPage: changeSessionPage,
         getSessionUsers: getSessionUsers,
         closeAllSessions: closeAllSessions,
+        isUserInSession: isUserInSession,
         setMongooseModels: setMongooseModels,
         setWebSockets: setWebSockets
     };

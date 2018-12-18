@@ -44,7 +44,7 @@ QUnit.module("Books");
 /**
  * Display the list of books in the 'Create a new session' books list
  */
-QUnit.test("Display list of books in 'Create a new session' book list", function (assert) {
+QUnit.test("Display list of books in 'Create a new session' book list", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -93,7 +93,7 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
 /**
  * Update the currently displayed book page in the book carousel
  */
-QUnit.test("Display book page in book carousel", function (assert) {
+QUnit.test("Display book page in book carousel", function(assert) {
     //STORE PREVIOUS VALUES
     var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
 
@@ -110,7 +110,7 @@ QUnit.test("Display book page in book carousel", function (assert) {
 
     //Check that the UI has been udpated to display the correct image
     assert.equal(angular.element("#bookPageImage").attr("src"), sampleBookPage.currentPage.src, "Book Page Carousel src should be set to " + sampleBookPage.currentPage.src);
-    assert.equal(angular.element("#bookPageImage").attr("alt"), "Page 0 could not be found", "Book Page Carousel alt should be set to \"Page 0 could not be found\"");
+    assert.equal(angular.element("#bookPageImage").attr("alt"), "Page could not be found", "Book Page Carousel alt should be set to \"Page could not be found\"");
 
     //RESET TO PREVIOUS VALUES
     CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
@@ -119,7 +119,7 @@ QUnit.test("Display book page in book carousel", function (assert) {
 /**
  * Check that alerts are correctly displayed when attempting to navigate to a page that doesn't exist
  */
-QUnit.test("Display alerts when attempted to navigate to a page that doesn't exist", function (assert) {
+QUnit.test("Display alerts when attempted to navigate to a page that doesn't exist", function(assert) {
     //STORE PREVIOUS VALUES
     var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
 
@@ -150,7 +150,7 @@ QUnit.test("Display alerts when attempted to navigate to a page that doesn't exi
 /**
  * Check book details are displaying correctly
  */
-QUnit.test("Update BookPage details when changing book/page", function (assert) {
+QUnit.test("Update BookPage details when changing book/page", function(assert) {
     //STORE PREVIOUS VALUES
     var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
 

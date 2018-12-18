@@ -11,6 +11,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     var sessions = Sessions; //Sessions object for performing operations on Sessions
     var books = Books; //Books object for performing operations on Books
     var chat = Chat; //Chat object for performing operations on Books
+    var notes = Notes; //Notes object for performing opersations on Notes
 
     /**
      * Initialise websocket, connect to server, and set onmessage
@@ -73,21 +74,24 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 books.getSessionBookPage(messageData.result);
                 break;
             case "chatmessagereceived":
-                chat.addNewChatMessage(messageData.result);
+                chat.addChatMessage(messageData.result);
                 break;
             case "userjoinedsession":
-                chat.addNewChatMessage({
+                chat.addChatMessage({
                     user: messageData.user,
                     message: messageData.user + " has joined the session",
                     notification: true
                 });
                 break;
             case "userleftsession":
-                chat.addNewChatMessage({
+                chat.addChatMessage({
                     user: messageData.user,
                     message: messageData.user + " has left the session",
                     notification: true
                 });
+                break;
+            case "newnoteadded":
+                notes.addNote(messageData.note);
                 break;
             default:
                 break;
@@ -124,12 +128,22 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         return chat;
     }
 
+    /**
+     * Returns Notes object
+     * 
+     * @returns {Notes} Notes Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getNotes() {
+        return notes;
+    }
+
     return {
-        getSessions: getSessions,
-        getBooks: getBooks,
+        getSessions,
+        getBooks,
         getChat,
-        getChat,
-        startWebSocketConnection: startWebSocketConnection,
-        stopWebSocketConnection: stopWebSocketConnection
+        getNotes,
+        startWebSocketConnection,
+        stopWebSocketConnection
     };
 })();

@@ -19,9 +19,9 @@ When('I ask to see the list of all books', function() {
 
 Then('I should be shown all of the books', function() {
     //Check that that the returned result contains the list of books
-    assert(this.allBooksResult, "The server should have sent back a response");
-    assert(!this.allBooksResult.err, "No error should be returned")
-    assert(this.allBooksResult.success, "Books should have successfully retrieved")
+    assert.ok(this.allBooksResult, "The server should have sent back a response");
+    assert.ok(!this.allBooksResult.err, "No error should be returned")
+    assert.ok(this.allBooksResult.success, "Books should have successfully retrieved")
 
     assert.ok(this.allBooksResult.result.length >= 1, "At least one book should have been retrieved");
 
@@ -59,9 +59,9 @@ Then('when I ask to see the page from a book', function() {
 
 Then('I should be shown the page from that book', function() {
     //Check that that the returned result contains the data for the page
-    assert(this.bookPageResult, "The server should have sent back a response");
-    assert(!this.bookPageResult.err, "No error should be returned")
-    assert(this.bookPageResult.success, "Book page should have successfully retrieved")
+    assert.ok(this.bookPageResult, "The server should have sent back a response");
+    assert.ok(!this.bookPageResult.err, "No error should be returned")
+    assert.ok(this.bookPageResult.success, "Book page should have successfully retrieved")
 
     var bookPage = this.bookPageResult.result;
     //Check that all of the expected keys exist - Don't worry about their values, we only care that they've been returned

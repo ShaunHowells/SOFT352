@@ -1,4 +1,4 @@
-module.exports = function (testMode) {
+module.exports = function(testMode) {
     var mongoose = require("mongoose");
     if (testMode) {
         mongoose.connect("mongodb://localhost/collaborativereadertest", {
@@ -35,6 +35,11 @@ module.exports = function (testMode) {
         users: [{
             user_id: String,
             username: String
+        }],
+        notes: [{
+            user: String,
+            note: String,
+            pageNum: Number
         }]
     });
 

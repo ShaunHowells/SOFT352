@@ -19,7 +19,8 @@
 
 /* Buttons displayed in 'My Session' */
 .createNewSession,
-.leaveSession {
+.leaveSession,
+.createNewNote {
     width: 100%
 }
 
@@ -27,7 +28,6 @@
 .chatArea {
     background-color: darkgray;
     height: 80%;
-    padding-right: 0;
 }
 
 /* Chat messages in right-side chat area */
@@ -108,4 +108,16 @@ button[disabled] {
 
 .alert {
     display: none;
+}
+
+#noteCreate {
+    position: absolute;
+    bottom: 10;
+    right: 0;
+    left: 0;
+}
+
+.notelist {
+    overflow-y: auto;
+    max-height: 65%;
 }

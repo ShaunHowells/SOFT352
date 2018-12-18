@@ -5,18 +5,19 @@ var models;
 var websockets;
 
 /**
- * Callback used when accessing Books from MongoDB
+ * Callback used when processing Chat messages
  * 
  * @callback chatCallback
- * @param {object} err - The error returned from MongoDB access
- * @param {object} result - The result returned from MongoDB access
+ * @param {Object} err - The error
+ * @param {Object} result - The result
  */
 
 /**
- * Adds a new book to the collection
+ * Sends a Chat message to all other users in the session
  *
- * @param {string} sessionId - The id of the session the message is being sent in
- * @param {array} userId -The id of the user sending the message
+ * @param {String} sessionId - The id of the session the message is being sent in
+ * @param {String} userId -The id of the user sending the message
+ * @param {String} message - The message being sent
  * @param {chatCallback} callback - A callback to run after database access.
  */
 var sendChatMessage = function(sessionId, userId, message, callback) {
@@ -53,7 +54,7 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
 /**
  * Sets available mongoose models
  *
- * @param {object} mongooseModels Available Mongoose models
+ * @param {Object} mongooseModels Available Mongoose models
  */
 var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
@@ -62,7 +63,7 @@ var setMongooseModels = function(mongooseModels) {
 /**
  * Set webSockets variable so that sessions can update websocket connections
  *
- * @param {object} newWebSockets The value to set webSockets to
+ * @param {Object} newWebSockets The value to set webSockets to
  */
 function setWebSockets(newWebSockets) {
     webSockets = newWebSockets;

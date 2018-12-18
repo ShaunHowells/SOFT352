@@ -5,6 +5,7 @@ var sampleAvailableSessionList = [{
         "title": "Shaun's Test Book"
     },
     "_id": "5c0936db8a7aa44ea0adf4be",
+    "test": true,
     "name": "Yet another test",
     "owner": "753b5e0e-2c07",
     "users": [{
@@ -18,6 +19,7 @@ var sampleAvailableSessionList = [{
         "title": "Shaun's Test Book"
     },
     "_id": "5c0936e68a7aa44ea0adf4c0",
+    "test": true,
     "name": "My Session",
     "owner": "65382863-fe2c",
     "users": [{
@@ -32,6 +34,7 @@ var sampleSession = {
         "title": "Shaun's Test Book"
     },
     "_id": "5c0936bd8a7aa44ea0adf4bc",
+    "test": true,
     "name": "Test",
     "owner": "036438b0-2515",
     "users": [{
@@ -45,6 +48,7 @@ var sampleCurrentUserSession = {
         "title": "Shaun's Test Book"
     },
     "_id": "5c091af0f5659f1ff48f6b8f",
+    "test": true,
     "name": "Test",
     "owner": "ad3ccf43-ea77",
     "users": [{
@@ -274,7 +278,7 @@ QUnit.test("Show 'My Session' tab content", function (assert) {
     assert.ok(angular.element("#currentUserSession").is(":visible"), "My session tab content should be visible");
 
     //'Create a new session' should be visible, while current session details should be hidden
-    assert.ok(angular.element("#currentUserSessionJoin").is(":visible"), "'Create a new session' should be visible");
+    assert.ok(angular.element("#currentUserSessionCreate").is(":visible"), "'Create a new session' should be visible");
     assert.ok(!angular.element("#currentUserSessionDetails").is(":visible"), "Current Session Details should be hidden");
 
     //RESET TO PREVIOUS VALUES
@@ -305,7 +309,7 @@ QUnit.test("Set current user session", function (assert) {
     currentUserSessionCtrlScope.$apply();
 
     //Check that 'Create a new session' is displayed and currentUserSession details are hidden
-    assert.ok(angular.element("#currentUserSessionJoin").is(":visible"), "'Create a new session' should be visible");
+    assert.ok(angular.element("#currentUserSessionCreate").is(":visible"), "'Create a new session' should be visible");
     assert.ok(!angular.element("#currentUserSessionDetails").is(":visible"), "Current Session Details should be hidden");
 
     //Set the currentUserSession to the sampleCurrentUserSession
@@ -315,7 +319,7 @@ QUnit.test("Set current user session", function (assert) {
     currentUserSessionCtrlScope.$apply();
 
     //Check that currentUserSession details are displayed and 'Create a new session' is hidden
-    assert.ok(!angular.element("#currentUserSessionJoin").is(":visible"), "'Create a new session' should be hidden");
+    assert.ok(!angular.element("#currentUserSessionCreate").is(":visible"), "'Create a new session' should be hidden");
     assert.ok(angular.element("#currentUserSessionDetails").is(":visible"), "Current Session Details should be visible");
 
     //Check values of the Angular scope are the same as the session that that was set as the currentUserSession
@@ -361,7 +365,7 @@ QUnit.test("Remove current user session", function (assert) {
     currentUserSessionCtrlScope.$apply();
 
     //Check that 'Create a new session' is displayed and currentUserSession details are hidden
-    assert.ok(angular.element("#currentUserSessionJoin").is(":visible"), "'Create a new session' should be visible");
+    assert.ok(angular.element("#currentUserSessionCreate").is(":visible"), "'Create a new session' should be visible");
     assert.ok(!angular.element("#currentUserSessionDetails").is(":visible"), "Current user session details should be hidden");
 
     //Check that the value Angular scope are is empty

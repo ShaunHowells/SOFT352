@@ -43,7 +43,7 @@ QUnit.test("Set list of Chat messages", function(assert) {
 
     //Check values of the Angular scope has been correctly updated
     var chatMessages = chatMessagesCtrl.chatMessages;
-    assert.equal(chatMessages.length, sampleChatMessages.length, sampleChatMessages.length + " chat messages should be in the current list");
+    assert.equal(chatMessages.length, sampleChatMessages.length, sampleChatMessages.length + " chat messages should be in the chat message list");
     //Check that the UI reflects the changes to the scope
     assert.equal(angular.element("#chatMessages").children("div").length, sampleChatMessages.length, sampleChatMessages.length + " chat messages should be displayed in the chat messages list");
 
@@ -73,7 +73,7 @@ QUnit.test("Clear list of Chat messages", function(assert) {
 
     //Check values of the Angular scope has been correctly updated
     var chatMessages = chatMessagesCtrl.chatMessages;
-    assert.equal(chatMessages.length, 0, "0 chat messages should be in the current list");
+    assert.equal(chatMessages.length, 0, "0 chat messages should be in the chat message list");
     //Check the the UI reflects the changes to the Angular scope
     assert.equal(angular.element("#chatMessages").children("div").length, 0, "0 chat messages should be displayed in the chat messages list");
 
@@ -98,20 +98,20 @@ QUnit.test("Add chat message to list of Chat messages", function(assert) {
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
 
-    CollabBookReader.getChat().addNewChatMessage(sampleChatMessage1);
+    CollabBookReader.getChat().addChatMessage(sampleChatMessage1);
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
     //Check values of the Angular scope have been correctly updated
     var chatMessages = chatMessagesCtrl.chatMessages;
-    assert.equal(chatMessages.length, 1, "1 chat messages should be in the current list");
+    assert.equal(chatMessages.length, 1, "1 chat messages should be in the chat message list");
     assert.equal(angular.element("#chatMessages").children("div").length, 1, "1 chat messages should be displayed in the chat messages list");
 
-    CollabBookReader.getChat().addNewChatMessage(sampleChatMessage2);
+    CollabBookReader.getChat().addChatMessage(sampleChatMessage2);
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
     //Check values of the Angular scope have been correctly updated
     chatMessages = chatMessagesCtrl.chatMessages;
-    assert.equal(chatMessages.length, 2, "2 chat messages should be in the current list");
+    assert.equal(chatMessages.length, 2, "2 chat messages should be in the chat message list");
     assert.equal(angular.element("#chatMessages").children("div").length, 2, "2 chat messages should be displayed in the chat messages list");
 
     //RESET TO PREVIOUS VALUES

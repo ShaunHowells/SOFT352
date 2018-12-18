@@ -42,7 +42,7 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
                 angular.element("#currentUserSessionTabHeading").click();
 
                 //Hide displayed details
-                $("#currentUserSessionJoin").hide();
+                $("#currentUserSessionCreate").hide();
                 $("#currentUserSessionDetails").show();
             });
         };
@@ -61,11 +61,11 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
         //Hide 'Create a new session' button, and show currentUserSession details
         // Otherwise we don't have a session, so show the 'Create a new session' button and hide currentUserSession details
         if (data) {
-            $("#currentUserSessionJoin").hide();
-            $("#currentUserSessionDetails").show();
+            angular.element("#currentUserSessionCreate").hide();
+            angular.element("#currentUserSessionDetails").show();
         } else {
-            $("#currentUserSessionDetails").hide();
-            $("#currentUserSessionJoin").show();
+            angular.element("#currentUserSessionDetails").hide();
+            angular.element("#currentUserSessionCreate").show();
         }
         $scope.$applyAsync();
     };

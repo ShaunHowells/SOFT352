@@ -4,7 +4,7 @@
  * @class
  * @hideconstructor
  */
-const Books = (function () { // eslint-disable-line no-unused-vars
+const Books = (function() { // eslint-disable-line no-unused-vars
     var currentUserId; //ID of the current user
     var bookList = []; //Stores the list of retrieved books
     const defaultBookPage = {
@@ -73,7 +73,7 @@ const Books = (function () { // eslint-disable-line no-unused-vars
      */
     function retrieveBookList() {
         var self = this;
-        $.post("http://localhost:9000/books/getallbooks", {}).done(function (data) {
+        $.post("http://localhost:9000/books/getallbooks", {}).done(function(data) {
             if (data.success) {
                 self.setBookList(data.result);
             } else {
@@ -148,7 +148,7 @@ const Books = (function () { // eslint-disable-line no-unused-vars
         if (bookId != null && pageNum != null) {
             for (var book in bookList) {
                 if (bookList[book]._id == bookId) {
-                    bookList[book].getPageData(pageNum, function (data) {
+                    bookList[book].getPageData(pageNum, function(data) {
                         callback(data);
                     });
                 }
@@ -166,7 +166,7 @@ const Books = (function () { // eslint-disable-line no-unused-vars
     }
 
     function setCurrentBookPageFromServer(pageNum) {
-        retrieveNewPageFromBook(currentBookPage._id, pageNum, function (data) {
+        retrieveNewPageFromBook(currentBookPage._id, pageNum, function(data) {
             var bookDetails = {
                 _id: currentBookPage._id,
                 title: currentBookPage.title,
@@ -189,7 +189,7 @@ const Books = (function () { // eslint-disable-line no-unused-vars
      */
     function getSessionBookPage(session) {
         if (session) {
-            retrieveNewPageFromBook(session.currentBook._id, session.currentPageNum, function (data) {
+            retrieveNewPageFromBook(session.currentBook._id, session.currentPageNum, function(data) {
                 var bookDetails = {
                     _id: session.currentBook._id,
                     title: session.currentBook.title,
@@ -205,22 +205,22 @@ const Books = (function () { // eslint-disable-line no-unused-vars
         } else {
             resetCurrentBookPage();
         }
-    }
+    };
 
     return {
-        getBookListObserver: getBookListObserver,
-        getUpdatePageBookObserver: getUpdatePageBookObserver,
-        setCurrentUserId: setCurrentUserId,
-        getCurrentUserId: getCurrentUserId,
-        retrieveBookList: retrieveBookList,
-        setBookList: setBookList,
-        getBookList: getBookList,
-        getCurrentBookPage: getCurrentBookPage,
-        setCurrentBookPage: setCurrentBookPage,
-        retrieveNewPageFromBook: retrieveNewPageFromBook,
-        resetCurrentBookPage: resetCurrentBookPage,
-        getSessionBookPage: getSessionBookPage,
-        setCurrentBookPageFromServer: setCurrentBookPageFromServer
+        getBookListObserver,
+        getUpdatePageBookObserver,
+        setCurrentUserId,
+        getCurrentUserId,
+        retrieveBookList,
+        setBookList,
+        getBookList,
+        getCurrentBookPage,
+        setCurrentBookPage,
+        retrieveNewPageFromBook,
+        resetCurrentBookPage,
+        getSessionBookPage,
+        setCurrentBookPageFromServer
     };
 })();
 
@@ -253,13 +253,13 @@ function Book(bookDetails) {
      * @param {Integer} pageNum - The number of the page you want to retrieve
      * @param {Function} callback - The function to execute after the page is successfully retrieved
      */
-    this.getPageData = function (pageNum, callback) {
+    this.getPageData = function(pageNum, callback) {
         if (pageNum >= 0 || pageNum < this.pageCount) {
             var self = this;
             $.post("http://localhost:9000/books/getpagefrombook", {
                 bookId: this._id,
                 pageNum: pageNum
-            }).done(function (data) {
+            }).done(function(data) {
                 if (data.success) {
                     callback(data.result);
                 } else {

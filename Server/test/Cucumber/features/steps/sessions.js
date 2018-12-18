@@ -8,55 +8,27 @@ const {
 } = require("cucumber");
 var assert = require("assert");
 var request = require("sync-request");
-
 var WebSocket = require("../../../../src/node_modules/websocket").client;
 
 var sampleSessionName = "My Test Session";
-var sampleBookId = "5c152300e70cc20a1032c994";
 var sampleUsername = "ShaunTest";
 
 var world;
-Before(function(testCase, callback) {
-    world = this;
-    world.websocket = new WebSocket();
-    world.websocket.on("connect", function(connection) {
-        world.websocketConnection = connection;
-        connection.on("message", function(message) {
-            var messageData = JSON.parse(message.utf8Data);
-            switch (messageData.type) {
-                // Message received containing our unique client id
-                case "connected":
-                    world.clientId = messageData.clientId;
-                    callback();
-                    break;
-                default:
-                    break;
-            }
-        });
-    });
-    world.websocket.connect("ws://localhost:9001");
-});
-
-After(function() {
-    world.websocketConnection.close();
-    world.websocket = null;
-});
 
 After({
     tags: "@AdditionalUserRequired"
 }, function() {
     world.extraWebsocketConnection.close();
     world.extraWebsocket = null;
-})
+});
 
-// var this.clientId; = "1q2w3e-4r5t";
 //1) Scenario: Viewing all available session # features\sessions.feature:5
 Given('there are available sessions', function() {
     // Create a session using a dummy user so that there's at least 1 available session
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
-            bookId: sampleBookId,
+            bookId: this.retrievedBookId,
             user: {
                 userId: this.clientId,
                 username: sampleUsername
@@ -65,9 +37,9 @@ Given('there are available sessions', function() {
     });
     var result = JSON.parse(response.getBody("utf8"));
 
-    assert(result, "The server should have sent back a response");
-    assert(!result.err, "No error should be returned")
-    assert(result.success, "Session should have successfully been created");
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "Session should have successfully been created");
 });
 
 When('I ask to see all available sessions', function() {
@@ -79,9 +51,9 @@ When('I ask to see all available sessions', function() {
 
 Then('I should be shown the available sessions', function() {
     //Check that that the returned result contains the list of available sessions
-    assert(this.availableSessionResult, "The server should have sent back a response");
-    assert(!this.availableSessionResult.err, "No error should be returned")
-    assert(this.availableSessionResult.success, "Sessions should have successfully retrieved")
+    assert.ok(this.availableSessionResult, "The server should have sent back a response");
+    assert.ok(!this.availableSessionResult.err, "No error should be returned")
+    assert.ok(this.availableSessionResult.success, "Sessions should have successfully retrieved")
 
     assert.ok(this.availableSessionResult.result.length >= 1, "At least one session should have been retrieved");
 
@@ -92,7 +64,6 @@ Then('I should be shown the available sessions', function() {
     assert.ok(firstSession.owner, "The owner should be returned");
     assert.ok(firstSession.currentPageNum != null, "The currentPageNum should be returned"); //currentPageNum could be 0, so we need a more truthy check
     assert.ok(firstSession.currentBook, "The currentBook should be returned");
-    assert.ok(firstSession.users, "The users should be returned");
 });
 
 
@@ -103,8 +74,8 @@ Given('I have supplied a name for the session', function() {
 });
 
 Given('I have chosen a book', function() {
-    //Use the sampleBookId as our bookId
-    this.bookId = sampleBookId;
+    //Use the this.retrievedBookId as our bookId
+    this.bookId = this.retrievedBookId;
 });
 
 Given('I have a user id', function() {
@@ -131,14 +102,14 @@ When('I try to create a session', function() {
     });
     var result = JSON.parse(response.getBody("utf8"));
 
-    assert(result, "The server should have sent back a response");
+    assert.ok(result, "The server should have sent back a response");
     this.sessionResult = result
 });
 
 Then('my session should be created', function() {
     // Write code here that turns the phrase above into concrete actions
-    assert(!this.sessionResult.err, "No error should be returned")
-    assert(this.sessionResult.success, "Session should have successfully been created");
+    assert.ok(!this.sessionResult.err, "No error should be returned")
+    assert.ok(this.sessionResult.success, "Session should have successfully been created");
 
 });
 
@@ -160,7 +131,7 @@ Given('there are available sessions to join', function() {
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
-            bookId: sampleBookId,
+            bookId: this.retrievedBookId,
             user: {
                 userId: this.clientId,
                 username: sampleUsername
@@ -169,10 +140,10 @@ Given('there are available sessions to join', function() {
     });
     var result = JSON.parse(response.getBody("utf8"));
 
-    assert(result, "The server should have sent back a response");
-    assert(!result.err, "No error should be returned")
-    assert(result.success, "Session should have successfully been created");
-    assert(result.result._id, "The session Id should have been returned");
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "Session should have successfully been created");
+    assert.ok(result.result._id, "The session Id should have been returned");
     this.sessionId = result.result._id;
 });
 
@@ -222,9 +193,9 @@ When('I try to join a session', function() {
 
 Then('I should be added to the session', function() {
     //Check that we were added to the session
-    assert(this.joinSessionResult, "The server should have sent back a response");
-    assert(!this.joinSessionResult.err, "No error should be returned")
-    assert(this.joinSessionResult.success, "Session should have successfully been joined");
+    assert.ok(this.joinSessionResult, "The server should have sent back a response");
+    assert.ok(!this.joinSessionResult.err, "No error should be returned")
+    assert.ok(this.joinSessionResult.success, "Session should have successfully been joined");
 
     var users = this.joinSessionResult.result.users;
 
@@ -256,7 +227,7 @@ Given('that I am in a session', function() {
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
-            bookId: sampleBookId,
+            bookId: this.retrievedBookId,
             user: {
                 userId: this.clientId,
                 username: sampleUsername
@@ -265,10 +236,10 @@ Given('that I am in a session', function() {
     });
     var result = JSON.parse(response.getBody("utf8"));
 
-    assert(result, "The server should have sent back a response");
-    assert(!result.err, "No error should be returned")
-    assert(result.success, "Session should have successfully been created");
-    assert(result.result._id, "The session Id should have been returned");
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "Session should have successfully been created");
+    assert.ok(result.result._id, "The session Id should have been returned");
     this.sessionId = result.result._id;
 });
 
@@ -281,9 +252,9 @@ When('I try to leave the session', function() {
         }
     });
     var result = JSON.parse(response.getBody("utf8"));
-    assert(result, "The server should have sent back a response");
-    assert(!result.err, "No error should be returned")
-    assert(result.success, "Session should have successfully been left");
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "Session should have successfully been left");
     this.leaveSessionResult = result;
 });
 

@@ -32,6 +32,7 @@ app.use(bodyParser.urlencoded({
 var booksRouting = require("./helpers/books/booksrouting.js")(app);
 var sessionsRouting = require("./helpers/sessions/sessionsrouting.js")(app, test);
 var chatRouting = require("./helpers/chat/chatrouting.js")(app);
+var notesRouting = require("./helpers/notes/notesrouting.js")(app);
 
 //Set up http server
 var server = app.listen(port, function () {
@@ -47,6 +48,7 @@ var mongooseModels = require("./helpers/mongoose.js")(test);
 sessionsRouting.sessionsdb.setMongooseModels(mongooseModels.models);
 booksRouting.booksdb.setMongooseModels(mongooseModels.models);
 chatRouting.chatdb.setMongooseModels(mongooseModels.models);
+notesRouting.notesdb.setMongooseModels(mongooseModels.models);
 
 var webSockets = require("./helpers/websockets")(server);
 sessionsRouting.sessionsdb.setWebSockets(webSockets);
