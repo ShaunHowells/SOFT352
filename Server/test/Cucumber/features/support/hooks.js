@@ -52,7 +52,7 @@ Before(function(testCase, callback) {
 
 //Get the id of a book to use as our sample book id
 Before(function(testCase, callback) {
-    // Create a session using a dummy user so that there's at least 1 available session
+    // Create a session so that there's at least 1 available session
     request.post("http://localhost:9001/books/getallbooks", function(err, response) {
         var result = JSON.parse(response.body);
         if (result.result.length > 0) {
@@ -67,4 +67,35 @@ Before(function(testCase, callback) {
 After(function() {
     world.websocketConnection.close();
     world.websocket = null;
+});
+
+Before({
+    tags: "@AdditionalUserRequired"
+}, function(testcase, callback) {
+    //Connect to the server to get another userId to join the session with
+    world = this;
+    world.extraWebsocket = new WebSocket();
+    world.extraWebsocket.on("connect", function(connection) {
+        world.extraWebsocketConnection = connection;
+        connection.on("message", function(message) {
+            var messageData = JSON.parse(message.utf8Data);
+            switch (messageData.type) {
+                // Message received containing our unique client id
+                case "connected":
+                    world.extraClientId = messageData.clientId;
+                    callback();
+                    break;
+                default:
+                    break;
+            }
+        });
+    });
+    world.extraWebsocket.connect("ws://localhost:9001");
+});
+
+After({
+    tags: "@AdditionalUserRequired"
+}, function() {
+    world.extraWebsocketConnection.close();
+    world.extraWebsocket = null;
 });

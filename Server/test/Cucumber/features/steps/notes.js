@@ -15,9 +15,9 @@ var samplePageNum = 0;
 var sampleNoteDetails = "This is an example note used in Cucumber-js tests";
 var world;
 
-//1) Scenario: View all notes for a session # Server\test\Cucumber\features\notes.feature:5
+//Scenario: View all notes for a session
 Given('that I am in the session I want to view the notes of', function() {
-    // Create a session using a dummy user so that there's at least 1 available session
+    // Create a session so that there's at least 1 available session
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
@@ -37,7 +37,7 @@ Given('that I am in the session I want to view the notes of', function() {
     //Retrieve ID of newly created session
     this.sessionId = result.result._id;
 
-    //Add a note to our dummy session
+    //Add a note to our session
     response = request("POST", "http://localhost:9001/notes/addnewnote", {
         json: {
             sessionId: this.sessionId,
@@ -54,6 +54,7 @@ Given('that I am in the session I want to view the notes of', function() {
 });
 
 When('I ask to see all of the notes for that session', function() {
+    //Get all of the notes for the session we just joined
     var response = request("POST", "http://localhost:9001/notes/getallsessionnotes", {
         json: {
             sessionId: this.sessionId,
@@ -66,6 +67,7 @@ When('I ask to see all of the notes for that session', function() {
 });
 
 Then('I should be shown the notes for that session', function() {
+    //Check the result of the previous getallsessionnotes request is as expected
     var result = this.getAllNotesResult;
 
     assert.ok(result, "The server should have sent back a response");
@@ -80,9 +82,9 @@ Then('I should be shown the notes for that session', function() {
 });
 
 
-//2) Scenario: Add a new note to a session # Server\test\Cucumber\features\notes.feature:10
+//Scenario: Add a new note to a session
 Given('that I am in the session I want to add a note to', function() {
-    // Create a session using a dummy user so that there's at least 1 available session
+    // Create a session so that there's at least 1 available session
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
@@ -115,7 +117,7 @@ Given('I have chosen what my note will say', function() {
 
 When('when I try to add a note', function(callback) {
     //Set up the websocket on message here 
-    //This has to be done here as the websocket should recieve a message about the note
+    //This has to be done here as the websocket should receive a message about the note
     world = this;
     this.websocketConnection.on("message", function(message) {
         var messageData = JSON.parse(message.utf8Data);
@@ -130,7 +132,7 @@ When('when I try to add a note', function(callback) {
         }
     });
 
-    //Add a note to our dummy session
+    //Add a note to our session
     var response = request("POST", "http://localhost:9001/notes/addnewnote", {
         json: {
             sessionId: this.sessionId,
@@ -162,9 +164,9 @@ Then('I should be informed that it was created', function() {
 });
 
 
-//3) Scenario: Delete a note in a session # Server\test\Cucumber\features\notes.feature:18
+//Scenario: Delete a note in a session
 Given('that I am in the session I want to remove a note from', function() {
-    // Create a session using a dummy user so that there's at least 1 available session
+    // Create a session so that there's at least 1 available session
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
             sessionName: sampleSessionName,
@@ -186,7 +188,7 @@ Given('that I am in the session I want to remove a note from', function() {
 });
 
 Given('that session has a note for me to delete', function() {
-    //Add a note to our dummy session
+    //Add a note to our session
     var response = request("POST", "http://localhost:9001/notes/addnewnote", {
         json: {
             sessionId: this.sessionId,
@@ -215,7 +217,7 @@ Given('I have selected the note I want to delete', function() {
 
 When('when I try to delete the note', function(callback) {
     //Set up the websocket on message here 
-    //This has to be done here as the websocket should recieve a message about the note
+    //This has to be done here as the websocket should receive a message about the note
     world = this;
     this.websocketConnection.on("message", function(message) {
         var messageData = JSON.parse(message.utf8Data);
@@ -230,7 +232,7 @@ When('when I try to delete the note', function(callback) {
         }
     });
 
-    //Add a note to our dummy session
+    //Add a note to our session
     var response = request("POST", "http://localhost:9001/notes/deletenote", {
         json: {
             sessionId: this.sessionId,
@@ -256,6 +258,6 @@ Then('the note should be deleted', function() {
 
 Then('I should be informed that it was deleted', function() {
     //Check that the result returned by the websocket is correct
-    assert.ok(this.removedNoteId, "The websocket should have recieved a message regarding the note being deleted");
-    assert.equal(this.removedNoteId, this.noteToDeleteId, "The note that was deleted should have the same Id as the message the web socket recieved");
+    assert.ok(this.removedNoteId, "The websocket should have received a message regarding the note being deleted");
+    assert.equal(this.removedNoteId, this.noteToDeleteId, "The note that was deleted should have the same Id as the message the web socket received");
 });

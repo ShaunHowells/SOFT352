@@ -9,7 +9,7 @@ var request = require("sync-request");
 var sampleBookId = "5c152300e70cc20a1032c994";
 var samplePageNum = 0;
 
-//1) Scenario: View all books # features\books.feature:3
+//Scenario: View all books
 When('I ask to see the list of all books', function() {
     //Query the server to return all books
     var response = request("POST", "http://localhost:9001/books/getallbooks", );
@@ -34,7 +34,7 @@ Then('I should be shown all of the books', function() {
 });
 
 
-//2) Scenario: Get a page from a book # features\books.feature:8
+//Scenario: Get a page from a book
 Given('I know what book I want to see', function() {
     //Use the sample bookId as our book
     this.bookId = sampleBookId;

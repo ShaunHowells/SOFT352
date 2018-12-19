@@ -41,7 +41,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Handle the messages sent to the websocket
      * 
-     * @param message - Recieved message
+     * @param message - Received message
      * @memberof CollabBookReader
      */
     function handleWebSocketMessage(message) {
@@ -56,15 +56,11 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 break;
                 //Message received containing the list of all available sessions
             case "allsessions":
-                if (messageData.success) {
-                    sessions.setAvailableSessions(messageData.result);
-                }
+                sessions.setAvailableSessions(messageData.result);
                 break;
                 //Message received when another session is created (either by us or by another user)
             case "newsessioncreated":
-                if (messageData.success) {
-                    sessions.pushAvailableSession(messageData.result);
-                }
+                sessions.pushAvailableSession(messageData.result);
                 break;
                 //Message received when a session is no longer available
             case "sessionremoved":
