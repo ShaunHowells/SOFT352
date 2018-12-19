@@ -11,7 +11,8 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     var sessions = Sessions; //Sessions object for performing operations on Sessions
     var books = Books; //Books object for performing operations on Books
     var chat = Chat; //Chat object for performing operations on Books
-    var notes = Notes; //Notes object for performing opersations on Notes
+    var notes = Notes; //Notes object for performing operations on Notes
+    var users = Users; //Users object for performing opersations on Users
 
     /**
      * Initialise websocket, connect to server, and set onmessage
@@ -78,17 +79,19 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 break;
             case "userjoinedsession":
                 chat.addChatMessage({
-                    user: messageData.user,
-                    message: messageData.user + " has joined the session",
+                    user: messageData.user.username,
+                    message: messageData.user.username + " has joined the session",
                     notification: true
                 });
+                users.addUser(messageData.user);
                 break;
             case "userleftsession":
                 chat.addChatMessage({
-                    user: messageData.user,
-                    message: messageData.user + " has left the session",
+                    user: messageData.user.username,
+                    message: messageData.user.username + " has left the session",
                     notification: true
                 });
+                users.removeUser(messageData.user._id);
                 break;
             case "newnoteadded":
                 notes.addNote(messageData.note);
@@ -141,11 +144,22 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         return notes;
     }
 
+    /**
+     * Returns Users object
+     * 
+     * @returns {Users} Users Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getUsers() {
+        return users;
+    }
+
     return {
         getSessions,
         getBooks,
         getChat,
         getNotes,
+        getUsers,
         startWebSocketConnection,
         stopWebSocketConnection
     };

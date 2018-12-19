@@ -7,7 +7,7 @@ var sampleChatMessage1 = {
 var sampleChatMessage2 = {
     "user": "JohnS",
     "message": "Sample 2"
-}
+};
 
 var sampleChatMessages = [{
     "user": "Tim",

@@ -24,6 +24,7 @@
     <script src="../js/classes/books.js"></script>
     <script src="../js/classes/chat.js"></script>
     <script src="../js/classes/notes.js"></script>
+    <script src="../js/classes/users.js"></script>
     <script src="../js/classes/collabbookreader.js"></script>
 
     <!-- Set up angular -->
@@ -44,6 +45,7 @@
     <script src="../../test/Qunit/tests/booksqunit.js"></script>
     <script src="../../test/Qunit/tests/chatqunit.js"></script>
     <script src="../../test/Qunit/tests/notesqunit.js"></script>
+    <script src="../../test/Qunit/tests/usersqunit.js"></script>
 
     <!-- Start main.js after unit tests are complete -->
     <script src="../js/main.js"></script>
@@ -116,6 +118,10 @@
                             <p>Current Session: <span id="currentUserSessionName" ng-bind="currentUserSession.name"></span></p>
                             <p>Currently reading: <span id="currentUserSessionBookTitle" ng-bind="currentUserSession.currentBook.title"></span></p>
                             <p>Owner: <span id="currentUserSessionOwner" ng-bind="currentUserSession.owner"></span></p>
+                            <p>Users in session:</p>
+                            <ul id="currentUserSessionUsers" class="list-group">
+                                <li class="list-group-item" ng-repeat="user in currentUserSessionUsers">{{user.username}}</li>
+                            </ul>
                         </div>
                         <button id="currentUserSessionDetailsLeaveSession" type="button" class="btn btn-primary leaveSession" ng-click="leaveSession(currentUserSession)">Leave Session</button>
                     </div>

@@ -59,10 +59,22 @@
                             }, function(err, result) {
                                 callback(err, result);
                             });
+
+                            var userId;
+                            var userList = result.users.toObject();
+                            for (var i = 0; i < userList.length; i++) {
+                                if (userList[i].user_id == user.userId) {
+                                    userId = userList[i]._id;
+                                    break;
+                                }
+                            }
                             if (webSockets) {
                                 webSockets.notifyUsers(result.users, {
                                     type: "userjoinedsession",
-                                    user: user.username
+                                    user: {
+                                        _id: userId,
+                                        username: user.username
+                                    }
                                 });
                             }
                         });
@@ -114,6 +126,14 @@
                                 select: "_id title"
                             }, function(err, result) {
                                 callback(err, result);
+
+                                var userList = result.users.toObject();
+                                for (var i = 0; i < userList.length; i++) {
+                                    if (userList[i].user_id == user.userId) {
+                                        userId = userList[i]._id;
+                                        break;
+                                    }
+                                }
                                 //Only notify users if new session creation was successful
                                 if (!err && webSockets) {
                                     webSockets.notifyAllConnectedUsers({
@@ -123,7 +143,10 @@
                                     });
                                     webSockets.notifyUsers(result.users, {
                                         type: "userjoinedsession",
-                                        user: user.username
+                                        user: {
+                                            _id: userId,
+                                            username: user.username
+                                        }
                                     });
                                 }
                             });
@@ -158,12 +181,14 @@
                         //If not result return
                         callback(err, result);
                     } else {
-                        //Find username before we remove the user
+                        //Find username/_id before we remove the user
                         var userList = result.users.toObject();
                         var username;
+                        var foundUserId;
                         for (var i = 0; i < userList.length; i++) {
                             if (userList[i].user_id == userId) {
                                 username = userList[i].username;
+                                foundUserId = userList[i]._id;
                                 break;
                             }
                         }
@@ -198,7 +223,10 @@
                                     if (webSockets) {
                                         webSockets.notifyUsers(result.users, {
                                             type: "userleftsession",
-                                            user: username
+                                            user: {
+                                                _id: foundUserId,
+                                                username: username
+                                            }
                                         });
                                     }
                                 }
@@ -225,6 +253,17 @@
             "users.user_id": userId
         }).exec(function(err, sessions) {
             sessions.forEach(function(session) {
+                //Find username/_id before we remove the user
+                var userList = session.users.toObject();
+                var username;
+                var foundUserId;
+                for (var i = 0; i < userList.length; i++) {
+                    if (userList[i].user_id == userId) {
+                        username = userList[i].username;
+                        foundUserId = userList[i]._id;
+                        break;
+                    }
+                }
                 if (session.users.length > 1) {
                     models.Sessions.findOneAndUpdate(session._id, {
                         $pull: {
@@ -237,6 +276,15 @@
                             console.log(err);
                         } else {
                             console.log(`User: ${userId} has been removed from Session: ${result._id}`);
+                            if (webSockets) {
+                                webSockets.notifyUsers(result.users, {
+                                    type: "userleftsession",
+                                    user: {
+                                        _id: foundUserId,
+                                        username: username
+                                    }
+                                });
+                            }
                         }
                     });
                 } else {

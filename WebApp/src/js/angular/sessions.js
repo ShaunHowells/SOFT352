@@ -36,7 +36,9 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
         if (!sessionUsername) {
             alert("Please enter your username for this session");
         } else {
-            CollabBookReader.getSessions().joinSession(sessionUsername, session._id, function() { //Can take data
+            CollabBookReader.getSessions().joinSession(sessionUsername, session._id, function(data) { 
+
+                CollabBookReader.getUsers().setUsers(data.users);
                 //Hide modal popup and select 'My Session' tab
                 $("#availableSessionDetailsModalClose").click();
                 angular.element("#currentUserSessionTabHeading").click();
@@ -112,4 +114,14 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
             angular.element("#availableSessionsTabHeading").click();
         });
     };
+
+    $scope.currentUserSessionUsers = [];
+    //Set $scope.bookList and update display ($applyAsync)
+    $scope.setCurrentUserSessionUsers = function(data) {
+        $scope.currentUserSessionUsers = data;
+        $scope.$applyAsync();
+    };
+    //Set $scope.setBookList as callback in CollabBookReader.getBooks() - Called when bookList is updated
+    CollabBookReader.getUsers().getCurrentSessionUsersObserver().subscribe($scope.setCurrentUserSessionUsers);
+
 });

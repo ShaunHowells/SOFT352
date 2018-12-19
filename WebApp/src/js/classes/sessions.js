@@ -206,7 +206,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
                     var self = this;
                     availableSessions[session].joinSession(sessionUsername, currentUserId, function(data) {
                         self.setCurrentUserSession(data.result);
-                        callback(data);
+                        callback(data.result);
                     });
                     break;
                 }
