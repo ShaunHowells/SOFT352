@@ -25,7 +25,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
 
     //Send user input chat message and clear display
     $scope.createNote = function() {
-        var newNotePageNum = angular.element("#createNewNotePageNum").val();
+        var newNotePageNum = angular.element("#createNewNotePageNumList").val();
         var newNoteDetails = angular.element("#createNewNoteDetails").val();
         //Check that all values have been supplied
         if (!newNotePageNum) {
@@ -47,7 +47,8 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
     };
     $scope.displayCreateNewNoteDetails = function() {
         //Reset values before displaying
-        $("#createNewNoteModal").find("input, textarea").val("");
+        $("#createNewNoteDetails").val("");
+        $("#createNewNotePageNumList").val(CollabBookReader.getBooks().getCurrentBookPage().currentPage.pageNum + 1);
         $("#createNewNoteModal").modal();
     }
 
@@ -75,5 +76,12 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
                 alert("You aren't currently in a session");
             }
         }
+    }
+
+    $scope.getPageNumArray = function() {
+        return Array(CollabBookReader.getBooks().getCurrentBookPage().pageCount).fill().map(function(x, i) {
+            return i + 1;
+        });
+
     }
 });

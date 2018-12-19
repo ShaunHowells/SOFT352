@@ -311,7 +311,9 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">Page Number</span>
                                                 </div>
-                                                <input id="createNewNotePageNum" type="number" class="form-control">
+                                                <select id="createNewNotePageNumList" class="form-control">
+                                                    <option ng-repeat="x in getPageNumArray()" value="{{x}}">{{x}}</option>
+                                                </select>
                                             </div>
                                             <div class="input-group">
                                                 <div class="input-group-prepend">

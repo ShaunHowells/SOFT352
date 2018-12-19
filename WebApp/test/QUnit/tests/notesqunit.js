@@ -29,7 +29,7 @@ var sampleNotes = [{
 var sampleBookPageForNotes = {
     "_id": "5bf59ade4cb1550530740989",
     "title": "Shaun's Test Book",
-    "pageCount": 1,
+    "pageCount": 2,
     "currentPage": {
         "_id": "5bf59ade4cb155053074098a",
         "src": "../../../test/QUnit/resources/testBookPage.png",
@@ -284,12 +284,13 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
     //Check that the 'Add a note' modal popup is displayed
     assert.ok(angular.element("#createNewNoteModal").is(":visible"), "'Add a note' popup is currently being displayed");
 
-    //Check that the values of the user inputs are empty when displaying the 'Add a note' popup
-    assert.equal(angular.element("#createNewNotePageNum").val(), "", "Page Num should be empty");
+    //Check that the value of note details is empty when displaying the 'Add a note' popup
     assert.equal(angular.element("#createNewNoteDetails").val(), "", "Note details should be empty");
+    //Check that the pageNum list defaults to the current page num + 1 (so it appears 1 indexed, 0)
+    assert.equal(angular.element("#createNewNotePageNumList").val(), sampleBookPage.currentPage.pageNum + 1, "Page Num should be set to the currentBookPage pageNum");
 
     //Set values in 'Add a note' popup
-    angular.element("#createNewNotePageNum").val("0");
+    angular.element("#createNewNotePageNum").val("2");
     angular.element("#createNewNoteDetails").val("This is a note used for testing");
 
     //Close 'Add a note' popup
@@ -299,7 +300,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
 
     //Reopen 'Add a note' popup to check that the values have been reset
     angular.element("#createNewNote").click();
-    assert.equal(angular.element("#createNewNotePageNum").val(), "", "Page Num should have been reset after re-opening the popup");
+    assert.equal(angular.element("#createNewNotePageNumList").val(), sampleBookPage.currentPage.pageNum + 1, "Page Num should have been reset after re-opening the popup");
     assert.equal(angular.element("#createNewNoteDetails").val(), "", "Note Details should be have been reset after opening the popup");
 
     //Close 'Add a note' popup
