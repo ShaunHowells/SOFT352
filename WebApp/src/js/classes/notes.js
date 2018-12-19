@@ -90,7 +90,15 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
         noteObserver.notify(noteList);
     }
 
+
+    /**
+     * Given a session, decided if we need to retrieve the notes, or clear the current notes
+     * 
+     * @memberof Notes
+     * @param {Session} session A given session 
+     */
     function getSessionNotes(session) {
+        //If session exists then retrieve notes, otherwise remove all notes
         if (session && !session.test) {
             retrieveAllSessionNotes(session._id, function(data) {
                 setNoteList(data.notes);
@@ -99,7 +107,13 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
             removeAllNotes();
         }
     }
-
+    /**
+     * Given a session id, retrieve the notes for that saession
+     * 
+     * @memberof Notes
+     * @param {String} sessionId The id of the session whose notes we want to retrieve
+     * @param {Function} callback The callback to execute after the server has responded 
+     */
     function retrieveAllSessionNotes(sessionId, callback) {
         $.post("http://localhost:9000/notes/getallsessionnotes", {
             sessionId: sessionId,
@@ -114,6 +128,36 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
         });
     }
 
+    /**
+     * Given a note id, delete that note from the current session
+     * The delete is being handled here instead of in the Note itself, because we also need the current session
+     * 
+     * @memberof Notes
+     * @param {String} noteId The id of the note to delete
+     * @param {Function} callback The callback to execute after the server has responded 
+     */
+    function deleteNote(noteId, callback) {
+        $.post("http://localhost:9000/notes/deletenote", {
+            sessionId: CollabBookReader.getSessions().getCurrentUserSession()._id,
+            noteId: noteId,
+            userId: CollabBookReader.getSessions().getCurrentUserId()
+        }).done(function(data) {
+            if (data.success) {
+                callback(data.result);
+            } else {
+                alert("An error has occured deleting this note. Please try again");
+                console.log(data);
+            }
+        });
+    }
+
+    function removeNote(noteId) {
+        noteList = noteList.filter(function(value) {
+            return value._id != noteId;
+        });
+        noteObserver.notify(noteList);
+    }
+
     return {
         getNoteObserver,
         addNote,
@@ -121,7 +165,9 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
         removeAllNotes,
         getNoteList,
         setNoteList,
-        getSessionNotes
+        getSessionNotes,
+        deleteNote,
+        removeNote
     };
 })();
 
@@ -130,6 +176,11 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
  * @constructor
  */
 function Note(noteDetails) {
+    /**
+     * The unique id of the note
+     * @member {String}
+     */
+    this._id = noteDetails._id;
     /**
      * The user who sent the message
      * @member {String}

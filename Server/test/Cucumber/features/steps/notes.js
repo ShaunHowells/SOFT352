@@ -13,6 +13,7 @@ var sampleSessionName = "My Test Session";
 var sampleUsername = "ShaunTest";
 var samplePageNum = 0;
 var sampleNoteDetails = "This is an example note used in Cucumber-js tests";
+var world;
 
 //1) Scenario: View all notes for a session # Server\test\Cucumber\features\notes.feature:5
 Given('that I am in the session I want to view the notes of', function() {
@@ -112,7 +113,23 @@ Given('I have chosen what my note will say', function() {
     this.noteDetails = sampleNoteDetails;
 });
 
-Then('when I try to add a note', function() {
+When('when I try to add a note', function(callback) {
+    //Set up the websocket on message here 
+    //This has to be done here as the websocket should recieve a message about the note
+    world = this;
+    this.websocketConnection.on("message", function(message) {
+        var messageData = JSON.parse(message.utf8Data);
+        switch (messageData.type) {
+            // Message received containing newly created note (sent to all users in the session)
+            case "newnoteadded":
+                world.newNoteId = messageData.note._id;
+                callback();
+                break;
+            default:
+                break;
+        }
+    });
+
     //Add a note to our dummy session
     var response = request("POST", "http://localhost:9001/notes/addnewnote", {
         json: {
@@ -137,4 +154,108 @@ Then('my note should be created', function() {
     //Check the the returned contents is correct
     assert.ok(result.result.notes, "The list of notes should have been returned");
     assert.equal(result.result.notes.length, 1, "There should be 1 note in the list");
+});
+
+Then('I should be informed that it was created', function() {
+    //Check that the value was correctly set by our websocket on message
+    assert.ok(this.newNoteId, "Our websocket should have told us about our new note being created");
+});
+
+
+//3) Scenario: Delete a note in a session # Server\test\Cucumber\features\notes.feature:18
+Given('that I am in the session I want to remove a note from', function() {
+    // Create a session using a dummy user so that there's at least 1 available session
+    var response = request("POST", "http://localhost:9001/sessions/createsession", {
+        json: {
+            sessionName: sampleSessionName,
+            bookId: this.retrievedBookId,
+            user: {
+                userId: this.clientId,
+                username: sampleUsername
+            }
+        }
+    });
+    var result = JSON.parse(response.getBody("utf8"));
+
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "Session should have successfully been created");
+
+    //Set the sessionId as the result from this
+    this.sessionId = result.result._id;
+});
+
+Given('that session has a note for me to delete', function() {
+    //Add a note to our dummy session
+    var response = request("POST", "http://localhost:9001/notes/addnewnote", {
+        json: {
+            sessionId: this.sessionId,
+            userId: this.clientId,
+            note: sampleNoteDetails,
+            pageNum: samplePageNum
+        }
+    });
+    var result = JSON.parse(response.getBody("utf8"));
+
+    //Check that the noteResult was successful
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "The note should have successfully been created");
+
+    //Check the the returned contents is correct
+    assert.ok(result.result.notes, "The list of notes should have been returned");
+    assert.equal(result.result.notes.length, 1, "There should be 1 note in the list");
+
+    this.createNoteResult = result;
+});
+
+Given('I have selected the note I want to delete', function() {
+    this.noteToDeleteId = this.createNoteResult.result.notes[0]._id;
+});
+
+When('when I try to delete the note', function(callback) {
+    //Set up the websocket on message here 
+    //This has to be done here as the websocket should recieve a message about the note
+    world = this;
+    this.websocketConnection.on("message", function(message) {
+        var messageData = JSON.parse(message.utf8Data);
+        switch (messageData.type) {
+            // Message received containing newly created note (sent to all users in the session)
+            case "noteremoved":
+                world.removedNoteId = messageData.noteId;
+                callback();
+                break;
+            default:
+                break;
+        }
+    });
+
+    //Add a note to our dummy session
+    var response = request("POST", "http://localhost:9001/notes/deletenote", {
+        json: {
+            sessionId: this.sessionId,
+            userId: this.clientId,
+            noteId: this.noteToDeleteId
+        }
+    });
+    var result = JSON.parse(response.getBody("utf8"));
+
+    this.deleteNoteResult = result;
+});
+
+Then('the note should be deleted', function() {
+    var result = this.deleteNoteResult;
+    //Check that the noteResult was successful
+    assert.ok(result, "The server should have sent back a response");
+    assert.ok(!result.err, "No error should be returned")
+    assert.ok(result.success, "The note should have successfully been created");
+
+    //Check the the returned contents is correct
+    assert.ok(result.result.removed, "The server should respond saying the note has been removed");
+});
+
+Then('I should be informed that it was deleted', function() {
+    //Check that the result returned by the websocket is correct
+    assert.ok(this.removedNoteId, "The websocket should have recieved a message regarding the note being deleted");
+    assert.equal(this.removedNoteId, this.noteToDeleteId, "The note that was deleted should have the same Id as the message the web socket recieved");
 });

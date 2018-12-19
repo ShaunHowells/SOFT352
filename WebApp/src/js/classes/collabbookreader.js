@@ -93,6 +93,9 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
             case "newnoteadded":
                 notes.addNote(messageData.note);
                 break;
+            case "noteremoved":
+                notes.removeNote(messageData.noteId);
+                break;
             default:
                 break;
         }

@@ -10,7 +10,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
     CollabBookReader.getNotes().getNoteObserver().subscribe($scope.setNoteList);
 
     $scope.refreshNoteList = function() {
-        if(CollabBookReader.getBooks().getCurrentBookPage() && CollabBookReader.getBooks().getCurrentBookPage()._id){
+        if (CollabBookReader.getBooks().getCurrentBookPage() && CollabBookReader.getBooks().getCurrentBookPage()._id) {
             angular.element("#notesDisplay").show();
         } else {
             angular.element("#notesDisplay").hide();
@@ -51,7 +51,29 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
         $("#createNewNoteModal").modal();
     }
 
-    $scope.checkInSession = function() {
-        return (CollabBookReader.getSessions().getCurrentUserSession()._id != null);
+    $scope.displayDeleteNote = function(note) {
+        //Set values for current note
+        $scope.noteToDelete = note;
+        $("#deleteNoteModalUser").text(note.user);
+        $("#deleteNoteModalPageNum").text(note.pageNum);
+        $("#deleteNoteModalDetails").text(note.note);
+        $("#deleteNoteModal").modal();
+    }
+
+    $scope.deleteNote = function(noteToDelete) {
+        //Check that all values have been supplied
+        if (!noteToDelete) {
+            alert("An error has occured attempting to delete this note");
+        } else {
+            //-1 to translate between 0 indexed and 1 indexed
+            if (CollabBookReader.getSessions().getCurrentUserSession()) {
+                CollabBookReader.getNotes().deleteNote(noteToDelete._id, function(data) {
+                    //Hide create new session modal
+                    $("#deleteNoteModalClose").click();
+                });
+            } else {
+                alert("You aren't currently in a session");
+            }
+        }
     }
 });
