@@ -4,13 +4,9 @@
   "description": "--- Repository for SOFT352 coursework ---",
   "main": "index.js",
   "dependencies": {
-    "cd": "^0.3.3",
     "eslint": "^5.9.0",
-    "install": "^0.12.2",
-    "npm": "^6.5.0",
     "qunit": "^2.8.0",
     "request": "^2.88.0",
-    "src": "file:Server/src",
     "sync-request": "^6.0.0"
   },
   "devDependencies": {
@@ -34,6 +30,6 @@
     "test-webapp": "node_modules\\.bin\\grunt",
     "complete-test": " npm run test-webapp && npm run test-server"
   },
-  "author": "ShaunH",
+  "author": "",
   "license": "ISC"
 }
