@@ -12,8 +12,6 @@
     "pouchdb": "^7.0.0",
     "websocket": "^1.0.28"
   },
-  "devDependencies": {},
-  "scripts": {},
-  "author": "",
+  "author": "ShaunH",
   "license": "ISC"
 }
