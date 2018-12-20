@@ -240,7 +240,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     function updateCurrentSessionBookPage(pageNum) {
         if (currentUserId && currentUserSession) {
             var self = this;
-            currentUserSession.updateBookPage(pageNum);
+            currentUserSession.updateBookPage(pageNum, currentUserId);
         } else {
             console.error("You aren't in a session. Please try again when you're in a session");
         }
@@ -325,10 +325,11 @@ function Session(sessionDetails) {
      * @param {Integer} pageNum - The number of the page to set in the session
      * @memberof Sessions
      */
-    this.updateBookPage = function(pageNum, callback) {
+    this.updateBookPage = function(pageNum, currentUserId, callback) {
         $.post("http://localhost:9000/sessions/updatecurrentpage", {
             sessionId: this._id,
-            pageNum: pageNum
+            pageNum: pageNum,
+            userId: currentUserId
         }, function(data) {
             if (data.success) {
                 if (callback)

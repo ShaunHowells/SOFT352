@@ -311,45 +311,52 @@
      * @param {Integer} pageNum Number of the page to navigate to
      * @param {Function} callback to execute after users have been retrieved
      */
-    var changeSessionPage = function(sessionId, pageNum, callback) {
-        models.Sessions.findOne({
-            _id: sessionId
-        }).select("currentBook").exec(function(err, result) {
-            if (err || !result) {
-                callback(err, result);
-            } else {
-                result.populate({
-                    path: "currentBook",
-                    select: "pageCount"
-                }, function(err, result) {
-                    if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
-                        callback("This page does not exist in the book");
+    var changeSessionPage = function(sessionId, pageNum, userId, callback) {
+        //Check that user is in that session
+        isUserInSession(sessionId, userId, function(err, inSession) {
+            if (err) {
+                callback(err, null);
+            } else if (inSession) {
+                models.Sessions.findOne({
+                    _id: sessionId
+                }).select("currentBook").exec(function(err, result) {
+                    if (err || !result) {
+                        callback(err, result);
                     } else {
-                        models.Sessions.findOneAndUpdate({
-                            _id: sessionId
-                        }, {
-                            "$set": {
-                                "currentPageNum": pageNum
-                            }
-                        }, {
-                            new: true,
-                            fields: {
-                                "currentBook.pages": false
-                            }
+                        result.populate({
+                            path: "currentBook",
+                            select: "pageCount"
                         }, function(err, result) {
-                            if (err || !result) {
-                                callback(err, result);
+                            if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
+                                callback("This page does not exist in the book");
                             } else {
-                                result.populate({
-                                    path: "currentBook",
-                                    select: "_id title"
+                                models.Sessions.findOneAndUpdate({
+                                    _id: sessionId
+                                }, {
+                                    "$set": {
+                                        "currentPageNum": pageNum
+                                    }
+                                }, {
+                                    new: true,
+                                    fields: {
+                                        "currentBook.pages": false
+                                    }
                                 }, function(err, result) {
-                                    callback(err, result);
-                                    if (!err && webSockets) {
-                                        webSockets.notifyUsers(result.users, {
-                                            type: "pagechanged",
-                                            success: true,
-                                            result: result
+                                    if (err || !result) {
+                                        callback(err, result);
+                                    } else {
+                                        result.populate({
+                                            path: "currentBook",
+                                            select: "_id title"
+                                        }, function(err, result) {
+                                            callback(err, result);
+                                            if (!err && webSockets) {
+                                                webSockets.notifyUsers(result.users, {
+                                                    type: "pagechanged",
+                                                    success: true,
+                                                    result: result
+                                                });
+                                            }
                                         });
                                     }
                                 });
@@ -357,6 +364,8 @@
                         });
                     }
                 });
+            } else {
+                callback("User isn't in this session");
             }
         });
     };

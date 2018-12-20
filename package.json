@@ -4,9 +4,13 @@
   "description": "--- Repository for SOFT352 coursework ---",
   "main": "index.js",
   "dependencies": {
+    "cd": "^0.3.3",
     "eslint": "^5.9.0",
+    "install": "^0.12.2",
+    "npm": "^6.5.0",
     "qunit": "^2.8.0",
     "request": "^2.88.0",
+    "src": "file:Server/src",
     "sync-request": "^6.0.0"
   },
   "devDependencies": {
@@ -17,10 +21,18 @@
     "grunt-contrib-qunit": "^3.0.1",
     "grunt-qunit-junit": "^0.3.1",
     "jsdoc": "^3.5.5",
-    "qunit-phantomjs-runner": "^2.3.1"
+    "qunit-phantomjs-runner": "^2.3.1",
+    "start-server-and-test": "^1.7.11"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-root": "npm install",
+    "install-server": "cd Server\\src\\ && npm install",
+    "complete-install": "install-root & install-server",
+    "start-test-server": "node Server\\src\\server-main.js test",
+    "run-server-cucumber": "node_modules\\.bin\\cucumber-js Server\\test\\Cucumber\\features\\ --format=json | node_modules\\.bin\\cucumber-junit > Server/test/Cucumber/report/Test_Cucumber.xml",
+    "test-server": "start-server-and-test start-test-server 9001 run-server-cucumber",
+    "test-webapp": "node_modules\\.bin\\grunt",
+    "complete-test": " npm run test-webapp && npm run test-server"
   },
   "author": "",
   "license": "ISC"

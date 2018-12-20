@@ -24,6 +24,13 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         if (!websocket) {
             websocket = new WebSocket("ws://localhost:9000");
             websocket.onmessage = handleWebSocketMessage;
+
+            websocket.onerror = function(err) {
+                $("#noConnectionModal").modal({
+                    "backdrop": "static",
+                    "keyboard": false
+                });
+            }
         }
     }
     /**

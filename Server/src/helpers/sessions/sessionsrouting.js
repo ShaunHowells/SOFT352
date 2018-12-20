@@ -163,6 +163,7 @@ module.exports = function(app, test) {
     sessionsRouter.post("/updatecurrentpage", function(request, response) {
         var sessionId = request.body.sessionId; //User friendly name of the session
         var pageNum = request.body.pageNum; //ID of the user creating the session
+        var userId = request.body.userId; //ID of the user creating the session
 
         //Check all required values have been supplied
         if (!sessionId) {
@@ -175,8 +176,13 @@ module.exports = function(app, test) {
                 success: false,
                 message: "You must supply a pageNum"
             });
+        } else if (!userId) {
+            response.send({
+                success: false,
+                message: "You must supply a userId"
+            });
         } else {
-            sessionsdb.changeSessionPage(sessionId, pageNum, function(err, result) {
+            sessionsdb.changeSessionPage(sessionId, pageNum, userId, function(err, result) {
                 if (err) {
                     //If an error has occured then write to console and inform caller of error
                     console.log(`Error in changeSessionPage: ${err}`);

@@ -10,10 +10,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 
-    <!-- Set up util classes -->
+    <!-- Set up util functions -->
     <script src="../js/util.js"></script>
 
     <!-- Set up pattern classes -->
@@ -364,9 +363,28 @@
             </div>
         </div>
     </div>
-
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
+    <div id="noConnection">
+        <div id="availableSessions" class="tab-pane active list-3-+group">
+            <!-- No connection modal -->
+            <div class="modal" id="noConnectionModal" tabindex="-1" role="dialog" aria-labelledby="noConnectionModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="noConnectionModalLabel"><span>An error has occured</span></h5>
+                        </div>
+                        <div class="modal-body">
+                            <p>An error has occured while attempting to connect</p>
+                            <p>Please reload and try again.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onClick="location.reload()">Retry?</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
 
 </body>
 
