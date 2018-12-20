@@ -14,9 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node server-main.js test",
-    "test": "..\\..\\node_modules\\.bin\\cucumber-js ..\\test\\Cucumber\\features\\ --format=json | ..\\..\\node_modules\\.bin\\cucumber-junit > ../../Server/test/Cucumber/report/Test_Cucumber.xml",
-    "ci": "start-server-and-test 9001"
+    "test": "Please run the tests from the root of the project"
   },
   "author": "",
   "license": "ISC"
