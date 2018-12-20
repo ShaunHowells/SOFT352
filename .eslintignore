@@ -1,7 +1,13 @@
+.eslintrc.json
 /WebApp/test/QUnit/report/**
-/WebApp/test/Cucumber/report/**
-/WebApp/test/Cucumber/features/**
-/WebApp/test/Cucumber/features/**
+/WebApp/test/QUnit/resources
 /WebApp/src/html/**
 /WebApp/src/css/**
-.eslintrc.json
+/Server/src/node_modules
+/Server/test/Cucumber/features/**
+/Server/test/Cucumber/report
+!/Server/test/Cucumber/features/steps
+!/Server/test/Cucumber/features/support
+/Server/src/package.json
+/Server/src/package-lock.json
+/Documentation/**

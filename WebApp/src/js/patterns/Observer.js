@@ -2,7 +2,7 @@
  * @classdesc Implementation of the Observer pattern
  * Used to allow classes to observe the actions of other classes
  */
-function Observer() {
+function Observer() { // eslint-disable-line no-unused-vars
     this.observers = [];
 
     /**
@@ -13,7 +13,7 @@ function Observer() {
      */
     this.subscribe = function (fn) {
         this.observers.push(fn);
-    }
+    };
 
     /**
      * Remove a method from observers
@@ -22,9 +22,9 @@ function Observer() {
      */
     this.unsubscribe = function (fn) {
         this.observers = this.observers.filter(function (value) {
-            value !== fn
+            value !== fn;
         });
-    }
+    };
 
 
     /**
@@ -37,5 +37,5 @@ function Observer() {
         this.observers.forEach(function (fn) {
             fn(data);
         });
-    }
+    };
 }

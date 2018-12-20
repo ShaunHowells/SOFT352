@@ -3,21 +3,18 @@ var sampleBookList = [{
     "_id": "5c13c247aca73c02600de352",
     "title": "Shaun's Test Book",
     "pages": [{
-            "_id": "5c13c247aca73c02600de353",
-            "pageNum": 0,
-            "contentType": "image/jpeg"
-        },
-        {
-            "_id": "5c13c247aca73c02600de354",
-            "pageNum": 1,
-            "contentType": "image/jpeg"
-        },
-        {
-            "_id": "5c13c247aca73c02600de355",
-            "pageNum": 2,
-            "contentType": "image/png"
-        }
-    ],
+        "_id": "5c13c247aca73c02600de353",
+        "pageNum": 0,
+        "contentType": "image/jpeg"
+    }, {
+        "_id": "5c13c247aca73c02600de354",
+        "pageNum": 1,
+        "contentType": "image/jpeg"
+    }, {
+        "_id": "5c13c247aca73c02600de355",
+        "pageNum": 2,
+        "contentType": "image/png"
+    }],
     "pageCount": 3
 }];
 

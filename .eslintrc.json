@@ -16,7 +16,12 @@
         "CollabBookReader": false,
         "Books": false,
         "Sessions": false,
-        "AngularMainApp": false
+        "AngularMainApp": false,
+        "Notes": false,
+        "Chat": false,
+        "Users": false,
+        "Observer": false,
+        "util_encode": false
     },
     "rules": {
         "indent": [

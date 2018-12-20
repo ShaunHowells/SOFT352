@@ -14,6 +14,8 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     var notes = Notes; //Notes object for performing operations on Notes
     var users = Users; //Users object for performing opersations on Users
 
+    var username;
+
     /**
      * Initialise websocket, connect to server, and set onmessage
      * 
@@ -25,12 +27,12 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
             websocket = new WebSocket("ws://localhost:9000");
             websocket.onmessage = handleWebSocketMessage;
 
-            websocket.onerror = function(err) {
+            websocket.onerror = function() {
                 $("#noConnectionModal").modal({
                     "backdrop": "static",
                     "keyboard": false
                 });
-            }
+            };
         }
     }
     /**
@@ -56,54 +58,54 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         console.log(messageData);
 
         switch (messageData.type) {
-            // Message received containing our unique client id
-            case "connected":
-                sessions.setCurrentUserId(messageData.clientId);
-                books.setCurrentUserId(messageData.clientId);
-                break;
-                //Message received containing the list of all available sessions
-            case "allsessions":
-                sessions.setAvailableSessions(messageData.result);
-                break;
-                //Message received when another session is created (either by us or by another user)
-            case "newsessioncreated":
-                sessions.pushAvailableSession(messageData.result);
-                break;
-                //Message received when a session is no longer available
-            case "sessionremoved":
-                sessions.removeAvailableSession(messageData.result.sessionId);
-                break;
-                //Message received when the page in the current session has changed
-            case "pagechanged":
-                books.getSessionBookPage(messageData.result);
-                break;
-            case "chatmessagereceived":
-                chat.addChatMessage(messageData.result);
-                break;
-            case "userjoinedsession":
-                chat.addChatMessage({
-                    user: messageData.user.username,
-                    message: messageData.user.username + " has joined the session",
-                    notification: true
-                });
-                users.addUser(messageData.user);
-                break;
-            case "userleftsession":
-                chat.addChatMessage({
-                    user: messageData.user.username,
-                    message: messageData.user.username + " has left the session",
-                    notification: true
-                });
-                users.removeUser(messageData.user._id);
-                break;
-            case "newnoteadded":
-                notes.addNote(messageData.note);
-                break;
-            case "noteremoved":
-                notes.removeNote(messageData.noteId);
-                break;
-            default:
-                break;
+        // Message received containing our unique client id
+        case "connected":
+            sessions.setCurrentUserId(messageData.clientId);
+            books.setCurrentUserId(messageData.clientId);
+            break;
+            //Message received containing the list of all available sessions
+        case "allsessions":
+            sessions.setAvailableSessions(messageData.result);
+            break;
+            //Message received when another session is created (either by us or by another user)
+        case "newsessioncreated":
+            sessions.pushAvailableSession(messageData.result);
+            break;
+            //Message received when a session is no longer available
+        case "sessionremoved":
+            sessions.removeAvailableSession(messageData.result.sessionId);
+            break;
+            //Message received when the page in the current session has changed
+        case "pagechanged":
+            books.getSessionBookPage(messageData.result);
+            break;
+        case "chatmessagereceived":
+            chat.addChatMessage(messageData.result);
+            break;
+        case "userjoinedsession":
+            chat.addChatMessage({
+                user: messageData.user.username,
+                message: messageData.user.username + " has joined the session",
+                notification: true
+            });
+            users.addUser(messageData.user);
+            break;
+        case "userleftsession":
+            chat.addChatMessage({
+                user: messageData.user.username,
+                message: messageData.user.username + " has left the session",
+                notification: true
+            });
+            users.removeUser(messageData.user._id);
+            break;
+        case "newnoteadded":
+            notes.addNote(messageData.note);
+            break;
+        case "noteremoved":
+            notes.removeNote(messageData.noteId);
+            break;
+        default:
+            break;
         }
     }
 
@@ -157,12 +159,26 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         return users;
     }
 
+    function setUsername(inputUsername) {
+        if (!username) {
+            username = inputUsername;
+        } else {
+            console.error("Username");
+        }
+    }
+
+    function getUsername() {
+        return username;
+    }
+
     return {
         getSessions,
         getBooks,
         getChat,
         getNotes,
         getUsers,
+        setUsername,
+        getUsername,
         startWebSocketConnection,
         stopWebSocketConnection
     };

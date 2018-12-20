@@ -94,12 +94,6 @@
                                     <p>Owner: <span id="displayedSessionOwner" ng-bind="displaySession.owner"></span></p>
                                     <br>
                                     <span id="canJoinSession"></span>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Username</span>
-                                        </div>
-                                        <input id="joinSessionUsername" type="text" placeholder="Username" class="form-control">
-                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button id="availableSessionDetailsModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -140,27 +134,29 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>Select the details for your new session below, the click "Create Session".</p>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Username</span>
+                                    <form id="createNewSessionForm" class="needs-validation" onsubmit="return false" novalidate>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Session Name</span>
+                                            </div>
+                                            <input id="createNewSessionName" type="text" placeholder="Name" class="form-control" required>
+                                            <div class="invalid-feedback">
+                                                Please enter a name for your session.
+                                            </div>
                                         </div>
-                                        <input id="createNewSessionUsername" type="text" placeholder="Username" class="form-control">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Session Name</span>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Book</span>
+                                            </div>
+                                            <select id="createNewSessionBook" class="form-control" ng-controller="bookListCtrl" required>
+                                                <option value="" disabled selected>--Select a book--</option>
+                                                <option ng-repeat="book in bookList" value="{{book._id}}">{{book.title}}</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select the book you would like to view in your session.
+                                            </div>
                                         </div>
-                                        <input id="createNewSessionName" type="text" placeholder="Name" class="form-control">
-                                    </div>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">Book</span>
-                                        </div>
-                                        <select id="createNewSessionBook" class="form-control" ng-controller="bookListCtrl">
-                                            <option value="" disabled selected>--Select a book--</option>
-                                            <option ng-repeat="book in bookList" value="{{book._id}}">{{book.title}}</option>
-                                        </select>
-                                    </div>
+                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button id="createNewSessionModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -312,20 +308,28 @@
                                         </div>
                                         <div class="modal-body">
                                             <p>Please enter the details for your new note</p>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Page Number</span>
+                                            <form id="createNoteForm" class="needs-validation" onsubmit="return false" novalidate>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Page Number</span>
+                                                    </div>
+                                                    <select id="createNewNotePageNumList" class="form-control" required>
+                                                        <option ng-repeat="x in getPageNumArray()" value="{{x}}">{{x}}</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please select a page number for your note.
+                                                    </div>
                                                 </div>
-                                                <select id="createNewNotePageNumList" class="form-control">
-                                                    <option ng-repeat="x in getPageNumArray()" value="{{x}}">{{x}}</option>
-                                                </select>
-                                            </div>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Note</span>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Note</span>
+                                                    </div>
+                                                    <textarea id="createNewNoteDetails" placeholder="Enter your note here..." class="form-control" required ng-keypress="noteEnter($event)""></textarea>
+                                                    <div class="invalid-feedback">
+                                                        Please enter some details for your note.
+                                                    </div>
                                                 </div>
-                                                <textarea id="createNewNoteDetails" placeholder="Enter your note here..." class="form-control"></textarea>
-                                            </div>
+                                            </form>
                                         </div>
                                         <div class="modal-footer">
                                             <button id="createNewNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -363,28 +367,53 @@
             </div>
         </div>
     </div>
-    <div id="noConnection">
-        <div id="availableSessions" class="tab-pane active list-3-+group">
-            <!-- No connection modal -->
-            <div class="modal" id="noConnectionModal" tabindex="-1" role="dialog" aria-labelledby="noConnectionModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="noConnectionModalLabel"><span>An error has occured</span></h5>
+    <!-- Username modal -->
+    <div class="modal" id="usernameModal" tabindex="-1" role="dialog" aria-labelledby="usernameModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="usernameModalLabel"><span>Welcome to the Collaborative Book Reader</span></h5>
+                </div>
+                <div class="modal-body">
+                    <p>To continue you must enter a username. This username will be your name in any session that you join</p>
+                    <form id="usernameForm" class="needs-validation" onsubmit="return false" novalidate>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Username</span>
+                            </div>
+                            <input type="text" id="inputUsername" placeholder="" class="form-control" required />
+                            <div class="invalid-feedback">
+                                Please enter a username.
+                            </div>
                         </div>
-                        <div class="modal-body">
-                            <p>An error has occured while attempting to connect</p>
-                            <p>Please reload and try again.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" onClick="location.reload()">Retry?</button>
-                        </div>
-                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onClick="setUsername()">Continue</button>
                 </div>
             </div>
         </div>
-        <div id="qunit"></div>
-        <div id="qunit-fixture"></div>
+    </div>
+    <!-- No connection modal -->
+    <div class="modal" id="noConnectionModal" tabindex="-1" role="dialog" aria-labelledby="noConnectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noConnectionModalLabel"><span>An error has occured</span></h5>
+                </div>
+                <div class="modal-body">
+                    <p>An error has occured while attempting to connect</p>
+                    <p>Please reload and try again.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onClick="location.reload()">Retry?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
 
 </body>
 

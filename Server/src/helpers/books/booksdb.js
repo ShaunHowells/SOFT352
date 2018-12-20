@@ -56,7 +56,7 @@ var getPageFromBook = function (bookId, pageNum, callback) {
         "pageCount": true,
         "pages.$": 1
     }).exec(callback);
-}
+};
 /**
  * Sets available mongoose models
  *
@@ -64,7 +64,7 @@ var getPageFromBook = function (bookId, pageNum, callback) {
  */
 var setMongooseModels = function (mongooseModels) {
     models = mongooseModels;
-}
+};
 
 module.exports = {
     addNewBook: addNewBook,

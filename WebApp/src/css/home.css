@@ -121,3 +121,7 @@ button[disabled] {
     overflow-y: auto;
     max-height: 65%;
 }
+
+body.modal-open {
+    overflow: hidden;
+}

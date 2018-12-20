@@ -211,7 +211,7 @@ module.exports = function(app, test) {
     //This should only be used to clean up after the cucumber-js tests have run, so only set this up in test mode
     if (test) {
         sessionsRouter.post("/closeallsessions", function(request, response) {
-            sessionsdb.closeAllSessions(function(err, result) {
+            sessionsdb.closeAllSessions(function(err) {
                 if (err) {
                     //If an error has occured then write to console and inform caller of error
                     console.log(`Error in closeAllSessions: ${err}`);
@@ -234,5 +234,5 @@ module.exports = function(app, test) {
 
     return {
         sessionsdb: sessionsdb
-    }
+    };
 };

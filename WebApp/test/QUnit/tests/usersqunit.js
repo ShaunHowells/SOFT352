@@ -17,6 +17,21 @@ var sampleUsers = [{
     "username": "Tim"
 }];
 
+//A sample session to use as our current session so we can display user details
+var sampleCurrentUserSession = {
+    "currentBook": {
+        "book_id": null,
+        "title": "Shaun's Test Book"
+    },
+    "_id": "5c091af0f5659f1ff48f6b8f",
+    "test": true,
+    "name": "Test",
+    "owner": "ad3ccf43-ea77",
+    "users": [{
+        "_id": "5c091af0f5659f1ff48f6b90",
+        "user_id": "ad3ccf43-ea77"
+    }]
+};
 
 
 /**

@@ -13,9 +13,6 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     //Create Observers for various events caused by Sessions
     var availableSessionsObserver = new Observer();
     var currentUserSessionObserver = new Observer();
-    var createSessionObserver = new Observer();
-    var joinSessionObserver = new Observer();
-    var leaveSessionObserver = new Observer();
 
     /**
      * Returns availableSessionsObserver
@@ -67,7 +64,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      */
     function getAvailableSessions() {
         return availableSessions;
-    };
+    }
     /**
      * Set availableSessions, then notify availableSessionsObserver
      * 
@@ -81,7 +78,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         }
 
         availableSessionsObserver.notify(filterAvailableSessions());
-    };
+    }
     /**
      * Add new session to availableSessions, then notify availableSessionsObserver
      * 
@@ -91,7 +88,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     function pushAvailableSession(newSession) {
         availableSessions.push(new Session(newSession));
         availableSessionsObserver.notify(filterAvailableSessions());
-    };
+    }
     /**
      * Given a session id, remove the session with that id from availableSessions, then notify availableSessionsObserver
      * 
@@ -105,7 +102,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
             });
             availableSessionsObserver.notify(filterAvailableSessions());
         }
-    };
+    }
 
     /**
      * Filter availableSessions so that the currentUserSession isn't displayed as we don't want to display our current session as an available session
@@ -126,7 +123,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         } else {
             return availableSessions;
         }
-    };
+    }
     /**
      * Return currentUserSession
      * 
@@ -135,7 +132,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      */
     function getCurrentUserSession() {
         return currentUserSession;
-    };
+    }
     /**
      * Set currentUserSession - Notfy currentUserSessionObserver and then notify availableSessionObserver
      *  
@@ -150,7 +147,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         }
         currentUserSessionObserver.notify(currentUserSession);
         availableSessionsObserver.notify(filterAvailableSessions());
-    };
+    }
     /**
      * Clears currentUserSession then notifies relevant observers
      * Current User Session display will be cleared, and the availableSessionList will be uploaded to display all availableSessions (as previously the currentUserSession would be filtered out)
@@ -161,7 +158,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         currentUserSession = null;
         availableSessionsObserver.notify(filterAvailableSessions());
         currentUserSessionObserver.notify(currentUserSession);
-    };
+    }
 
     /**
      * Creates a new user session, sets the currentUserSession to the newly created session, then gets the first page of the selected book to display
@@ -171,7 +168,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      * @param {Function} callback - The callback to be executed after the session is created
      * @memberof Sessions
      */
-    function createNewSession(sessionUsername, sessionName, bookId, callback) {
+    function createNewSession(sessionName, bookId, callback) {
         if (currentUserId) {
             var self = this;
             $.post("http://localhost:9000/sessions/createsession", {
@@ -179,7 +176,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
                 bookId: bookId,
                 user: {
                     userId: currentUserId,
-                    username: sessionUsername
+                    username: CollabBookReader.getUsername()
                 }
             }).done(function(data) {
                 if (data.success) {
@@ -191,7 +188,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
                 }
             });
         }
-    };
+    }
     /**
      * Joins a session, then retrieves the page the session is currently reading
      * 
@@ -199,12 +196,12 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      * @param {Function} callback - The callback to be executed after the session is joined
      * @memberof Sessions
      */
-    function joinSession(sessionUsername, sessionId, callback) {
-        if (currentUserId && sessionUsername) {
+    function joinSession(sessionId, callback) {
+        if (currentUserId && CollabBookReader.getUsername()) {
             for (var session in availableSessions) {
                 if (availableSessions[session]._id == sessionId) {
                     var self = this;
-                    availableSessions[session].joinSession(sessionUsername, currentUserId, function(data) {
+                    availableSessions[session].joinSession(currentUserId, function(data) {
                         self.setCurrentUserSession(data.result);
                         callback(data.result);
                     });
@@ -212,7 +209,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
                 }
             }
         }
-    };
+    }
     /**
      * Leaves the currentUserSession
      * 
@@ -229,7 +226,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         } else {
             console.error("No session to leave");
         }
-    };
+    }
 
     /**
      * Updates the page number in current the session
@@ -239,7 +236,6 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      */
     function updateCurrentSessionBookPage(pageNum) {
         if (currentUserId && currentUserSession) {
-            var self = this;
             currentUserSession.updateBookPage(pageNum, currentUserId);
         } else {
             console.error("You aren't in a session. Please try again when you're in a session");
@@ -275,17 +271,17 @@ function Session(sessionDetails) {
     this.name = sessionDetails.name;
     this.owner = sessionDetails.owner;
     this.users = sessionDetails.users;
-    this.currentPageNum = sessionDetails.currentPageNum
+    this.currentPageNum = sessionDetails.currentPageNum;
     this.currentBook = sessionDetails.currentBook;
     this.test = sessionDetails.test ? sessionDetails.test : false; // Used to identify sessions used for unit tests
 
 
-    this.joinSession = function(sessionUsername, userId, callback) {
+    this.joinSession = function(userId, callback) {
         $.post("http://localhost:9000/sessions/joinsession", {
             sessionId: this._id,
             user: {
                 userId: userId,
-                username: sessionUsername
+                username: CollabBookReader.getUsername()
             }
         }).done(function(data) {
             if (data.success) {
@@ -296,7 +292,7 @@ function Session(sessionDetails) {
                 console.log(data);
             }
         });
-    }
+    };
 
     /**
      * leaveSessions - Leaves the current session
@@ -338,5 +334,5 @@ function Session(sessionDetails) {
                 console.error("An error has occured trying to update the current session page");
             }
         });
-    }
+    };
 }

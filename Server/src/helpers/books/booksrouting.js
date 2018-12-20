@@ -41,7 +41,7 @@ module.exports = function(app) {
                 if (err) {
                     //If an error has occured then write to console and inform caller of error
                     console.log(`Error in addNewBook: ${err}`);
-                    response.send("An error has occured attempting to add a new book. Please try again.")
+                    response.send("An error has occured attempting to add a new book. Please try again.");
                 } else {
                     //If successful then return result to caller
                     console.log(`Book: ${result._id} added`);
@@ -117,5 +117,5 @@ module.exports = function(app) {
 
     return {
         booksdb: booksdb
-    }
+    };
 };

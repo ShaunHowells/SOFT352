@@ -81,7 +81,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
                 console.log(data);
             }
         });
-    };
+    }
 
     /**
      * Sends a request to the server to retrieve the list of all books
@@ -98,7 +98,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
             bookList.push(new Book(books[book]));
         }
         bookListObserver.notify(bookList);
-    };
+    }
 
     /**
      * Returns the bookList
@@ -108,7 +108,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
      */
     function getBookList() {
         return bookList;
-    };
+    }
 
     /**
      * Returns the currentBookPage
@@ -136,7 +136,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         } else {
             resetCurrentBookPage();
         }
-    };
+    }
 
     /**
      * Retrieves a new page from the current book
@@ -154,7 +154,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
                 }
             }
         }
-    };
+    }
 
     /**
      * Resets the currentBookPage to the defaultBookPagePage
@@ -205,7 +205,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         } else {
             resetCurrentBookPage();
         }
-    };
+    }
 
     return {
         getBookListObserver,
@@ -245,7 +245,7 @@ function Book(bookDetails) {
     /**
      * The number of pages in the book
      */
-    this.pageCount = bookDetails.pageCount
+    this.pageCount = bookDetails.pageCount;
 
     /**
      * Retrieves the data of a given page of the book
@@ -255,7 +255,6 @@ function Book(bookDetails) {
      */
     this.getPageData = function(pageNum, callback) {
         if (pageNum >= 0 || pageNum < this.pageCount) {
-            var self = this;
             $.post("http://localhost:9000/books/getpagefrombook", {
                 bookId: this._id,
                 pageNum: pageNum
@@ -270,7 +269,7 @@ function Book(bookDetails) {
         } else {
             console.error("This books does not have page number " + pageNum);
         }
-    }
+    };
 }
 
 function BookPage(bookPageDetails) {

@@ -1,6 +1,4 @@
 var express = require("express");
-var multer = require("multer");
-var upload = multer();
 
 module.exports = function(app) {
     //Set up router for /chat
@@ -61,5 +59,5 @@ module.exports = function(app) {
 
     return {
         chatdb: chatdb
-    }
+    };
 };

@@ -50,14 +50,14 @@ AngularMainApp.controller("bookPageCtrl", function ($scope) {
                 });
             }, 3000);
         }
-    }
+    };
     //Hide the prevPageWarning - Called by button on alert
     $scope.hidePrevPageWarning = function () {
         if (prevPageWarningTimeout) {
             clearTimeout(prevPageWarningTimeout);
         }
         angular.element("#prevPageWarning").hide();
-    }
+    };
 
 
     var nextPageWarningTimeout;
@@ -84,14 +84,14 @@ AngularMainApp.controller("bookPageCtrl", function ($scope) {
                 });
             }, 3000);
         }
-    }
+    };
     //Hide the nextPageWarning - Called by button on alert
     $scope.hideNextPageWarning = function () {
         if (nextPageWarningTimeout) {
             clearTimeout(nextPageWarningTimeout);
         }
         angular.element("#nextPageWarning").hide();
-    }
+    };
 });
 
 /**

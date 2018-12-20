@@ -2,7 +2,9 @@
 var models;
 
 //Websocket
-var websockets;
+var webSockets;
+
+var sessionsdb = require("../sessions/sessionsdb.js");
 
 /**
  * Callback used when processing Chat messages
@@ -25,28 +27,36 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
         console.error("Web sockets not set up.");
         callback(new Error("Web sockets not set up"), null);
     } else {
-        models.Sessions.findOne({
-            _id: sessionId
-        }).exec(function(err, result) {
-            callback(err, result);
+        sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
+            if (!inSession) {
+                callback("User is not in this session");
+            } else if (err) {
+                callback(err);
+            } else {
+                models.Sessions.findOne({
+                    _id: sessionId
+                }).exec(function(err, result) {
+                    callback(err, result);
 
-            var userList = result.users.toObject();
-            var username;
-            for (var i = 0; i < userList.length; i++) {
-                if (userList[i].user_id == userId) {
-                    username = userList[i].username;
-                    break;
-                }
+                    var userList = result.users.toObject();
+                    var username;
+                    for (var i = 0; i < userList.length; i++) {
+                        if (userList[i].user_id == userId) {
+                            username = userList[i].username;
+                            break;
+                        }
+                    }
+                    //Notify this sessions users
+                    webSockets.notifyUsers(userList, {
+                        type: "chatmessagereceived",
+                        success: true,
+                        result: {
+                            user: username,
+                            message: message
+                        }
+                    });
+                });
             }
-            //Notify this sessions users
-            webSockets.notifyUsers(userList, {
-                type: "chatmessagereceived",
-                success: true,
-                result: {
-                    user: username,
-                    message: message
-                }
-            });
         });
     }
 };
@@ -58,7 +68,7 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
  */
 var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
-}
+};
 
 /**
  * Set webSockets variable so that sessions can update websocket connections

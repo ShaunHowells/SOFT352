@@ -11,7 +11,7 @@ var sampleNote2 = {
     "user": "JohnS",
     "pageNum": 1,
     "message": "Sample 2"
-}
+};
 
 var sampleNotes = [{
     "_id": "fakeId3",
@@ -36,7 +36,6 @@ var sampleBookPageForNotes = {
         "pageNum": 0
     }
 };
-
 
 
 /**
@@ -66,7 +65,7 @@ QUnit.test("Set list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -78,7 +77,7 @@ QUnit.test("Set list of Notes", function(assert) {
     //Find how many pages in our sample page are in our currentBookPage
     var currentPageNotesLength = 0;
     for (var i = 0; i < sampleNotes; i++) {
-        if (sampleNotes[i].page == sampleBookPage.currentPage.pageNum) {
+        if (sampleNotes[i].page == sampleBookPageForNotes.currentPage.pageNum) {
             currentPageNotesLength++;
         }
     }
@@ -120,7 +119,7 @@ QUnit.test("Clear list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -168,7 +167,7 @@ QUnit.test("Add note to list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -227,7 +226,7 @@ QUnit.test("Remove a note from the list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -271,7 +270,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -287,7 +286,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
     //Check that the value of note details is empty when displaying the 'Add a note' popup
     assert.equal(angular.element("#createNewNoteDetails").val(), "", "Note details should be empty");
     //Check that the pageNum list defaults to the current page num + 1 (so it appears 1 indexed, 0)
-    assert.equal(angular.element("#createNewNotePageNumList").val(), sampleBookPage.currentPage.pageNum + 1, "Page Num should be set to the currentBookPage pageNum");
+    assert.equal(angular.element("#createNewNotePageNumList").val(), sampleBookPageForNotes.currentPage.pageNum + 1, "Page Num should be set to the currentBookPage pageNum");
 
     //Set values in 'Add a note' popup
     angular.element("#createNewNotePageNum").val("2");
@@ -300,7 +299,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
 
     //Reopen 'Add a note' popup to check that the values have been reset
     angular.element("#createNewNote").click();
-    assert.equal(angular.element("#createNewNotePageNumList").val(), sampleBookPage.currentPage.pageNum + 1, "Page Num should have been reset after re-opening the popup");
+    assert.equal(angular.element("#createNewNotePageNumList").val(), sampleBookPageForNotes.currentPage.pageNum + 1, "Page Num should have been reset after re-opening the popup");
     assert.equal(angular.element("#createNewNoteDetails").val(), "", "Note Details should be have been reset after opening the popup");
 
     //Close 'Add a note' popup

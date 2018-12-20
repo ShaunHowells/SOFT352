@@ -2,7 +2,7 @@
 var models;
 
 //Websocket
-var websockets;
+var webSockets;
 
 var sessionsdb = require("../sessions/sessionsdb.js");
 
@@ -81,13 +81,13 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                                         });
                                     }
                                 });
-                            };
+                            }
                         });
-                    };
+                    }
                 });
-            };
+            }
         });
-    };
+    }
 };
 
 /**
@@ -135,7 +135,7 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
                         }
                     }
                 });
-            };
+            }
         });
     }
 };
@@ -159,7 +159,7 @@ var getAllSessionNotes = function(sessionId, userId, callback) {
             }).select("notes").exec(function(err, result) {
                 callback(err, result);
             });
-        };
+        }
     });
 };
 
@@ -171,7 +171,7 @@ var getAllSessionNotes = function(sessionId, userId, callback) {
  */
 var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
-}
+};
 
 /**
  * Set webSockets variable so that sessions can update websocket connections

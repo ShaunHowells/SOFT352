@@ -1,17 +1,16 @@
-var http = require("http");
 var express = require("express");
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 
 //Get commandline arguments
 var myArgs = process.argv.slice(2);
 var test = false;
 switch (myArgs[0]) {
-    case 'test':
-        console.log("Enabling Test Mode");
-        test = true;
-        break;
-    default:
-        break;
+case "test":
+    console.log("Enabling Test Mode");
+    test = true;
+    break;
+default:
+    break;
 }
 
 var app = express();
@@ -36,12 +35,8 @@ var notesRouting = require("./helpers/notes/notesrouting.js")(app);
 
 //Set up http server
 var server = app.listen(port, function () {
-    console.log(`Listening on port ${port}`)
+    console.log(`Listening on port ${port}`);
 });
-//Set root page
-app.get('/', function (req, res) {
-    res.send('CollabBookReader Server');
-  })
 
 //Setup mongoonse models
 var mongooseModels = require("./helpers/mongoose.js")(test);
@@ -50,6 +45,13 @@ booksRouting.booksdb.setMongooseModels(mongooseModels.models);
 chatRouting.chatdb.setMongooseModels(mongooseModels.models);
 notesRouting.notesdb.setMongooseModels(mongooseModels.models);
 
+//Pass websockets through to classes
 var webSockets = require("./helpers/websockets")(server);
 sessionsRouting.sessionsdb.setWebSockets(webSockets);
 chatRouting.chatdb.setWebSockets(webSockets);
+notesRouting.notesdb.setWebSockets(webSockets);
+
+//Set root page
+app.get("/", function (req, res) {
+    res.send("CollabBookReader Server");
+});

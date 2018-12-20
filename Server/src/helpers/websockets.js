@@ -1,6 +1,4 @@
 module.exports = function(server) {
-    var http = require("http");
-    var express = require("express");
     var WebSocketServer = require("websocket").server;
     var sessionsdb = require("../helpers/sessions/sessionsdb.js");
 
@@ -33,8 +31,8 @@ module.exports = function(server) {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         }
-        return s4() + s4() + '-' + s4();
-    };
+        return s4() + s4() + "-" + s4();
+    }
 
     function sendSessionList(uniqueId) {
         //Send user all current sessions
@@ -73,7 +71,7 @@ module.exports = function(server) {
     socket.on("request", function(request) {
         var connection = request.accept(null, request.origin);
 
-        connection.on("close", function(reasonCode, description) {
+        connection.on("close", function() {
             sessionsdb.removeUserFromAllSessions(connection.shaun_uniqueId);
             delete connectedUsers[connection.shaun_uniqueId];
             console.log("Connection closed - Total Connections: " + Object.keys(connectedUsers).length);
@@ -99,5 +97,5 @@ module.exports = function(server) {
     return {
         notifyAllConnectedUsers: notifyAllConnectedUsers,
         notifyUsers: notifyUsers
-    }
-}
+    };
+};

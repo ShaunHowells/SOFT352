@@ -18,37 +18,27 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
         if (CollabBookReader.getSessions().getCurrentUserSession()) {
             angular.element("#availableSessionDetailsModalJoinSession").prop("disabled", true);
             angular.element("#canJoinSession").html("<b>You cannot join another session while you are already in one!</b>");
-            angular.element("#joinSessionUsername").hide();
         } else {
             angular.element("#availableSessionDetailsModalJoinSession").prop("disabled", false);
             angular.element("#canJoinSession").html("Do you want to join this session?");
-            angular.element("#joinSessionUsername").show();
-            angular.element("#joinSessionUsername").val("");
         }
         $("#availableSessionDetailsModal").modal();
     };
 
     //Called from availableSessionDetailsModalJoinSession button - Join a session
     $scope.joinSession = function(session) {
-        var sessionUsername = angular.element("#joinSessionUsername").val();
+        CollabBookReader.getSessions().joinSession(session._id, function(data) {
 
-        //Check that all values have been supplied
-        if (!sessionUsername) {
-            alert("Please enter your username for this session");
-        } else {
-            CollabBookReader.getSessions().joinSession(sessionUsername, session._id, function(data) { 
+            CollabBookReader.getUsers().setUsers(data.users);
+            //Hide modal popup and select 'My Session' tab
+            $("#availableSessionDetailsModalClose").click();
+            angular.element("#currentUserSessionTabHeading").click();
 
-                CollabBookReader.getUsers().setUsers(data.users);
-                //Hide modal popup and select 'My Session' tab
-                $("#availableSessionDetailsModalClose").click();
-                angular.element("#currentUserSessionTabHeading").click();
-
-                //Hide displayed details
-                $("#currentUserSessionCreate").hide();
-                $("#currentUserSessionDetails").show();
-            });
-        };
-    }
+            //Hide displayed details
+            $("#currentUserSessionCreate").hide();
+            $("#currentUserSessionDetails").show();
+        });
+    };
 });
 
 /**
@@ -83,19 +73,11 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
 
     //Called from createNewSessionModalJoinSession - Create a new session
     $scope.createNewSession = function() {
-        var newSessionUsername = angular.element("#createNewSessionUsername").val();
-        var newSessionName = angular.element("#createNewSessionName").val();
-        var newSessionBook = angular.element("#createNewSessionBook").val();
-        //Check that all values have been supplied
-        if (!newSessionUsername) {
-            alert("Please enter your username for your session");
-        } else if (!newSessionName) {
-            alert("Please enter a name for your session");
-        } else if (!newSessionBook) {
-            alert("Please select a book");
-        } else {
+        if (validCreateNewSessionForm()) {
+            var newSessionName = angular.element("#createNewSessionName").val();
+            var newSessionBook = angular.element("#createNewSessionBook").val();
             //Create a new session and update UI upon success
-            CollabBookReader.getSessions().createNewSession(newSessionUsername, newSessionName, newSessionBook, function(data) {
+            CollabBookReader.getSessions().createNewSession(newSessionName, newSessionBook, function(data) {
                 //Hide create new session modal
                 $("#createNewSessionModalClose").click();
                 //Show newly created session details
@@ -107,8 +89,16 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
         }
     };
 
+    function validCreateNewSessionForm() {
+        var form = document.getElementById("createNewSessionForm");
+        var valid = form.checkValidity();
+        form.classList.add("was-validated");
+
+        return valid;
+    }
+
     //Called by currentUserSessionDetailsLeaveSession - Leave current session
-    $scope.leaveSession = function(session) {
+    $scope.leaveSession = function() {
         CollabBookReader.getSessions().leaveCurrentSession(function() { //Can take data
             $("#currentUserSessionDetailsModalClose").click();
             angular.element("#availableSessionsTabHeading").click();
