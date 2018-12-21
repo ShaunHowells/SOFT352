@@ -330,9 +330,9 @@
                                 </div>
                                 <div class="modal-body">
                                     <h3>Note Details</h3>
-                                    <p>User: <b><span id="deleteNoteModalUser"></span></b></p>
-                                    <p>Page:  <b><span id="deleteNoteModalPageNum"></span></b></p>
-                                    <p>Message:  <b><span id="deleteNoteModalDetails"></span></b></p>
+                                    <p>User: <b><span id="deleteNoteModalUser">{{noteToDelete.user}}</span></b></p>
+                                    <p>Page:  <b><span id="deleteNoteModalPageNum">{{noteToDelete.pageNum + 1}}</span></b></p>
+                                    <p>Message:  <b><span id="deleteNoteModalDetails">{{noteToDelete.note}}</span></b></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button id="deleteNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

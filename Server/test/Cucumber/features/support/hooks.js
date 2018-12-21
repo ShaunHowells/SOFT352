@@ -6,6 +6,7 @@ const {
 } = require("cucumber");
 var request = require("request");
 var WebSocket = require("../../../../src/node_modules/websocket").client;
+var assert = require("assert");
 
 var world;
 

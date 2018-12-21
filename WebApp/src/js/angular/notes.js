@@ -69,9 +69,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
     $scope.displayDeleteNote = function(note) {
         //Set values for current note
         $scope.noteToDelete = note;
-        angular.element("#deleteNoteModalUser").text(note.user);
-        angular.element("#deleteNoteModalPageNum").text(note.pageNum);
-        angular.element("#deleteNoteModalDetails").text(note.note);
+        $scope.$applyAsync();
         angular.element("#deleteNoteModal").modal();
     };
 
