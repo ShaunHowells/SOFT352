@@ -9,7 +9,6 @@
     "mongodb": "^3.1.10",
     "mongoose": "^5.4.0",
     "multer": "^1.4.1",
-    "pouchdb": "^7.0.0",
     "websocket": "^1.0.28"
   },
   "devDependencies": {},
