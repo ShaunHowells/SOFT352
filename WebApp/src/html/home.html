@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -52,24 +52,12 @@
 </head>
 
 <body>
-    <div class="page-header">
-        <h1>Collaborative Book Reader - CBR</h1>
-    </div>
-    <div class="col-sm-8">
-        <p>Welcome to the online Collaborative Book Reader, also known as CBR. What CBR allows you to
-            do is
-            read
-            books together with other users in real time.
-            When one of you selects a book to read, this will be replicated for each user.
-            You can also add notes for pages and books, as well as chat with your collaboraters.
-            This Web Application current supports:</p>
-        <ul>
-            <li>NOTHING</li>
-        </ul>
-    </div>
     <div class="row border main" id="main" ng-app="AngularMainApp">
         <!-- Sesssion Lists -->
-        <div class="col-sm-3 sessionTabs">
+        <div class="col-12 col-md-3 no-gutters flexboxcolumns">
+            <div id="displayUsername" class="username-init border">
+                <p>Welcome, <b><span id="spanUsername"></span></b> </p>
+            </div>
             <ul id="sessionTabList" class="nav nav-tabs" role="tablist">
                 <li class="nav-item active"><a id="availableSessionsTabHeading" href="#availableSessions" role="tab" data-toggle="tab" class="nav-link active">Available
                         Sessions</a></li>
@@ -84,14 +72,15 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel"><span id="displayedSessionName" ng-bind="displaySession.name"></span></h5>
+                                    <h5 class="modal-title" id="availableSessionDetailsModalLabel"><span>Session Details</span></h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Currently reading: <span id="displayedSessionBookTitle" ng-bind="displaySession.currentBook.title"></span></p>
-                                    <p>Owner: <span id="displayedSessionOwner" ng-bind="displaySession.owner"></span></p>
+                                    <p>Session Name: <b><span id="displayedSessionName" ng-bind="displaySession.name"></span></b></p>
+                                    <p>Currently reading: <b><span id="displayedSessionBookTitle" ng-bind="displaySession.currentBook.title"></span></b></p>
+                                    <p>Owner: <b><span id="displayedSessionOwner" ng-bind="displaySession.owner"></span></b></p>
                                     <br>
                                     <span id="canJoinSession"></span>
                                 </div>
@@ -108,9 +97,9 @@
                     <div id="currentUserSessionDetails">
                         <div id="currentUserSessionDetailList">
                             <input type="hidden" id="currentUserSessionId{{session._id}}">
-                            <p>Current Session: <span id="currentUserSessionName" ng-bind="currentUserSession.name"></span></p>
-                            <p>Currently reading: <span id="currentUserSessionBookTitle" ng-bind="currentUserSession.currentBook.title"></span></p>
-                            <p>Owner: <span id="currentUserSessionOwner" ng-bind="currentUserSession.owner"></span></p>
+                            <p>Session Name: <b><span id="currentUserSessionName" ng-bind="currentUserSession.name"></span></b></p>
+                            <p>Currently reading: <b><span id="currentUserSessionBookTitle" ng-bind="currentUserSession.currentBook.title"></span></b></p>
+                            <p>Owner: <b><span id="currentUserSessionOwner" ng-bind="currentUserSession.owner"></span></b></p>
                             <p>Users in session:</p>
                             <ul id="currentUserSessionUsers" class="list-group">
                                 <li class="list-group-item" ng-repeat="user in currentUserSessionUsers">{{user.username}}</li>
@@ -168,7 +157,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-12 col-md-6 no-gutters">
             <!-- Book page display -->
             <div id="bookPageCarousel" data-interval="false" class="carousel slide" data-ride="carousel" ng-controller="bookPageCtrl">
                 <!-- Book Carousel Warnings -->
@@ -202,7 +191,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-sm-3 chatArea border">
+        <div class="col-12 col-md-3 no-gutters flexboxcolumns chatArea border">
             <!-- Book details -->
             <div id="bookDetails" class="bookdetails" ng-controller="bookPageDetailsCtrl">
                 <!-- if reading a book, then display book details -->
@@ -210,155 +199,144 @@
                 <p id="pBookPageDetails" ng-if="currentBookPage._id" class="text-center" ng-cloak><strong>Currently Reading: {{currentBookPage.title}} - Page: {{currentBookPage.currentPage.pageNum + 1}}</strong></p>
                 <p id="pBookPageDetails" ng-if="!currentBookPage._id" class="text-center"><strong>Currently Reading: Nothing</strong></p>
             </div>
-            <div class="chatNoteTabs">
-                <ul id="chatNotesTabList" class="nav nav-tabs" role="tablist">
-                    <li class="nav-item active"><a id="chatHeading" href="#chatMessageArea" role="tab" data-toggle="tab" class="nav-link active">Chat</a></li>
-                    <li class="nav-item"><a id="notesHeading" href="#notesArea" role="tab" data-toggle="tab" class="nav-link">Notes</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div id="chatMessageArea" ng-controller="chatMessagesCtrl" class="tab-pane active list-3-+group">
-                        <!-- Chat message list -->
-                        <div id="chatMessages" class="list-group chatMessages">
-                            <div ng-repeat="message in chatMessages">
-                                <li ng-if="!message.notification" class="list-group-item chatMessage" ng-cloak><b>{{message.user}}</b>:
-                                    {{message.message}}
-                                </li>
-                                <li ng-if="message.notification" class="list-group-item chatMessage" ng-cloak>
-                                    <b>{{message.message}}</b>
-                                </li>
+            <ul id="chatNotesTabList" class="nav nav-tabs" role="tablist">
+                <li class="nav-item active"><a id="chatHeading" href="#chatMessageArea" role="tab" data-toggle="tab" class="nav-link active">Chat</a></li>
+                <li class="nav-item"><a id="notesHeading" href="#notesArea" role="tab" data-toggle="tab" class="nav-link">Notes</a></li>
+            </ul>
+            <div class="tab-content chatNotesTabContent">
+                <div id="chatMessageArea" ng-controller="chatMessagesCtrl" class="tab-pane active list-3-+group border">
+                    <!-- Chat message list -->
+                    <ul id="chatMessages" class="list-group chatMessages">
+                        <li ng-repeat="message in chatMessages" class="list-group-item chatMessage" ng-cloak>
+                            <span ng-if="!message.notification">
+                                <b>{{message.user}}</b>
+                                : {{message.message}}
+                            </span>
+                            <span ng-if="message.notification">
+                                <b>{{message.message}}</b>
+                            </span>
+                        </li>
+                    </ul>
+                    <!-- Chat message input -->
+                    <div class="chatInput">
+                        <input id="chatInputMessage" type="text" placeholder="Enter your message here" class="chatInputMessage" ng-model="messageToSend" ng-keypress="chatMessageEnter($event)">
+                    </div>
+                </div>
+                <!-- Notes List  -->
+                <div id="notesArea" ng-controller="noteListCtrl" class="tab-pane list-3-+group">
+                    <div id="notesDisplay" class="list-group">
+                        <div class="accordion" id="notesAccordion">
+                            <!-- All Pages Notes -->
+                            <div class="card">
+                                <div class="card-header" id="allPagesNotesHeading">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#allPagesNotes" aria-expanded="true" aria-controls="allPagesNotes">
+                                            All Pages ({{noteList.length}})
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="allPagesNotes" class="collapse notelist" aria-labelledby="allPagesNotesHeading" data-parent="#notesAccordion">
+                                    <ul id="allPagesNotesBody" class="card-body list-group">
+                                        <li class="list-group-item flex-column align-items-start" ng-repeat="note in noteList">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{note.user}} - Page {{note.pageNum + 1}}</h5>
+                                                <button type="button" class="btn btn-dark" ng-click="displayDeleteNote(note)">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <p class="mb-1">{{note.note}}</p>
+                                        </li>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Chat message input -->
-                        <div class="chatInput row border">
-                            <div class="col-sm-10">
-                                <input type="text" placeholder="Enter your message here" class="chatInputMessage" ng-model="messageToSend" ng-keypress="chatMessageEnter($event)">
-                            </div>
-                            <div class="col-sm-2">
-                                <button class="btn" ng-click="sendChatMessage(messageToSend)">Send</button>
+                            <!-- Current Page Notes -->
+                            <div class="card">
+                                <div class="card-header" id="currentPageNotesHeading">
+                                    <h5 class="mb-0">
+                                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#currentPageNotes" aria-expanded="false" aria-controls="currentPageNotes">
+                                            Current Page: {{currentPageNum + 1}} ({{currentPageNoteList.length}})
+                                        </button>
+                                    </h5>
+                                </div>
+                                <div id="currentPageNotes" class="collapse notelist" aria-labelledby="currentPageNotesHeading" data-parent="#notesAccordion">
+                                    <ul id="currentPageNotesBody" class="card-body list-group">
+                                        <li class="list-group-item flex-column align-items-start" ng-repeat="note in currentPageNoteList">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1">{{note.user}}</h5>
+                                                <button type="button" class="btn btn-dark" ng-click="displayDeleteNote(note)">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <p class="mb-1">{{note.note}}</p>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- Notes List  -->
-                    <div id="notesArea" ng-controller="noteListCtrl" class="tab-pane list-3-+group">
-                        <div id="notesDisplay" class="list-group">
-                            <div class="accordion" id="notesAccordion">
-                                <!-- All Pages Notes -->
-                                <div class="card">
-                                    <div class="card-header" id="allPagesNotesHeading">
-                                        <h5 class="mb-0">
-                                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#allPagesNotes" aria-expanded="true" aria-controls="allPagesNotes">
-                                                All Pages ({{noteList.length}})
-                                            </button>
-                                        </h5>
-                                    </div>
-                                    <div id="allPagesNotes" class="collapse notelist" aria-labelledby="allPagesNotesHeading" data-parent="#notesAccordion">
-                                        <div id="allPagesNotesBody" class="card-body list-group">
-                                            <div ng-repeat="note in noteList">
-                                                <a class="list-group-item flex-column align-items-start">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h5 class="mb-1">{{note.user}} - Page {{note.pageNum + 1}}</h5>
-                                                        <button type="button" class="btn btn-dark" ng-click="displayDeleteNote(note)">
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                                                    <p class="mb-1">{{note.note}}</p>
-                                                </a>
+                    <div id="noteCreate">
+                        <button id="createNewNote" class="btn btn-primary createNewNote" id="createNewNote" ng-click="displayCreateNewNoteDetails()">Add a note</button>
+                    </div>
+                    <!-- Create new Note details Modal -->
+                    <div class="modal" id="createNewNoteModal" tabindex="-1" role="dialog" aria-labelledby="createNewNoteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="createNewNoteModalLabel">Add a note</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Please enter the details for your new note</p>
+                                    <form id="createNoteForm" class="needs-validation" onsubmit="return false" novalidate>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Page Number</span>
+                                            </div>
+                                            <select id="createNewNotePageNumList" class="form-control" required>
+                                                <option ng-repeat="x in getPageNumArray()" value="{{x}}">{{x}}</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Please select a page number for your note.
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <!-- Current Page Notes -->
-                                <div class="card">
-                                    <div class="card-header" id="currentPageNotesHeading">
-                                        <h5 class="mb-0">
-                                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#currentPageNotes" aria-expanded="false" aria-controls="currentPageNotes">
-                                                Current Page: {{currentPageNum + 1}} ({{currentPageNoteList.length}})
-                                            </button>
-                                        </h5>
-                                    </div>
-                                    <div id="currentPageNotes" class="collapse notelist" aria-labelledby="currentPageNotesHeading" data-parent="#notesAccordion">
-                                        <div id="currentPageNotesBody" class="card-body list-group">
-                                            <div ng-repeat="note in currentPageNoteList">
-                                                <a class="list-group-item flex-column align-items-start">
-                                                    <div class="d-flex w-100 justify-content-between">
-                                                        <h5 class="mb-1">{{note.user}}</h5>
-                                                        <button type="button" class="btn btn-dark" ng-click="displayDeleteNote(note)">
-                                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                        </button>
-                                                    </div>
-                                                    <p class="mb-1">{{note.note}}</p>
-                                                </a>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Note</span>
+                                            </div>
+                                            <textarea id="createNewNoteDetails" placeholder="Enter your note here..." class="form-control" required ng-keypress="noteEnter($event)"></textarea>
+                                            <div class=" invalid-feedback">
+                                                Please enter some details for your note.
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="createNewNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button id="createNewNoteModalJoinSession" type="button" class="btn btn-primary" ng-click="createNote()">Create note</button>
                                 </div>
                             </div>
-                            <div id="noteCreate">
-                                <button class="btn btn-primary createNewNote" id="createNewNote" ng-click="displayCreateNewNoteDetails()">Add a note</button>
-                            </div>
-                            <!-- Create new Note details Modal -->
-                            <div class="modal" id="createNewNoteModal" tabindex="-1" role="dialog" aria-labelledby="createNewNoteModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="createNewNoteModalLabel">Add a note</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>Please enter the details for your new note</p>
-                                            <form id="createNoteForm" class="needs-validation" onsubmit="return false" novalidate>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Page Number</span>
-                                                    </div>
-                                                    <select id="createNewNotePageNumList" class="form-control" required>
-                                                        <option ng-repeat="x in getPageNumArray()" value="{{x}}">{{x}}</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">
-                                                        Please select a page number for your note.
-                                                    </div>
-                                                </div>
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Note</span>
-                                                    </div>
-                                                    <textarea id="createNewNoteDetails" placeholder="Enter your note here..." class="form-control" required ng-keypress="noteEnter($event)""></textarea>
-                                                    <div class="invalid-feedback">
-                                                        Please enter some details for your note.
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button id="createNewNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button id="createNewNoteModalJoinSession" type="button" class="btn btn-primary" ng-click="createNote()">Create note</button>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    <!-- Delete Note Modal -->
+                    <div class="modal" id="deleteNoteModal" tabindex="-1" role="dialog" aria-labelledby="deleteNoteModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteNoteModalLabel">Delete?</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                            </div>
-                            <!-- Delete Note Modal -->
-                            <div class="modal" id="deleteNoteModal" tabindex="-1" role="dialog" aria-labelledby="deleteNoteModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="deleteNoteModalLabel">Delete?</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h3>Note Details</h3>
-                                            <p>User: <b><span id="deleteNoteModalUser"></span></b></p>
-                                            <p>Page:  <b><span id="deleteNoteModalPageNum"></span></b></p>
-                                            <p>Message:  <b><span id="deleteNoteModalDetails"></span</b></p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button id="deleteNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button id="deleteNoteModalJoinSession" type="button" class="btn btn-danger" ng-click="deleteNote(noteToDelete)">Delete note</button>
-                                        </div>
-                                    </div>
+                                <div class="modal-body">
+                                    <h3>Note Details</h3>
+                                    <p>User: <b><span id="deleteNoteModalUser"></span></b></p>
+                                    <p>Page:  <b><span id="deleteNoteModalPageNum"></span></b></p>
+                                    <p>Message:  <b><span id="deleteNoteModalDetails"></span></b></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="deleteNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button id="deleteNoteModalJoinSession" type="button" class="btn btn-danger" ng-click="deleteNote(noteToDelete)">Delete note</button>
                                 </div>
                             </div>
                         </div>
@@ -366,6 +344,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- Username modal -->
     <div class="modal" id="usernameModal" tabindex="-1" role="dialog" aria-labelledby="usernameModalLabel" aria-hidden="true">
@@ -375,6 +354,13 @@
                     <h5 class="modal-title" id="usernameModalLabel"><span>Welcome to the Collaborative Book Reader</span></h5>
                 </div>
                 <div class="modal-body">
+                    <h5>Welcome to the Collaborative Book Reader</h5>
+                    <p>This application allows you to read a book in real time with others users. User in the same session can:</p>
+                    <ul>
+                        <li>Read a book at the same time. As someone navigates through the book, the page will also change for the others users</li>
+                        <li>Chat via a text chat</li>
+                        <li>Add notes to page in the book that all users can see</li>
+                    </ul>
                     <p>To continue you must enter a username. This username will be your name in any session that you join</p>
                     <form id="usernameForm" class="needs-validation" onsubmit="return false" novalidate>
                         <div class="input-group">
@@ -412,9 +398,8 @@
         </div>
     </div>
 
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-
+    <div id="qunit" class="col-12"></div>
+    <div id="qunit-fixture" class="col-12"></div>
 </body>
 
 </html>

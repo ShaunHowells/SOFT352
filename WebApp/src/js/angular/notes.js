@@ -33,7 +33,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
             if (CollabBookReader.getSessions().getCurrentUserSession()) {
                 CollabBookReader.getNotes().createNewNote(newNotePageNum, newNoteDetails, function() {
                     //Hide create new session modal
-                    $("#createNewNoteModalClose").click();
+                    angular.element("#createNewNoteModalClose").click();
                 });
             } else {
                 alert("You aren't currently in a session");
@@ -49,6 +49,10 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
         return valid;
     }
 
+    angular.element("#createNewNoteModal").on("hidden.bs.modal", function() {
+        document.getElementById("createNoteForm").classList.remove("was-validated");;
+    });
+
     $scope.noteEnter = function(event) {
         if (event.charCode == 13) {
             $scope.createNote();
@@ -57,18 +61,18 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
 
     $scope.displayCreateNewNoteDetails = function() {
         //Reset values before displaying
-        $("#createNewNoteDetails").val("");
-        $("#createNewNotePageNumList").val(CollabBookReader.getBooks().getCurrentBookPage().currentPage.pageNum + 1);
-        $("#createNewNoteModal").modal();
+        angular.element("#createNewNoteDetails").val("");
+        angular.element("#createNewNotePageNumList").val(CollabBookReader.getBooks().getCurrentBookPage().currentPage.pageNum + 1);
+        angular.element("#createNewNoteModal").modal();
     };
 
     $scope.displayDeleteNote = function(note) {
         //Set values for current note
         $scope.noteToDelete = note;
-        $("#deleteNoteModalUser").text(note.user);
-        $("#deleteNoteModalPageNum").text(note.pageNum);
-        $("#deleteNoteModalDetails").text(note.note);
-        $("#deleteNoteModal").modal();
+        angular.element("#deleteNoteModalUser").text(note.user);
+        angular.element("#deleteNoteModalPageNum").text(note.pageNum);
+        angular.element("#deleteNoteModalDetails").text(note.note);
+        angular.element("#deleteNoteModal").modal();
     };
 
     $scope.deleteNote = function(noteToDelete) {
@@ -80,7 +84,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
             if (CollabBookReader.getSessions().getCurrentUserSession()) {
                 CollabBookReader.getNotes().deleteNote(noteToDelete._id, function() {
                     //Hide create new session modal
-                    $("#deleteNoteModalClose").click();
+                    angular.element("#deleteNoteModalClose").click();
                 });
             } else {
                 alert("You aren't currently in a session");

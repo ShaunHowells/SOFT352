@@ -1,13 +1,9 @@
-//Start the websocket connection
-CollabBookReader.startWebSocketConnection();
-
-//Retrieve book list
-CollabBookReader.getBooks().retrieveBookList();
-
 //When document is ready
 $(document).ready(function() {
     //Hide currentUserSessionDetails - As we've just joined, we won't be in a session
     $("#currentUserSessionDetails").hide();
+    $("#chatInputMessage").attr("disabled", true);
+    $("#createNewNote").attr("disabled", true);
     $("#inputUsername").on("keypress", function(event) {
         if (event.charCode == 13) {
             setUsername();
@@ -25,6 +21,12 @@ function setUsername() {
         CollabBookReader.setUsername(username);
         $("#inputUsername").val("");
         $("#usernameModal").modal("hide");
+
+        //Start connecting to the server after we've been provided with a username
+        //Start the websocket connection
+        CollabBookReader.startWebSocketConnection();
+        //Retrieve book list
+        CollabBookReader.getBooks().retrieveBookList();
     }
 }
 

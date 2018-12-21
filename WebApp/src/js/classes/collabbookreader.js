@@ -162,6 +162,9 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     function setUsername(inputUsername) {
         if (!username) {
             username = inputUsername;
+            $("#spanUsername").text(username);
+            $("#displayUsername").removeClass("username-init");
+            $("#displayUsername").addClass("username-set");
         } else {
             console.error("Username");
         }

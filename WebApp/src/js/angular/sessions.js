@@ -22,7 +22,7 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
             angular.element("#availableSessionDetailsModalJoinSession").prop("disabled", false);
             angular.element("#canJoinSession").html("Do you want to join this session?");
         }
-        $("#availableSessionDetailsModal").modal();
+        angular.element("#availableSessionDetailsModal").modal();
     };
 
     //Called from availableSessionDetailsModalJoinSession button - Join a session
@@ -31,12 +31,12 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
 
             CollabBookReader.getUsers().setUsers(data.users);
             //Hide modal popup and select 'My Session' tab
-            $("#availableSessionDetailsModalClose").click();
+            angular.element("#availableSessionDetailsModalClose").click();
             angular.element("#currentUserSessionTabHeading").click();
 
             //Hide displayed details
-            $("#currentUserSessionCreate").hide();
-            $("#currentUserSessionDetails").show();
+            angular.element("#currentUserSessionCreate").hide();
+            angular.element("#currentUserSessionDetails").show();
         });
     };
 });
@@ -55,9 +55,13 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
         if (data) {
             angular.element("#currentUserSessionCreate").hide();
             angular.element("#currentUserSessionDetails").show();
+            angular.element("#chatInputMessage").attr("disabled", false);
+            angular.element("#createNewNote").attr("disabled", false);
         } else {
             angular.element("#currentUserSessionDetails").hide();
             angular.element("#currentUserSessionCreate").show();
+            angular.element("#chatInputMessage").attr("disabled", true);
+            angular.element("#createNewNote").attr("disabled", true);
         }
         $scope.$applyAsync();
     };
@@ -67,8 +71,8 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
     //Called from createNewSession - Display 'Create a new session' modal popup
     $scope.displayCreateNewSessionDetails = function() {
         //Reset values before displaying
-        $("#createNewSessionModal").find("input[type=text], select").val("");
-        $("#createNewSessionModal").modal();
+        angular.element("#createNewSessionModal").find("input[type=text], select").val("");
+        angular.element("#createNewSessionModal").modal();
     };
 
     //Called from createNewSessionModalJoinSession - Create a new session
@@ -79,7 +83,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
             //Create a new session and update UI upon success
             CollabBookReader.getSessions().createNewSession(newSessionName, newSessionBook, function(data) {
                 //Hide create new session modal
-                $("#createNewSessionModalClose").click();
+                angular.element("#createNewSessionModalClose").click();
                 //Show newly created session details
                 angular.element("#currentUserSessionTabHeading").click();
 
@@ -97,10 +101,14 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
         return valid;
     }
 
+    angular.element("#createNewSessionModal").on("hidden.bs.modal", function() {
+        document.getElementById("createNewSessionForm").classList.remove("was-validated");;
+    });
+
     //Called by currentUserSessionDetailsLeaveSession - Leave current session
     $scope.leaveSession = function() {
         CollabBookReader.getSessions().leaveCurrentSession(function() { //Can take data
-            $("#currentUserSessionDetailsModalClose").click();
+            angular.element("#currentUserSessionDetailsModalClose").click();
             angular.element("#availableSessionsTabHeading").click();
         });
     };

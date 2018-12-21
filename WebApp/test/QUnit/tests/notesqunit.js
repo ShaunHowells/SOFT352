@@ -86,8 +86,8 @@ QUnit.test("Set list of Notes", function(assert) {
     var notes = notesCtrl.noteList;
     assert.equal(notes.length, sampleNotes.length, sampleNotes.length + " notes should be in the notes list");
     //Check that the UI reflects the changes to the scope
-    assert.equal(angular.element("#allPagesNotesBody").children("div").length, notes.length, notes.length + " notes should be displayed in the notes list");
-    assert.equal(angular.element("#currentPageNotesBody").children("div").length, currentPageNotesLength, currentPageNotesLength + " notes should be displayed in the notes list");
+    assert.equal(angular.element("#allPagesNotesBody").children("li").length, notes.length, notes.length + " notes should be displayed in the notes list");
+    assert.equal(angular.element("#currentPageNotesBody").children("li").length, currentPageNotesLength, currentPageNotesLength + " notes should be displayed in the notes list");
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
@@ -135,7 +135,7 @@ QUnit.test("Clear list of Notes", function(assert) {
     var notes = notesCtrl.noteList;
     assert.equal(notes.length, 0, "0 notes should be in the notes list");
     //Check that the UI reflects the changes to the scope
-    assert.equal(angular.element("#allPagesNotesBody").children("div").length, 0, "0 notes should be displayed in the notes list ");
+    assert.equal(angular.element("#allPagesNotesBody").children("li").length, 0, "0 notes should be displayed in the notes list ");
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
@@ -183,8 +183,8 @@ QUnit.test("Add note to list of Notes", function(assert) {
     //Check values of the Angular scope have been correctly updated
     var notes = notesCtrl.noteList;
     assert.equal(notes.length, 1, "1 note should be in the notes list");
-    assert.equal(angular.element("#allPagesNotesBody").children("div").length, 1, "1 note should be displayed in the all pages notes list");
-    assert.equal(angular.element("#currentPageNotesBody").children("div").length, 1, "1 note should be displayed in the current page notes list");
+    assert.equal(angular.element("#allPagesNotesBody").children("li").length, 1, "1 note should be displayed in the all pages notes list");
+    assert.equal(angular.element("#currentPageNotesBody").children("li").length, 1, "1 note should be displayed in the current page notes list");
 
     CollabBookReader.getNotes().addNote(sampleNote2);
     //Manually call .$apply() as it normally uses $applyAsync()
@@ -193,8 +193,8 @@ QUnit.test("Add note to list of Notes", function(assert) {
     //Check values of the Angular scope have been correctly updated
     notes = notesCtrl.noteList;
     assert.equal(notes.length, 2, "2 note should be in the notes list");
-    assert.equal(angular.element("#allPagesNotesBody").children("div").length, 2, "2 note should be displayed in the notes list");
-    assert.equal(angular.element("#currentPageNotesBody").children("div").length, 1, "1 note should be displayed in the current page notes list");
+    assert.equal(angular.element("#allPagesNotesBody").children("li").length, 2, "2 note should be displayed in the notes list");
+    assert.equal(angular.element("#currentPageNotesBody").children("li").length, 1, "1 note should be displayed in the current page notes list");
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
@@ -242,7 +242,7 @@ QUnit.test("Remove a note from the list of Notes", function(assert) {
     //Check values of the Angular scope have been correctly updated
     var notes = notesCtrl.noteList;
     assert.equal(notes.length, expectedLength, expectedLength + " note should be in the notes list");
-    assert.equal(angular.element("#allPagesNotesBody").children("div").length, expectedLength, expectedLength + " note should be displayed in the all pages notes list");
+    assert.equal(angular.element("#allPagesNotesBody").children("li").length, expectedLength, expectedLength + " note should be displayed in the all pages notes list");
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value

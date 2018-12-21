@@ -8,7 +8,7 @@ AngularMainApp.controller("chatMessagesCtrl", function($scope) {
         $scope.$apply();
 
         //Scroll to bottom of chat list
-        $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
+        angular.element("#chatMessages").scrollTop(angular.element("#chatMessages")[0].scrollHeight);
     };
     //Set $scope.setAvailableSessions as callback in CollabBookReader.getSessions() - Called when availableSession list is updated
     CollabBookReader.getChat().getChatMessageObserver().subscribe($scope.setChatMessages);
