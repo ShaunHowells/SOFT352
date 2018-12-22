@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: classes/notes.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: classes/notes.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @classdesc Handles all of the functionality relating to the handling of multiple 'Notes'.
+ * 
+ * @class
+ * @hideconstructor
+ */
+var Notes = (function() { // eslint-disable-line no-unused-vars
+    var noteList = [];
+
+    var noteObserver = new Observer();
+
+    /**
+     * Returns noteObserver
+     * 
+     * @memberof Notes
+     * @return {Observer} Observer for the chat messages
+     */
+    function getNoteObserver() {
+        return noteObserver;
+    }
+
+    /**
+     * Adds a note to the noteList
+     * 
+     * @memberof Notes
+     * @param {Object} note - The details of the note to add
+     */
+    function addNote(note) {
+        noteList.push(new Note(note));
+
+        noteObserver.notify(noteList);
+    }
+    /**
+     * Create a note for a page in the current session
+     * 
+     * @memberof Notes
+     * @param {String} message
+     */
+    function createNewNote(pageNum, note, callback) {
+        $.post("http://localhost:9000/notes/addnewnote", {
+            sessionId: CollabBookReader.getSessions().getCurrentUserSession()._id,
+            userId: CollabBookReader.getSessions().getCurrentUserId(),
+            note: note,
+            pageNum: pageNum
+        }).done(function(data) {
+            if (!data.success) {
+                alert("An error has occured creating this note. Please try again");
+                console.log(data);
+            } else {
+                if (callback)
+                    callback(data.result);
+            }
+        });
+    }
+
+    /**
+     * Remove all notes from note list
+     * 
+     * @memberof Notes
+     */
+    function removeAllNotes(session) {
+        if (!session) {
+            noteList = [];
+            noteObserver.notify(noteList);
+        }
+    }
+
+    /**
+     * Returns noteList
+     * 
+     * @memberof Notes
+     * @returns {Note[]} List of all current notes
+     */
+    function getNoteList() {
+        return noteList;
+    }
+
+    /**
+     * Sets the list of chat messages
+     * 
+     * @memberof Notes
+     * @param {Object} notes Contains the data for the notes
+     */
+    function setNoteList(notes) {
+        noteList = [];
+        for (var note in notes) {
+            noteList.push(new Note(notes[note]));
+        }
+
+        noteObserver.notify(noteList);
+    }
+
+
+    /**
+     * Given a session, decided if we need to retrieve the notes, or clear the current notes
+     * 
+     * @memberof Notes
+     * @param {Session} session A given session 
+     */
+    function getSessionNotes(session) {
+        //If session exists then retrieve notes, otherwise remove all notes
+        if (session &amp;&amp; !session.test) {
+            retrieveAllSessionNotes(session._id, function(data) {
+                setNoteList(data.notes);
+            });
+        } else {
+            removeAllNotes();
+        }
+    }
+    /**
+     * Given a session id, retrieve the notes for that saession
+     * 
+     * @memberof Notes
+     * @param {String} sessionId The id of the session whose notes we want to retrieve
+     * @param {Function} callback The callback to execute after the server has responded 
+     */
+    function retrieveAllSessionNotes(sessionId, callback) {
+        $.post("http://localhost:9000/notes/getallsessionnotes", {
+            sessionId: sessionId,
+            userId: CollabBookReader.getSessions().getCurrentUserId()
+        }).done(function(data) {
+            if (data.success) {
+                callback(data.result);
+            } else {
+                alert("An error has occured retrieving the session notes. Please try again");
+                console.log(data);
+            }
+        });
+    }
+
+    /**
+     * Given a note id, delete that note from the current session
+     * The delete is being handled here instead of in the Note itself, because we also need the current session
+     * 
+     * @memberof Notes
+     * @param {String} noteId The id of the note to delete
+     * @param {Function} callback The callback to execute after the server has responded 
+     */
+    function deleteNote(noteId, callback) {
+        $.post("http://localhost:9000/notes/deletenote", {
+            sessionId: CollabBookReader.getSessions().getCurrentUserSession()._id,
+            noteId: noteId,
+            userId: CollabBookReader.getSessions().getCurrentUserId()
+        }).done(function(data) {
+            if (data.success) {
+                callback(data.result);
+            } else {
+                alert("An error has occured deleting this note. Please try again");
+                console.log(data);
+            }
+        });
+    }
+
+    function removeNote(noteId) {
+        noteList = noteList.filter(function(value) {
+            return value._id != noteId;
+        });
+        noteObserver.notify(noteList);
+    }
+
+    return {
+        getNoteObserver,
+        addNote,
+        createNewNote,
+        removeAllNotes,
+        getNoteList,
+        setNoteList,
+        getSessionNotes,
+        deleteNote,
+        removeNote
+    };
+})();
+
+/**
+ * Handles all of the functionality related to an individual chat message
+ * @constructor
+ */
+function Note(noteDetails) {
+    /**
+     * The unique id of the note
+     * @member {String}
+     */
+    this._id = noteDetails._id;
+    /**
+     * The user who sent the message
+     * @member {String}
+     */
+    this.user = noteDetails.user;
+    /**
+     * The contents of the message
+     * @member {String}
+     */
+    this.note = noteDetails.note;
+    /**
+     * The page number this note belongs to
+     * @member {Integer}
+     */
+    this.pageNum = noteDetails.pageNum;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Book.html">Book</a></li><li><a href="Books.html">Books</a></li><li><a href="Chat.html">Chat</a></li><li><a href="ChatMessage.html">ChatMessage</a></li><li><a href="CollabBookReader.html">CollabBookReader</a></li><li><a href="Note.html">Note</a></li><li><a href="Notes.html">Notes</a></li><li><a href="Observer.html">Observer</a></li><li><a href="Page.html">Page</a></li><li><a href="Session.html">Session</a></li><li><a href="Sessions.html">Sessions</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AngularMainApp">AngularMainApp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Dec 22 2018 14:44:08 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

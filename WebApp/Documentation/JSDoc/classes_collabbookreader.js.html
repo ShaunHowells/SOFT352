@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: classes/collabbookreader.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: classes/collabbookreader.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @classdesc Container that that is used to access other singlton classes.
+ * Also handles general functions that affect multiple classes like websocket messages
+ *  
+ * @class
+ * @hideconstructor
+ */
+const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
+
+    var websocket = null; //Websocket for receiving data from server
+    var sessions = Sessions; //Sessions object for performing operations on Sessions
+    var books = Books; //Books object for performing operations on Books
+    var chat = Chat; //Chat object for performing operations on Books
+    var notes = Notes; //Notes object for performing operations on Notes
+    var users = Users; //Users object for performing opersations on Users
+
+    var username;
+
+    /**
+     * Initialise websocket, connect to server, and set onmessage
+     * 
+     * @memberof CollabBookReader
+     */
+    function startWebSocketConnection() {
+        //Don't recreate the websocket if it already exists
+        if (!websocket) {
+            websocket = new WebSocket("ws://localhost:9000");
+            websocket.onmessage = handleWebSocketMessage;
+
+            websocket.onerror = function() {
+                $("#noConnectionModal").modal({
+                    "backdrop": "static",
+                    "keyboard": false
+                });
+            };
+        }
+    }
+    /**
+     * Close websocket and set to null
+     * 
+     * @memberof CollabBookReader
+     */
+    function stopWebSocketConnection() {
+        //Only close the websocket if it exists
+        if (websocket) {
+            websocket.close();
+            websocket = null;
+        }
+    }
+    /**
+     * Handle the messages sent to the websocket
+     * 
+     * @param message - Received message
+     * @memberof CollabBookReader
+     */
+    function handleWebSocketMessage(message) {
+        var messageData = JSON.parse(message.data);
+        console.log(messageData);
+
+        switch (messageData.type) {
+        // Message received containing our unique client id
+        case "connected":
+            sessions.setCurrentUserId(messageData.clientId);
+            books.setCurrentUserId(messageData.clientId);
+            break;
+            //Message received containing the list of all available sessions
+        case "allsessions":
+            sessions.setAvailableSessions(messageData.result);
+            break;
+            //Message received when another session is created (either by us or by another user)
+        case "newsessioncreated":
+            sessions.pushAvailableSession(messageData.result);
+            break;
+            //Message received when a session is no longer available
+        case "sessionremoved":
+            sessions.removeAvailableSession(messageData.result.sessionId);
+            break;
+            //Message received when the page in the current session has changed
+        case "pagechanged":
+            books.getSessionBookPage(messageData.result);
+            break;
+        case "chatmessagereceived":
+            chat.addChatMessage(messageData.result);
+            break;
+        case "userjoinedsession":
+            chat.addChatMessage({
+                user: messageData.user.username,
+                message: messageData.user.username + " has joined the session",
+                notification: true
+            });
+            users.addUser(messageData.user);
+            break;
+        case "userleftsession":
+            chat.addChatMessage({
+                user: messageData.user.username,
+                message: messageData.user.username + " has left the session",
+                notification: true
+            });
+            users.removeUser(messageData.user._id);
+            break;
+        case "newnoteadded":
+            notes.addNote(messageData.note);
+            break;
+        case "noteremoved":
+            notes.removeNote(messageData.noteId);
+            break;
+        default:
+            break;
+        }
+    }
+
+    /**
+     * Returns Sessions object
+     * 
+     * @returns {Sessions} Sessions Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getSessions() {
+        return sessions;
+    }
+
+    /**
+     * Returns Books object
+     * 
+     * @returns {Books} Books Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getBooks() {
+        return books;
+    }
+
+    /**
+     * Returns Chat object
+     * 
+     * @returns {Chat} Chat Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getChat() {
+        return chat;
+    }
+
+    /**
+     * Returns Notes object
+     * 
+     * @returns {Notes} Notes Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getNotes() {
+        return notes;
+    }
+
+    /**
+     * Returns Users object
+     * 
+     * @returns {Users} Users Singleton Class
+     * @memberof CollabBookReader
+     */
+    function getUsers() {
+        return users;
+    }
+
+    function setUsername(inputUsername) {
+        if (!username) {
+            username = inputUsername;
+            $("#spanUsername").text(username);
+            $("#displayUsername").removeClass("username-init");
+            $("#displayUsername").addClass("username-set");
+        } else {
+            console.error("Username");
+        }
+    }
+
+    function getUsername() {
+        return username;
+    }
+
+    return {
+        getSessions,
+        getBooks,
+        getChat,
+        getNotes,
+        getUsers,
+        setUsername,
+        getUsername,
+        startWebSocketConnection,
+        stopWebSocketConnection
+    };
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Book.html">Book</a></li><li><a href="Books.html">Books</a></li><li><a href="Chat.html">Chat</a></li><li><a href="ChatMessage.html">ChatMessage</a></li><li><a href="CollabBookReader.html">CollabBookReader</a></li><li><a href="Note.html">Note</a></li><li><a href="Notes.html">Notes</a></li><li><a href="Observer.html">Observer</a></li><li><a href="Page.html">Page</a></li><li><a href="Session.html">Session</a></li><li><a href="Sessions.html">Sessions</a></li><li><a href="User.html">User</a></li><li><a href="Users.html">Users</a></li></ul><h3>Global</h3><ul><li><a href="global.html#AngularMainApp">AngularMainApp</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sat Dec 22 2018 14:44:08 GMT+0000 (GMT Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

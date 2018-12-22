@@ -1,0 +1,10 @@
+{
+    "opts": {
+        "destination": "./Server/Documentation/JSDoc/",
+        "recurse": true
+    },
+    "source": {
+        "excludePattern": "node_modules",
+        "include": ["./Server/src"]
+    }
+}

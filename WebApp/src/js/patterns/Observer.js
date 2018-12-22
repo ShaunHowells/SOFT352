@@ -1,6 +1,8 @@
 /**
  * @classdesc Implementation of the Observer pattern
  * Used to allow classes to observe the actions of other classes
+ * 
+ * @class
  */
 function Observer() { // eslint-disable-line no-unused-vars
     this.observers = [];
