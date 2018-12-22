@@ -1,10 +1,10 @@
 {
     "opts": {
-        "destination": "./WebApp/Documentation/JSDoc/",
+        "destination": "./Website/Documentation/JSDoc/",
         "recurse": true
     },
     "source": {
         "excludePattern": "node_modules",
-        "include": ["./WebApp/src"]
+        "include": ["./Website/src"]
     }
 }

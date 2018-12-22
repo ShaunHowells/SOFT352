@@ -77,10 +77,6 @@ module.exports = function(server) {
             console.log("Connection closed - Total Connections: " + Object.keys(connectedUsers).length);
         });
 
-        connection.on("message", function(message) {
-            console.log(message);
-        });
-
         var uniqueId = getUniqueId();
         connection.shaun_uniqueId = uniqueId;
         connectedUsers[uniqueId] = connection;
