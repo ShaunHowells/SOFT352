@@ -53,6 +53,14 @@
 
 <body>
     <div class="row border main" id="main" ng-app="AngularMainApp">
+        <div class="alerts">
+            <div id="sessionNoLongerAvailableAlert" class="alert alert-info fade show" role="alert">
+                The session you were viewing is no longer available
+                <button id="sessionNoLongerAvailableClose" type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
         <!-- Sesssion Lists -->
         <div class="col-12 col-md-3 no-gutters flexboxcolumns">
             <div id="displayUsername" class="username-init border">

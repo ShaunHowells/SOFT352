@@ -1,32 +1,32 @@
 //Sample sessions for use in Sessions tests
 var sampleAvailableSessionList = [{
-    "currentBook": {
-        "book_id": null,
-        "title": "Shaun's Test Book"
+        "currentBook": {
+            "book_id": null,
+            "title": "Shaun's Test Book"
+        },
+        "_id": "5c0936db8a7aa44ea0adf4be",
+        "test": true,
+        "name": "Yet another test",
+        "owner": "753b5e0e-2c07",
+        "users": [{
+            "_id": "5c0936db8a7aa44ea0adf4bf",
+            "user_id": "753b5e0e-2c07"
+        }]
     },
-    "_id": "5c0936db8a7aa44ea0adf4be",
-    "test": true,
-    "name": "Yet another test",
-    "owner": "753b5e0e-2c07",
-    "users": [{
-        "_id": "5c0936db8a7aa44ea0adf4bf",
-        "user_id": "753b5e0e-2c07"
-    }]
-},
-{
-    "currentBook": {
-        "book_id": null,
-        "title": "Shaun's Test Book"
-    },
-    "_id": "5c0936e68a7aa44ea0adf4c0",
-    "test": true,
-    "name": "My Session",
-    "owner": "65382863-fe2c",
-    "users": [{
-        "_id": "5c0936e68a7aa44ea0adf4c1",
-        "user_id": "65382863-fe2c"
-    }]
-}
+    {
+        "currentBook": {
+            "book_id": null,
+            "title": "Shaun's Test Book"
+        },
+        "_id": "5c0936e68a7aa44ea0adf4c0",
+        "test": true,
+        "name": "My Session",
+        "owner": "65382863-fe2c",
+        "users": [{
+            "_id": "5c0936e68a7aa44ea0adf4c1",
+            "user_id": "65382863-fe2c"
+        }]
+    }
 ];
 var sampleSession = {
     "currentBook": {
@@ -68,7 +68,7 @@ QUnit.module("Sessions");
 /**
  * Show 'Available Sessions' tab content - Test that the 'Available Sessions' tab content can be displayed
  */
-QUnit.test("Show 'Available Sessions' tab content", function (assert) {
+QUnit.test("Show 'Available Sessions' tab content", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -87,7 +87,7 @@ QUnit.test("Show 'Available Sessions' tab content", function (assert) {
 /**
  * Set 'Available Sessions' list - Test that the 'Available Sessions' list is updated when the 'Available Sessions' Angular scope is set
  */
-QUnit.test("Set 'Available Sessions' list", function (assert) {
+QUnit.test("Set 'Available Sessions' list", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -135,7 +135,7 @@ QUnit.test("Set 'Available Sessions' list", function (assert) {
 /**
  * Add new session to 'Available Session' list - Test that the 'Available Sessions' list is updated when a new session is added to the 'Available Sessions' Angular scope
  */
-QUnit.test("Add new session to 'Available Session' list", function (assert) {
+QUnit.test("Add new session to 'Available Session' list", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -176,7 +176,7 @@ QUnit.test("Add new session to 'Available Session' list", function (assert) {
 /**
  * Remove session from 'Available Sessions' list - Test that the 'Available Sessions' list is updated a session is removed from the 'Available Sessions' Angular scope
  */
-QUnit.test("Remove session from 'Available Sessions' list", function (assert) {
+QUnit.test("Remove session from 'Available Sessions' list", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -216,7 +216,7 @@ QUnit.test("Remove session from 'Available Sessions' list", function (assert) {
 /**
  * View details for a session in the 'Available Sessions' list - Test that you can view the details of a session in the 'Available Sessions' by clicking on it
  */
-QUnit.test("View details for a session in the 'Available Sessions' list", function (assert) {
+QUnit.test("View details for a session in the 'Available Sessions' list", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -266,7 +266,7 @@ QUnit.test("View details for a session in the 'Available Sessions' list", functi
 /**
  * Show 'My Session' tab content - Test that the 'My Session' tab content can be displayed. 'Create new Session' should be shown when there isn't a currentUserSession
  */
-QUnit.test("Show 'My Session' tab content", function (assert) {
+QUnit.test("Show 'My Session' tab content", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -289,7 +289,7 @@ QUnit.test("Show 'My Session' tab content", function (assert) {
 /**
  * Set current user session - Test that the 'My Session' tab content shows session details the user is in a session
  */
-QUnit.test("Set current user session", function (assert) {
+QUnit.test("Set current user session", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -342,7 +342,7 @@ QUnit.test("Set current user session", function (assert) {
 /**
  * Remove current user session - Test that the 'My Session' tab content shows 'Create a new session' after leaving a session
  */
-QUnit.test("Remove current user session", function (assert) {
+QUnit.test("Remove current user session", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -382,7 +382,7 @@ QUnit.test("Remove current user session", function (assert) {
 /**
  * Display 'Create new session' popup - Test that clicking 'Create a new session' button in the 'My Session' tab content shows the 'Create a new session' modal popup
  */
-QUnit.test("Display 'Create new session' popup", function (assert) {
+QUnit.test("Display 'Create new session' popup", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -425,9 +425,9 @@ QUnit.test("Display 'Create new session' popup", function (assert) {
 });
 
 /**
- * Remove session from 'Available Sessions' when the user is in that session - Test that the users current session isn't displayed in the 'Available Sessions' list
+ * Session should be removed from 'Available Sessions' when the user is in that session - Test that the users current session isn't displayed in the 'Available Sessions' list
  */
-QUnit.test("Remove session from 'Available Sessions' when the user is in that session", function (assert) {
+QUnit.test("Remove session from 'Available Sessions' when the user is in that session", function(assert) {
     //STORE PREVIOUS VALUES
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
@@ -469,6 +469,52 @@ QUnit.test("Remove session from 'Available Sessions' when the user is in that se
     CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionsList);
     //Set currentUserSession back to previous value
     CollabBookReader.getSessions().setCurrentUserSession(previousCurrentUserSession);
+    //Click the previously selected tab heading
+    currentlyActiveTab.click();
+});
+
+/**
+ * When a session is removed from the available sessions list while the user is looking at the session details it should be closed and an alert should be displayed
+ */
+QUnit.test("Close available session details popup when viewing details of a session that no longer exists", function(assert) {
+    //STORE PREVIOUS VALUES
+    //Get the currently active tab heading
+    var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
+    //Get the current availableSessions
+    var previousAvailableSessionsList = CollabBookReader.getSessions().getAvailableSessions();
+
+    //Click 'Available Sessions' tab heading
+    angular.element("#availableSessionsTabHeading").click();
+
+    //Get Angular scope for the 'Available Sessions' list
+    var availableSessionsCtrlScope = angular.element("#availableSessions").scope();
+
+    //Set availableSessions to our sample session list
+    CollabBookReader.getSessions().setAvailableSessions(sampleAvailableSessionList);
+    //Manually call $apply
+    //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
+    availableSessionsCtrlScope.$apply();
+
+    //Select the first session in the 'Available Sessions' list to display the details
+    angular.element("#availableSessionId" + sampleAvailableSessionList[0]._id).click();
+
+    //Check that the modal popup is current displayed
+    assert.ok(angular.element("#availableSessionDetailsModal").is(":visible"), "Available Sessions Details are currently being displayed");
+
+    //Remove the session whose details we are viewing
+    CollabBookReader.getSessions().removeAvailableSession(sampleAvailableSessionList[0]._id);
+
+    //The modal popup should have been closed (as the session itself no longer exists);
+    assert.ok(!angular.element("#availableSessionDetailsModal").is(":visible"), "Available Sessions Details should have been closed");
+    assert.ok(angular.element("#sessionNoLongerAvailableAlert").is(":visible"), "The alert for the session no longer being available should be visible");
+
+    angular.element("#sessionNoLongerAvailableClose").click();
+
+    assert.ok(!angular.element("#sessionNoLongerAvailableAlert").is(":visible"), "The alert for the session no longer being available should no longer be visible");
+
+    //RESET TO PREVIOUS VALUES
+    //Set availableSessions back to previous value
+    CollabBookReader.getSessions().setAvailableSessions(previousAvailableSessionsList);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });

@@ -6,10 +6,60 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
     //Set $scope.availableSessions and update display
     $scope.setAvailableSessions = function(data) {
         $scope.availableSessions = data;
+        //If we're currently displaying the details of a session, check if it's still available
+        checkDisplayedSessionDetails();
         $scope.$applyAsync();
     };
     //Set $scope.setAvailableSessions as callback in CollabBookReader.getSessions() - Called when availableSession list is updated
     CollabBookReader.getSessions().getAvailableSessionsObserver().subscribe($scope.setAvailableSessions);
+
+    //Check if we're currently displaying available session details
+    //If that session is no longer available then close the popup and alert the user
+    function checkDisplayedSessionDetails() {
+        if ($scope.displaySession) {
+            var found = false;
+            for (var i = 0; i < availableSessions; i++) {
+                if (displaySession._id == availableSessions[i]._id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                hideSessionDetails();
+                displaySessionNoLongerAvailableAlert();
+            }
+        }
+    }
+
+    function hideSessionDetails() {
+        angular.element("#availableSessionDetailsModalClose").click();
+    };
+
+    angular.element('#availableSessionDetailsModal').on('hidden.bs.modal', function() {
+        $scope.displaySession = null;
+    });
+    angular.element("#sessionNoLongerAvailableClose").click(function() {
+        angular.element("#sessionNoLongerAvailableAlert").hide();
+    });
+    var sessionNoLongerAvailableTimeout;
+
+    function displaySessionNoLongerAvailableAlert() {
+        //If timeout exists, then clear it
+        if (sessionNoLongerAvailableTimeout) {
+            clearTimeout(sessionNoLongerAvailableTimeout);
+        }
+        //Show alert and cancel all current animations
+        var sessionNoLongerAvailableAlert = angular.element("#sessionNoLongerAvailableAlert");
+        sessionNoLongerAvailableAlert.stop();
+        sessionNoLongerAvailableAlert.removeAttr("style");
+        sessionNoLongerAvailableAlert.show();
+        //After 3 sconds hide the alert
+        sessionNoLongerAvailableTimeout = window.setTimeout(function() {
+            sessionNoLongerAvailableAlert.hide({
+                duration: 1000
+            });
+        }, 3000);
+    }
 
     //Display session details popup with given a given sessions details
     $scope.showSessionDetails = function(session) {
@@ -31,7 +81,7 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
 
             CollabBookReader.getUsers().setUsers(data.users);
             //Hide modal popup and select 'My Session' tab
-            angular.element("#availableSessionDetailsModalClose").click();
+            hideSessionDetails
             angular.element("#currentUserSessionTabHeading").click();
 
             //Hide displayed details

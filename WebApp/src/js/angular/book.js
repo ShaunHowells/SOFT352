@@ -1,10 +1,10 @@
 /**
  * Controller for displaying the list of books within the 'Create a new session' popup
  */
-AngularMainApp.controller("bookListCtrl", function ($scope) {
+AngularMainApp.controller("bookListCtrl", function($scope) {
     $scope.bookList = [];
     //Set $scope.bookList and update display ($applyAsync)
-    $scope.setBookList = function (data) {
+    $scope.setBookList = function(data) {
         $scope.bookList = data;
         $scope.$applyAsync();
     };
@@ -15,10 +15,10 @@ AngularMainApp.controller("bookListCtrl", function ($scope) {
 /**
  * Controller for displaying Book/Page contents in centre carousel
  */
-AngularMainApp.controller("bookPageCtrl", function ($scope) {
+AngularMainApp.controller("bookPageCtrl", function($scope) {
 
     //Set $scope.pageNum and $scope.pageImage and update the display ($applyAsync)
-    $scope.updatePage = function (bookPage) {
+    $scope.updatePage = function(bookPage) {
         $scope.currentBookPage = bookPage;
         $scope.$applyAsync();
     };
@@ -27,32 +27,36 @@ AngularMainApp.controller("bookPageCtrl", function ($scope) {
 
     var prevPageWarningTimeout;
     //Navigate to previous page
-    $scope.getPreviousPage = function (bookPage) {
-        //If we we're at a page greater than 0, then navigate backwards
-        //If we're at page 0 then we can't go backwards, so display an alert
-        if (bookPage.currentPage.pageNum > 0) {
-            CollabBookReader.getSessions().updateCurrentSessionBookPage(bookPage.currentPage.pageNum - 1);
-        } else {
-            //If timeout for exists, then clear it
-            if (prevPageWarningTimeout) {
-                clearTimeout(prevPageWarningTimeout);
-            }
-            //Show alert and cancel all current animations
-            var prevPageWarning = angular.element("#prevPageWarning");
-            prevPageWarning.stop();
-            prevPageWarning.removeAttr("style");
-            prevPageWarning.show();
+    $scope.getPreviousPage = function(bookPage) {
+        //Check if we have an actual bookPage (where _id exists)
+        //If not do nothing
+        if (bookPage._id) {
+            //If we we're at a page greater than 0, then navigate backwards
+            //If we're at page 0 then we can't go backwards, so display an alert
+            if (bookPage.currentPage.pageNum > 0) {
+                CollabBookReader.getSessions().updateCurrentSessionBookPage(bookPage.currentPage.pageNum - 1);
+            } else {
+                //If timeout for exists, then clear it
+                if (prevPageWarningTimeout) {
+                    clearTimeout(prevPageWarningTimeout);
+                }
+                //Show alert and cancel all current animations
+                var prevPageWarning = angular.element("#prevPageWarning");
+                prevPageWarning.stop();
+                prevPageWarning.removeAttr("style");
+                prevPageWarning.show();
 
-            //After 3 seconds hide the alert
-            prevPageWarningTimeout = window.setTimeout(function () {
-                prevPageWarning.hide({
-                    duration: 1000
-                });
-            }, 3000);
+                //After 3 seconds hide the alert
+                prevPageWarningTimeout = window.setTimeout(function() {
+                    prevPageWarning.hide({
+                        duration: 1000
+                    });
+                }, 3000);
+            }
         }
     };
     //Hide the prevPageWarning - Called by button on alert
-    $scope.hidePrevPageWarning = function () {
+    $scope.hidePrevPageWarning = function() {
         if (prevPageWarningTimeout) {
             clearTimeout(prevPageWarningTimeout);
         }
@@ -62,31 +66,35 @@ AngularMainApp.controller("bookPageCtrl", function ($scope) {
 
     var nextPageWarningTimeout;
     //Navigate to next page
-    $scope.getNextPage = function (bookPage) {
-        //If we have pages left to go to (we aren't currently at the last page) then navigate to next page
-        //If we're at the last page then display an alert
-        if (bookPage.currentPage.pageNum < bookPage.pageCount - 1) {
-            CollabBookReader.getSessions().updateCurrentSessionBookPage(bookPage.currentPage.pageNum + 1);
-        } else {
-            //If timeout exists, then clear it
-            if (nextPageWarningTimeout) {
-                clearTimeout(nextPageWarningTimeout);
+    $scope.getNextPage = function(bookPage) {
+        //Check if we have an actual bookPage (where _id exists)
+        //If not do nothing
+        if (bookPage._id) {
+            //If we have pages left to go to (we aren't currently at the last page) then navigate to next page
+            //If we're at the last page then display an alert
+            if (bookPage.currentPage.pageNum < bookPage.pageCount - 1) {
+                CollabBookReader.getSessions().updateCurrentSessionBookPage(bookPage.currentPage.pageNum + 1);
+            } else {
+                //If timeout exists, then clear it
+                if (nextPageWarningTimeout) {
+                    clearTimeout(nextPageWarningTimeout);
+                }
+                //Show alert and cancel all current animations
+                var nextPageWarning = angular.element("#nextPageWarning");
+                nextPageWarning.stop();
+                nextPageWarning.removeAttr("style");
+                nextPageWarning.show();
+                //After 3 sconds hide the alert
+                nextPageWarningTimeout = window.setTimeout(function() {
+                    nextPageWarning.hide({
+                        duration: 1000
+                    });
+                }, 3000);
             }
-            //Show alert and cancel all current animations
-            var nextPageWarning = angular.element("#nextPageWarning");
-            nextPageWarning.stop();
-            nextPageWarning.removeAttr("style");
-            nextPageWarning.show();
-            //After 3 sconds hide the alert
-            nextPageWarningTimeout = window.setTimeout(function () {
-                nextPageWarning.hide({
-                    duration: 1000
-                });
-            }, 3000);
         }
     };
     //Hide the nextPageWarning - Called by button on alert
-    $scope.hideNextPageWarning = function () {
+    $scope.hideNextPageWarning = function() {
         if (nextPageWarningTimeout) {
             clearTimeout(nextPageWarningTimeout);
         }
@@ -97,10 +105,10 @@ AngularMainApp.controller("bookPageCtrl", function ($scope) {
 /**
  * Controller for displaying Book/Page contents in centre carousel
  */
-AngularMainApp.controller("bookPageDetailsCtrl", function ($scope) {
+AngularMainApp.controller("bookPageDetailsCtrl", function($scope) {
 
     //Set $scope.pageNum and $scope.pageImage and update the display ($applyAsync)
-    $scope.updatePage = function (bookPage) {
+    $scope.updatePage = function(bookPage) {
         $scope.currentBookPage = bookPage;
         $scope.$applyAsync();
     };
