@@ -31,7 +31,8 @@
     "complete-test": " npm run test-webapp && npm run test-server",
     "generate-webapp-doc": ".\\node_modules\\.bin\\jsdoc -c .\\WebApp\\Documentation\\jsdoc.json",
     "generate-server-doc": ".\\node_modules\\.bin\\jsdoc -c .\\Server\\Documentation\\jsdoc.json",
-    "generate-documentation": "npm run generate-webapp-doc && npm run generate-server-doc"
+    "generate-documentation": "npm run generate-webapp-doc && npm run generate-server-doc",
+    "eslint": ".\\node_modules\\.bin\\eslint -c .\\.eslintrc.json --ignore-path .\\.eslintignore ."
   },
   "author": "",
   "license": "ISC"

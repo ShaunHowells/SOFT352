@@ -5,12 +5,12 @@ var bodyParser = require("body-parser");
 var myArgs = process.argv.slice(2);
 var test = false;
 switch (myArgs[0]) {
-case "test":
-    console.log("Enabling Test Mode");
-    test = true;
-    break;
-default:
-    break;
+    case "test":
+        console.log("Enabling Test Mode");
+        test = true;
+        break;
+    default:
+        break;
 }
 
 var app = express();

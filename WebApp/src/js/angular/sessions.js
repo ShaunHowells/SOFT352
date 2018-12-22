@@ -18,8 +18,8 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
     function checkDisplayedSessionDetails() {
         if ($scope.displaySession) {
             var found = false;
-            for (var i = 0; i < availableSessions; i++) {
-                if (displaySession._id == availableSessions[i]._id) {
+            for (var i = 0; i < $scope.availableSessions; i++) {
+                if ($scope.displaySession._id == $scope.availableSessions[i]._id) {
                     found = true;
                     break;
                 }
@@ -31,13 +31,17 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
         }
     }
 
+    //Hide the availableSessionDetailsModal
     function hideSessionDetails() {
         angular.element("#availableSessionDetailsModalClose").click();
-    };
-
-    angular.element('#availableSessionDetailsModal').on('hidden.bs.modal', function() {
+    }
+    //When availableSessionDetailsModal is hidden
+    //Clear $scope.displaySession
+    angular.element("#availableSessionDetailsModal").on("hidden.bs.modal", function() {
         $scope.displaySession = null;
     });
+    //When the close button on the sessionNoLongerAvaiable alert is clicked, manually hide the alert
+    //In Bootstrap the default close action ony allows the alert to display once
     angular.element("#sessionNoLongerAvailableClose").click(function() {
         angular.element("#sessionNoLongerAvailableAlert").hide();
     });
@@ -81,7 +85,6 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
 
             CollabBookReader.getUsers().setUsers(data.users);
             //Hide modal popup and select 'My Session' tab
-            hideSessionDetails
             angular.element("#currentUserSessionTabHeading").click();
 
             //Hide displayed details
@@ -152,7 +155,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
     }
 
     angular.element("#createNewSessionModal").on("hidden.bs.modal", function() {
-        document.getElementById("createNewSessionForm").classList.remove("was-validated");;
+        document.getElementById("createNewSessionForm").classList.remove("was-validated");
     });
 
     //Called by currentUserSessionDetailsLeaveSession - Leave current session

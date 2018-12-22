@@ -1,7 +1,4 @@
 const {
-    BeforeAll,
-    Before,
-    After,
     Given,
     When,
     Then
@@ -18,7 +15,7 @@ var world;
 
 
 //Scenario: Send chat message
-Given('that I am in a session with multiple users', function() {
+Given("that I am in a session with multiple users", function() {
     // Create a session
     var response = request("POST", "http://localhost:9001/sessions/createsession", {
         json: {
@@ -33,14 +30,14 @@ Given('that I am in a session with multiple users', function() {
     var result = JSON.parse(response.getBody("utf8"));
 
     assert.ok(result, "The server should have sent back a response");
-    assert.ok(!result.err, "No error should be returned")
+    assert.ok(!result.err, "No error should be returned");
     assert.ok(result.success, "Session should have successfully been created");
     assert.ok(result.result._id, "The session Id should have been returned");
 
     this.sessionId = result.result._id;
 
     //Join the session with another user so that we have multiple users in one session
-    var response = request("POST", "http://localhost:9001/sessions/joinsession", {
+    response = request("POST", "http://localhost:9001/sessions/joinsession", {
         json: {
             sessionId: this.sessionId,
             user: {
@@ -52,22 +49,22 @@ Given('that I am in a session with multiple users', function() {
     result = JSON.parse(response.getBody("utf8"));
 
     assert.ok(result, "The server should have sent back a response");
-    assert.ok(!result.err, "No error should be returned")
+    assert.ok(!result.err, "No error should be returned");
     assert.ok(result.success, "Session should have successfully been joined");
 });
-Given('I have input my chat message', function() {
+Given("I have input my chat message", function() {
     //Set our message as sampleChatMessage
     this.message = sampleChatMessage;
 });
 
-When('I send a chat message', function(callback) {
+When("I send a chat message", function(callback) {
     //Set up the websocket on message here 
     //This has to be done here as the websocket should receive a chat message
     world = this;
     this.extraWebsocketConnection.on("message", function(message) {
         var messageData = JSON.parse(message.utf8Data);
         switch (messageData.type) {
-            // Message received contains the data about the incoming chat message
+        // Message received contains the data about the incoming chat message
             case "chatmessagereceived":
                 world.receivedChatMessage = messageData.result;
                 callback();
@@ -87,11 +84,11 @@ When('I send a chat message', function(callback) {
     var result = JSON.parse(response.getBody("utf8"));
 
     assert.ok(result, "The server should have sent back a response");
-    assert.ok(!result.err, "No error should be returned")
+    assert.ok(!result.err, "No error should be returned");
     assert.ok(result.success, "The chat message should have successfully sent");
 });
 
-Then('the other users in the session should receive that chat message', function() {
+Then("the other users in the session should receive that chat message", function() {
     //Check that the message as received correctly
     assert.ok(this.receivedChatMessage, "The chat message should have been received by the other user(s) in the session");
     assert.equal(this.receivedChatMessage.user, sampleUsername, "The chat message should contain the name of the user who sent the message");

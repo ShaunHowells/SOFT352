@@ -50,7 +50,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
     }
 
     angular.element("#createNewNoteModal").on("hidden.bs.modal", function() {
-        document.getElementById("createNoteForm").classList.remove("was-validated");;
+        document.getElementById("createNoteForm").classList.remove("was-validated");
     });
 
     $scope.noteEnter = function(event) {

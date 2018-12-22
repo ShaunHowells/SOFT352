@@ -9,18 +9,18 @@ var request = require("sync-request");
 var samplePageNum = 0;
 
 //Scenario: View all books
-When('I ask to see the list of all books', function() {
+When("I ask to see the list of all books", function() {
     //Query the server to return all books
-    var response = request("POST", "http://localhost:9001/books/getallbooks", );
+    var response = request("POST", "http://localhost:9001/books/getallbooks");
     var result = JSON.parse(response.getBody("utf8"));
-    this.allBooksResult = result
+    this.allBooksResult = result;
 });
 
-Then('I should be shown all of the books', function() {
+Then("I should be shown all of the books", function() {
     //Check that that the returned result contains the list of books
     assert.ok(this.allBooksResult, "The server should have sent back a response");
-    assert.ok(!this.allBooksResult.err, "No error should be returned")
-    assert.ok(this.allBooksResult.success, "Books should have been successfully retrieved")
+    assert.ok(!this.allBooksResult.err, "No error should be returned");
+    assert.ok(this.allBooksResult.success, "Books should have been successfully retrieved");
 
     assert.ok(this.allBooksResult.result.length >= 1, "At least one book should have been retrieved");
 
@@ -34,17 +34,17 @@ Then('I should be shown all of the books', function() {
 
 
 //Scenario: Get a page from a book
-Given('I know what book I want to see', function() {
+Given("I know what book I want to see", function() {
     //Use the retrieved bookId as our book
     this.bookId = this.retrievedBookId;
 });
 
-Given('I know what page I want to see', function() {
+Given("I know what page I want to see", function() {
     //Use the sample pageNum as our pageNum
     this.pageNum = samplePageNum;
 });
 
-Then('when I ask to see the page from a book', function() {
+Then("when I ask to see the page from a book", function() {
     //Query the server to the page from that book
     var response = request("POST", "http://localhost:9001/books/getpagefrombook", {
         json: {
@@ -53,14 +53,14 @@ Then('when I ask to see the page from a book', function() {
         }
     });
     var result = JSON.parse(response.getBody("utf8"));
-    this.bookPageResult = result
+    this.bookPageResult = result;
 });
 
-Then('I should be shown the page from that book', function() {
+Then("I should be shown the page from that book", function() {
     //Check that that the returned result contains the data for the page
     assert.ok(this.bookPageResult, "The server should have sent back a response");
-    assert.ok(!this.bookPageResult.err, "No error should be returned")
-    assert.ok(this.bookPageResult.success, "Book page should have been successfully retrieved")
+    assert.ok(!this.bookPageResult.err, "No error should be returned");
+    assert.ok(this.bookPageResult.success, "Book page should have been successfully retrieved");
 
     var bookPage = this.bookPageResult.result;
     //Check that all of the expected keys exist - Don't worry about their values, we only care that they've been returned
