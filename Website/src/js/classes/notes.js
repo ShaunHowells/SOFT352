@@ -151,6 +151,12 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
         });
     }
 
+    /**
+     * Removes a note from noteList
+     * 
+     * @memberof Notes
+     * @param {String} noteId The id of the note to remove from the list
+     */
     function removeNote(noteId) {
         noteList = noteList.filter(function(value) {
             return value._id != noteId;

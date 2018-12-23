@@ -48,7 +48,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     var currentBookPage = new BookPage(defaultBookPage);
 
     var bookListObserver = new Observer();
-    var updatePageBookObserver = new Observer();
+    var updateBookPageObserver = new Observer();
 
     /**
      * Returns bookListObserver
@@ -60,13 +60,13 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         return bookListObserver;
     }
     /**
-     * Returns updatePageBookObserver
+     * Returns updateBookPageObserver
      * 
      * @memberof Books
      * @return {Observer} Observer for updating the current page and book
      */
-    function getUpdatePageBookObserver() {
-        return updatePageBookObserver;
+    function getUpdateBookPageObserver() {
+        return updateBookPageObserver;
     }
 
     /**
@@ -148,7 +148,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     }
 
     /**
-     * Sets the current book/page, then notifies the updatePageBookObserver
+     * Sets the current book/page, then notifies the updateBookPageObserver
      * 
      * @param {Object} data - Data of the book + page
      */
@@ -160,7 +160,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
                 pageCount: data.pageCount,
                 currentPage: data.currentPage
             });
-            updatePageBookObserver.notify(currentBookPage);
+            updateBookPageObserver.notify(currentBookPage);
         } else {
             resetCurrentBookPage();
         }
@@ -237,7 +237,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
 
     return {
         getBookListObserver,
-        getUpdatePageBookObserver,
+        getUpdateBookPageObserver,
         setCurrentUserId,
         getCurrentUserId,
         retrieveBookList,

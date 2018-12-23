@@ -20,7 +20,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     var currentBookPage = new BookPage(defaultBookPage);
 
     var bookListObserver = new Observer();
-    var updatePageBookObserver = new Observer();
+    var updateBookPageObserver = new Observer();
 
     /**
      * Returns bookListObserver
@@ -32,13 +32,13 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         return bookListObserver;
     }
     /**
-     * Returns updatePageBookObserver
+     * Returns updateBookPageObserver
      * 
      * @memberof Books
      * @return {Observer} Observer for updating the current page and book
      */
-    function getUpdatePageBookObserver() {
-        return updatePageBookObserver;
+    function getUpdateBookPageObserver() {
+        return updateBookPageObserver;
     }
 
     /**
@@ -120,7 +120,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     }
 
     /**
-     * Sets the current book/page, then notifies the updatePageBookObserver
+     * Sets the current book/page, then notifies the updateBookPageObserver
      * 
      * @param {Object} data - Data of the book + page
      */
@@ -132,7 +132,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
                 pageCount: data.pageCount,
                 currentPage: data.currentPage
             });
-            updatePageBookObserver.notify(currentBookPage);
+            updateBookPageObserver.notify(currentBookPage);
         } else {
             resetCurrentBookPage();
         }
@@ -165,22 +165,6 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         setCurrentBookPage(defaultBookPage);
     }
 
-    function setCurrentBookPageFromServer(pageNum) {
-        retrieveNewPageFromBook(currentBookPage._id, pageNum, function(data) {
-            var bookDetails = {
-                _id: currentBookPage._id,
-                title: currentBookPage.title,
-                pageCount: data.pageCount,
-                currentPage: {
-                    contentType: data.pages[0].contentType,
-                    imageData: data.pages[0].data.data,
-                    pageNum: data.pages[0].pageNum
-                }
-            };
-            setCurrentBookPage(bookDetails);
-        });
-    }
-
     /**
      * Given a session, find the details of the book/page and retrieve the page from the book.
      * 
@@ -209,7 +193,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
 
     return {
         getBookListObserver,
-        getUpdatePageBookObserver,
+        getUpdateBookPageObserver,
         setCurrentUserId,
         getCurrentUserId,
         retrieveBookList,
@@ -219,8 +203,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         setCurrentBookPage,
         retrieveNewPageFromBook,
         resetCurrentBookPage,
-        getSessionBookPage,
-        setCurrentBookPageFromServer
+        getSessionBookPage
     };
 })();
 

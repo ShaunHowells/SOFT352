@@ -23,7 +23,7 @@ AngularMainApp.controller("bookPageCtrl", function($scope) {
         $scope.$applyAsync();
     };
     //Set $scope.updatePage as callback in CollabBookReader.getBooks() - Called when currentPage is updated
-    CollabBookReader.getBooks().getUpdatePageBookObserver().subscribe($scope.updatePage);
+    CollabBookReader.getBooks().getUpdateBookPageObserver().subscribe($scope.updatePage);
 
     var prevPageWarningTimeout;
     //Navigate to previous page
@@ -113,6 +113,6 @@ AngularMainApp.controller("bookPageDetailsCtrl", function($scope) {
         $scope.$applyAsync();
     };
     //Set $scope.updatePage as callback in CollabBookReader.getBooks() - Called when currentPage is updated
-    CollabBookReader.getBooks().getUpdatePageBookObserver().subscribe($scope.updatePage);
+    CollabBookReader.getBooks().getUpdateBookPageObserver().subscribe($scope.updatePage);
 
 });

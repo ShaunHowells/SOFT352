@@ -21,7 +21,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
         });
         $scope.$apply();
     };
-    CollabBookReader.getBooks().getUpdatePageBookObserver().subscribe($scope.refreshNoteList);
+    CollabBookReader.getBooks().getUpdateBookPageObserver().subscribe($scope.refreshNoteList);
 
     //Send user input chat message and clear display
     $scope.createNote = function() {
