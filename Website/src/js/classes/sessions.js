@@ -251,7 +251,6 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         setAvailableSessions,
         pushAvailableSession,
         removeAvailableSession,
-        filterAvailableSessions,
         getCurrentUserSession,
         setCurrentUserSession,
         removeCurrentUserSession,
