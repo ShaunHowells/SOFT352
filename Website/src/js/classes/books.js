@@ -262,29 +262,24 @@ function BookPage(bookPageDetails) {
 
     this.pageCount = bookPageDetails.pageCount;
 
-    this.currentPage = new Page(bookPageDetails.currentPage);
-}
-/**
- * Handles all of the functionality related to an individual page
- * @constructor
- */
-function Page(pageDetails) {
-    /**
-     * The number of the page - Starts from 0
-     * @member {Integer}
-     */
-    this.pageNum = pageDetails.pageNum;
-    /**
-     * The source of the page image
-     * @member {String}
-     */
-    this.src = null;
+    this.currentPage = {
+        /**
+         * The number of the page - Starts from 0
+         * @member {Integer}
+         */
+        pageNum: bookPageDetails.currentPage.pageNum,
+        /**
+         * The source of the page image
+         * @member {String}
+         */
+        src: null
+    }
 
-    //Page src can come in two formats
-    //Name of local files or the image data
-    if (pageDetails.src) {
-        this.src = pageDetails.src;
-    } else if (pageDetails.imageData) {
-        this.src = "data:" + pageDetails.contentType + ";base64," + util_encode(pageDetails.imageData);
+    //The page src can come in two formats
+    //Either as a filename, or the image data as retrieved from the server
+    if (bookPageDetails.currentPage.src) {
+        this.currentPage.src = bookPageDetails.currentPage.src;
+    } else if (bookPageDetails.currentPage.imageData) {
+        this.currentPage.src = "data:" + bookPageDetails.currentPage.contentType + ";base64," + util_encode(bookPageDetails.currentPage.imageData);
     }
 }
