@@ -137,18 +137,15 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * @param {Function} callback The callback to execute after the server has responded 
      */
     function deleteNote(noteId, callback) {
-        $.post("http://localhost:9000/notes/deletenote", {
-            sessionId: CollabBookReader.getSessions().getCurrentUserSession()._id,
-            noteId: noteId,
-            userId: CollabBookReader.getSessions().getCurrentUserId()
-        }).done(function(data) {
-            if (data.success) {
-                callback(data.result);
-            } else {
-                alert("An error has occured deleting this note. Please try again");
-                console.log(data);
+        for (var note in noteList) {
+            if (noteList[note]._id == noteId) {
+                var self = this;
+                noteList[note].deleteNote(function() {
+                    callback();
+                });
+                break;
             }
-        });
+        }
     }
 
     /**
@@ -202,4 +199,24 @@ function Note(noteDetails) {
      * @member {Integer}
      */
     this.pageNum = noteDetails.pageNum;
+
+    /**
+     * Deletes the note
+     * 
+     * @param {Function} callback The callback to be executed when the note is deleted
+     */
+    this.deleteNote = function(callback) {
+        $.post("http://localhost:9000/notes/deletenote", {
+            sessionId: CollabBookReader.getSessions().getCurrentUserSession()._id,
+            noteId: this._id,
+            userId: CollabBookReader.getSessions().getCurrentUserId()
+        }).done(function(data) {
+            if (data.success) {
+                callback();
+            } else {
+                alert("An error has occured deleting this note. Please try again");
+                console.log(data);
+            }
+        });
+    }
 }

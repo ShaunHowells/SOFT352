@@ -294,7 +294,7 @@ function Session(sessionDetails) {
     };
 
     /**
-     * leaveSessions - Leaves the current session
+     * Leaves the current session
      * 
      * @param {String} userId - ID of the user to leaving the session
      * @param {Function} callback - The callback to be executed when the session is left
