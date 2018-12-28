@@ -12,7 +12,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
         title: null,
         pageCount: null,
         currentPage: {
-            src: "testimage.jpg",
+            src: "DefaultPage.png",
             pageNum: 0
         }
     };
