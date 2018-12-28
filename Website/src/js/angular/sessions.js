@@ -17,9 +17,10 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
     //If that session is no longer available then close the popup and alert the user
     function checkDisplayedSessionDetails() {
         if ($scope.displaySession) {
+            var allAvailableSessions = CollabBookReader.getSessions().getAvailableSessions();
             var found = false;
-            for (var i = 0; i < $scope.availableSessions; i++) {
-                if ($scope.displaySession._id == $scope.availableSessions[i]._id) {
+            for (var i = 0; i < allAvailableSessions.length; i++) {
+                if ($scope.displaySession._id == allAvailableSessions[i]._id) {
                     found = true;
                     break;
                 }
@@ -85,6 +86,7 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
 
             CollabBookReader.getUsers().setUsers(data.users);
             //Hide modal popup and select 'My Session' tab
+            angular.element("#availableSessionDetailsModalClose").click();
             angular.element("#currentUserSessionTabHeading").click();
 
             //Hide displayed details
