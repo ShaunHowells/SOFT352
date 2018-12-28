@@ -49,29 +49,32 @@ function joinSession(sessionId, user, callback) {
             }, {
                 new: true
             }, function(err, result) {
-                result.populate({
-                    path: "currentBook",
-                    select: "_id title"
-                }, function(err, result) {
+                if (err || !result) {
                     callback(err, result);
-                });
-
-                var userId;
-                var userList = result.users.toObject();
-                for (var i = 0; i < userList.length; i++) {
-                    if (userList[i].user_id == user.userId) {
-                        userId = userList[i]._id;
-                        break;
-                    }
-                }
-                if (webSockets) {
-                    webSockets.notifyUsers(result.users, {
-                        type: "userjoinedsession",
-                        user: {
-                            _id: userId,
-                            username: user.username
-                        }
+                } else {
+                    result.populate({
+                        path: "currentBook",
+                        select: "_id title"
+                    }, function(err, result) {
+                        callback(err, result);
                     });
+                    var userId;
+                    var userList = result.users.toObject();
+                    for (var i = 0; i < userList.length; i++) {
+                        if (userList[i].user_id == user.userId) {
+                            userId = userList[i]._id;
+                            break;
+                        }
+                    }
+                    if (webSockets) {
+                        webSockets.notifyUsers(result.users, {
+                            type: "userjoinedsession",
+                            user: {
+                                _id: userId,
+                                username: user.username
+                            }
+                        });
+                    }
                 }
             });
         } else {
