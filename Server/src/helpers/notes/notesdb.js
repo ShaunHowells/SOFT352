@@ -55,7 +55,7 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                             if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
                                 callback("This page does not exist in the book");
                             } else {
-                                models.Sessions.updateOne({
+                                models.Sessions.findOneAndUpdate({
                                     _id: sessionId
                                 }, {
                                     "$push": {
@@ -65,24 +65,21 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                                             pageNum: pageNum
                                         }
                                     }
+                                }, {
+                                    new: true
                                 }, function(err, result) {
-                                    models.Sessions.findOne({
-                                        _id: sessionId
-                                    }, {
-                                        notes: {
-                                            $slice: -1
-                                        }
-                                    }, function(err, result) {
-                                        var createdNote = result.notes[0].toObject();
-                                        callback(err, createdNote);
-
+                                    if (err || !result) {
+                                        callback(err, result);
+                                    } else {
+                                        var newNote = result.notes[result.notes.length - 1];
+                                        callback(err, newNote);
                                         if (webSockets) {
-                                            webSockets.notifyUsers(userList, {
+                                            webSockets.notifyUsers(result.users, {
                                                 type: "newnoteadded",
-                                                note: createdNote
+                                                note: newNote
                                             });
                                         }
-                                    });
+                                    }
                                 });
                             }
                         });
@@ -92,7 +89,6 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
         });
     }
 };
-
 /**
  * Get all notes from a session
  *
