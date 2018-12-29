@@ -55,7 +55,6 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
      */
     function handleWebSocketMessage(message) {
         var messageData = JSON.parse(message.data);
-        console.log(messageData);
 
         switch (messageData.type) {
             // Message received containing our unique client id
