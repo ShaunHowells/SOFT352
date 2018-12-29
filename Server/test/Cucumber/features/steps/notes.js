@@ -151,8 +151,9 @@ Then("my note should be created", function() {
     assert.ok(result.success, "The note should have successfully been created");
 
     //Check the the returned contents is correct
-    assert.ok(result.result.notes, "The list of notes should have been returned");
-    assert.equal(result.result.notes.length, 1, "There should be 1 note in the list");
+    assert.equal(result.result.user, sampleUsername, "The returned note should havethe correct username");
+    assert.equal(result.result.note, this.noteDetails, "The returned note should have the correct noteDetails");
+    assert.equal(result.result.pageNum, this.pageNum, "The returned note should have the correct page number");
 });
 
 Then("I should be informed that it was created", function() {
@@ -202,14 +203,17 @@ Given("that session has a note for me to delete", function() {
     assert.ok(result.success, "The note should have successfully been created");
 
     //Check the the returned contents is correct
-    assert.ok(result.result.notes, "The list of notes should have been returned");
-    assert.equal(result.result.notes.length, 1, "There should be 1 note in the list");
+
+    //Check the the returned contents is correct
+    assert.equal(result.result.user, sampleUsername, "The returned note should havethe correct username");
+    assert.equal(result.result.note, sampleNoteDetails, "The returned note should have the correct noteDetails");
+    assert.equal(result.result.pageNum, samplePageNum, "The returned note should have the correct page number");
 
     this.createNoteResult = result;
 });
 
 Given("I have selected the note I want to delete", function() {
-    this.noteToDeleteId = this.createNoteResult.result.notes[0]._id;
+    this.noteToDeleteId = this.createNoteResult.result._id;
 });
 
 When("when I try to delete the note", function(callback) {

@@ -179,55 +179,55 @@ function removeUserFromSession(sessionId, userId, callback) {
                 } else {
                     //Find username/_id before we remove the user
                     var userList = result.users.toObject();
-                    var username;
-                    var foundUserId;
+                    var userLength = userList.length;
+                    var foundUser;
                     for (var i = 0; i < userList.length; i++) {
                         if (userList[i].user_id == userId) {
-                            username = userList[i].username;
-                            foundUserId = userList[i]._id;
+                            foundUser = userList[i];
+                            //Remove user from list for later
+                            userList.splice(i, 1);
                             break;
                         }
                     }
-                    models.Sessions.findOneAndUpdate({
-                        _id: sessionId
-                    }, {
-                        $pull: {
-                            users: {
-                                user_id: userId
-                            }
-                        }
-                    }, {
-                        new: true
-                    }, function(err, result) {
-                        if (err || !result) {
-                            callback(err, result);
-                        } else {
-                            if (result.users.length == 0) {
-                                result.remove(callback);
-                                if (webSockets) {
-                                    webSockets.notifyAllConnectedUsers({
-                                        type: "sessionremoved",
-                                        success: true,
-                                        result: {
-                                            sessionId: sessionId
-                                        }
-                                    });
+
+                    if (userLength <= 1) {
+                        result.remove(callback);
+                        if (webSockets) {
+                            webSockets.notifyAllConnectedUsers({
+                                type: "sessionremoved",
+                                success: true,
+                                result: {
+                                    sessionId: sessionId
                                 }
+                            });
+                        }
+                    } else {
+                        models.Sessions.updateOne({
+                            _id: sessionId
+                        }, {
+                            $pull: {
+                                users: {
+                                    user_id: userId
+                                }
+                            }
+                        }, function(err, result) {
+                            if (err || !result) {
+                                callback(err, {});
                             } else {
-                                callback(err, result);
+                                callback(err, {});
 
                                 if (webSockets) {
-                                    webSockets.notifyUsers(result.users, {
+                                    webSockets.notifyUsers(userList, {
                                         type: "userleftsession",
                                         user: {
-                                            _id: foundUserId,
-                                            username: username
+                                            _id: foundUser._id,
+                                            username: foundUser.username
                                         }
                                     });
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             });
         } else {

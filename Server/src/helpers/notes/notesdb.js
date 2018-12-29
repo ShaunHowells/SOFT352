@@ -55,7 +55,7 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                             if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
                                 callback("This page does not exist in the book");
                             } else {
-                                models.Sessions.findOneAndUpdate({
+                                models.Sessions.updateOne({
                                     _id: sessionId
                                 }, {
                                     "$push": {
@@ -65,21 +65,24 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                                             pageNum: pageNum
                                         }
                                     }
-                                }, {
-                                    new: true
                                 }, function(err, result) {
-                                    result.populate({
-                                        path: "currentBook",
-                                        select: "_id title"
+                                    models.Sessions.findOne({
+                                        _id: sessionId
+                                    }, {
+                                        notes: {
+                                            $slice: -1
+                                        }
                                     }, function(err, result) {
-                                        callback(err, result);
+                                        var createdNote = result.notes[0].toObject();
+                                        callback(err, createdNote);
+
+                                        if (webSockets) {
+                                            webSockets.notifyUsers(userList, {
+                                                type: "newnoteadded",
+                                                note: createdNote
+                                            });
+                                        }
                                     });
-                                    if (webSockets) {
-                                        webSockets.notifyUsers(result.users, {
-                                            type: "newnoteadded",
-                                            note: result.notes[result.notes.length - 1]
-                                        });
-                                    }
                                 });
                             }
                         });
@@ -109,7 +112,7 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
             } else if (err) {
                 callback(err);
             } else {
-                models.Sessions.findOneAndUpdate({
+                models.Sessions.updateOne({
                     _id: sessionId
                 }, {
                     $pull: {
@@ -117,11 +120,11 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
                             _id: noteId
                         }
                     }
-                }, {
-                    new: true
                 }, function(err, result) {
                     if (err || !result) {
-                        callback(err, result);
+                        callback(err, {
+                            removed: false
+                        });
                     } else {
                         callback(err, {
                             removed: true
