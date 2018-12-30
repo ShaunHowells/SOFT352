@@ -48,6 +48,16 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Handle the messages sent to the websocket
      * 
+     * @return {Boolean} A boolean indicating if the websocket is active
+     * @memberof CollabBookReader
+     */
+    function isWebSocketActive() {
+        return (websocket != null);
+    }
+
+    /**
+     * Handle the messages sent to the websocket
+     * 
      * @param message - Received message
      * @memberof CollabBookReader
      */
@@ -202,6 +212,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         setUsername,
         getUsername,
         startWebSocketConnection,
-        getWebSocketMessageObserver
+        getWebSocketMessageObserver,
+        isWebSocketActive
     };
 })();
