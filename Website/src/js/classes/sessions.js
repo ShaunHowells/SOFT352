@@ -17,7 +17,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns availableSessionsObserver
      * 
-     * @return {Observer} Observer for the available session list
+     * @return {Observer} - Observer for the available session list
      * @memberof Sessions
      */
     function getAvailableSessionsObserver() {
@@ -26,7 +26,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns currentUserSessionObserver
      * 
-     * @return {Observer} Observer for the current user session
+     * @return {Observer} - Observer for the current user session
      * @memberof Sessions
      */
     function getCurrentUserSessionObserver() {
@@ -43,7 +43,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
         if (!currentUserId) {
             currentUserId = newUserId;
         } else {
-            console.error("Current User Id may only be set once");
+            console.error("Current User ID may only be set once");
         }
     }
     /**
@@ -92,7 +92,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     /**
      * Given a session id, remove the session with that id from availableSessions, then notify availableSessionsObserver
      * 
-     * @param {String} sessionId - Id of the session to be removed
+     * @param {String} sessionId - ID of the session to be removed
      * @memberof Sessions
      */
     function removeAvailableSession(sessionId) {
@@ -107,7 +107,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     /**
      * Filter availableSessions so that the currentUserSession isn't displayed as we don't want to display our current session as an available session
      * 
-     * @return {Session[]} The list of available sessions where the current user session has been filtered out
+     * @return {Session[]} - The list of available sessions where the current user session has been filtered out
      * @memberof Sessions
      */
     function filterAvailableSessions() {
@@ -127,7 +127,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
     /**
      * Return currentUserSession
      * 
-     * @returns {Session} The current user session
+     * @returns {Session} - The current user session
      * @memberof Sessions
      */
     function getCurrentUserSession() {
@@ -165,6 +165,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      * 
      * @param {String} sessionName - Name of the session to be created
      * @param {String} bookId - The id of the book to be loaded into the session
+     * @param {String} username - The name of the user creating the session
      * @param {Function} callback - The callback to be executed after the session is created
      * @memberof Sessions
      */
@@ -193,6 +194,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      * Joins a session, then retrieves the page the session is currently reading
      * 
      * @param {String} sessionId - ID of the session to join
+     * @param {String} username - Name of the user joining the session
      * @param {Function} callback - The callback to be executed after the session is joined
      * @memberof Sessions
      */
@@ -267,7 +269,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
  */
 function Session(sessionDetails) {
     /**
-     * The Id of the session
+     * The ID of the session
      * @member {String}
      */
     this._id = sessionDetails._id;
@@ -303,6 +305,7 @@ function Session(sessionDetails) {
      * Joins the supplied user to the session
      * 
      * @param {String} userId - ID of the user to joining the session
+     * @param {String} username - Name of the user joining the session
      * @param {Function} callback - The callback to be executed when the session is joined
      */
     this.joinSession = function(userId, username, callback) {
@@ -348,13 +351,15 @@ function Session(sessionDetails) {
      * Updates the page number in current the session
      * 
      * @param {Integer} pageNum - The number of the page to set in the session
+     * @param {String} userId - The ID of the user updating the bookPage
+     * @param {Integer} callback - The function to be executed after the bookPage is updated
      * @memberof Sessions
      */
-    this.updateBookPage = function(pageNum, currentUserId, callback) {
+    this.updateBookPage = function(pageNum, userId, callback) {
         $.post("http://localhost:9000/sessions/updatecurrentpage", {
             sessionId: this._id,
             pageNum: pageNum,
-            userId: currentUserId
+            userId: userId
         }, function(data) {
             if (data.success) {
                 if (callback)

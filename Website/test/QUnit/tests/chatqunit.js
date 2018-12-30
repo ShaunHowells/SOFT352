@@ -31,13 +31,13 @@ QUnit.module("Chat");
 QUnit.test("Set list of Chat messages", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current chatMessages
-    var previousChatList = CollabBookReader.getChat().getChatMessages();
+    var previousChatList = Chat.getChatMessages();
 
     //Get Angular scope for the the chat messages
     var chatMessagesCtrl = angular.element("#chatMessageArea").scope();
 
     //Set chat messages to our sample set
-    CollabBookReader.getChat().setChatMessages(sampleChatMessages);
+    Chat.setChatMessages(sampleChatMessages);
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
 
@@ -49,7 +49,7 @@ QUnit.test("Set list of Chat messages", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the chatMessages to previous value
-    CollabBookReader.getChat().setChatMessages(previousChatList);
+    Chat.setChatMessages(previousChatList);
 });
 
 /**
@@ -58,18 +58,18 @@ QUnit.test("Set list of Chat messages", function(assert) {
 QUnit.test("Clear list of Chat messages", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current chatMessages
-    var previousChatList = CollabBookReader.getChat().getChatMessages();
+    var previousChatList = Chat.getChatMessages();
 
     //Get Angular scope for the the chat messages
     var chatMessagesCtrl = angular.element("#chatMessageArea").scope();
 
     //Set chat messages to our sample list (so we have messages to remove)
-    CollabBookReader.getChat().setChatMessages(sampleChatMessages);
+    Chat.setChatMessages(sampleChatMessages);
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
 
     //Remove all chat messages
-    CollabBookReader.getChat().removeAllChatMessages();
+    Chat.removeAllChatMessages();
 
     //Check values of the Angular scope has been correctly updated
     var chatMessages = chatMessagesCtrl.chatMessages;
@@ -79,7 +79,7 @@ QUnit.test("Clear list of Chat messages", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the chatMessages to previous value
-    CollabBookReader.getChat().setChatMessages(previousChatList);
+    Chat.setChatMessages(previousChatList);
 });
 
 /**
@@ -88,17 +88,17 @@ QUnit.test("Clear list of Chat messages", function(assert) {
 QUnit.test("Add chat message to list of Chat messages", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current chatMessages
-    var previousChatList = CollabBookReader.getChat().getChatMessages();
+    var previousChatList = Chat.getChatMessages();
 
     //Get Angular scope for the the chat messages
     var chatMessagesCtrl = angular.element("#chatMessageArea").scope();
 
     //Clear all chat messages (so that we ensure we're starting at 0 messages)
-    CollabBookReader.getChat().removeAllChatMessages();
+    Chat.removeAllChatMessages();
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
 
-    CollabBookReader.getChat().addChatMessage(sampleChatMessage1);
+    Chat.addChatMessage(sampleChatMessage1);
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
     //Check values of the Angular scope have been correctly updated
@@ -106,7 +106,7 @@ QUnit.test("Add chat message to list of Chat messages", function(assert) {
     assert.equal(chatMessages.length, 1, "1 chat messages should be in the chat message list");
     assert.equal(angular.element("#chatMessages").children("li").length, 1, "1 chat messages should be displayed in the chat messages list");
 
-    CollabBookReader.getChat().addChatMessage(sampleChatMessage2);
+    Chat.addChatMessage(sampleChatMessage2);
     //Manually call .$apply() as it normally uses $applyAsync()
     chatMessagesCtrl.$apply();
     //Check values of the Angular scope have been correctly updated
@@ -116,5 +116,5 @@ QUnit.test("Add chat message to list of Chat messages", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the chatMessages to previous value
-    CollabBookReader.getChat().setChatMessages(previousChatList);
+    Chat.setChatMessages(previousChatList);
 });

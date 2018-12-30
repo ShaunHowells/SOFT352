@@ -32,7 +32,7 @@ Given("that I am in a session with multiple users", function() {
     assert.ok(result, "The server should have sent back a response");
     assert.ok(!result.err, "No error should be returned");
     assert.ok(result.success, "Session should have successfully been created");
-    assert.ok(result.result._id, "The session Id should have been returned");
+    assert.ok(result.result._id, "The session ID should have been returned");
 
     this.sessionId = result.result._id;
 

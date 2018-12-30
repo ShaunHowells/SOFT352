@@ -15,7 +15,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * Returns currentSessionUsersObserver
      * 
      * @memberof Users
-     * @return {Observer} Observer for the current session users
+     * @return {Observer} - Observer for the current session users
      */
     function getCurrentSessionUsersObserver() {
         return currentSessionUsersObserver;
@@ -40,7 +40,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * @param {String} userId - The id of the user to remove
      */
     function removeUser(userId) {
-        currentSessionUsers = currentSessionUsers.filter(function(value){
+        currentSessionUsers = currentSessionUsers.filter(function(value) {
             return value._id != userId;
         });
 
@@ -63,7 +63,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * Returns currentSessionUsers
      * 
      * @memberof Users
-     * @returns {User[]} List of all current session users
+     * @returns {User[]} - List of all current session users
      */
     function getUsers() {
         return currentSessionUsers;
@@ -73,7 +73,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * Sets the list of users
      * 
      * @memberof Users
-     * @param {Object} users Contains the data for the users
+     * @param {Object} users - Contains the data for the users
      */
     function setUsers(users) {
         currentSessionUsers = [];
@@ -100,7 +100,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
  */
 function User(userDetails) {
     /**
-     * The Id of the user
+     * The ID of the user
      * @member {String}
      */
     this._id = userDetails._id;

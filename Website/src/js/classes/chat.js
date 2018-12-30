@@ -13,7 +13,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Returns chatMessageObserver
      * 
      * @memberof Chat
-     * @return {Observer} Observer for the chat messages
+     * @return {Observer} - Observer for the chat messages
      */
     function getChatMessageObserver() {
         return chatMessageObserver;
@@ -34,7 +34,9 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Send a message to other users in the session
      * 
      * @memberof Chat
-     * @param {String} message
+     * @param {String} message - The ID the message is being sent in
+     * @param {String} userId - The ID of the user sending the message
+     * @param {String} message - The message to send
      */
     function sendChatMessage(sessionId, userId, message) {
         $.post("http://localhost:9000/chat/sendchatmessage", {
@@ -53,6 +55,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Removes all chat messages
      * 
      * @memberof Chat
+     * @param {Object} session - If session is empty then clear the list of chat messages
      */
     function removeAllChatMessages(session) {
         if (!session) {
@@ -65,7 +68,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Returns chatMessages
      * 
      * @memberof Chat
-     * @returns {ChatMessages[]} List of all current chat messages
+     * @returns {ChatMessages[]} - List of all current chat messages
      */
     function getChatMessages() {
         return chatMessages;
@@ -75,7 +78,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Sets the list of chat messages
      * 
      * @memberof Chat
-     * @param {Object} messages Contains the data for the chat messages
+     * @param {Object} messages - Contains the data for the chat messages
      */
     function setChatMessages(messages) {
         chatMessages = [];

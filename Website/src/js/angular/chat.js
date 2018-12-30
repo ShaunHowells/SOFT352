@@ -11,13 +11,13 @@ AngularMainApp.controller("chatMessagesCtrl", function($scope) {
         angular.element("#chatMessages").scrollTop(angular.element("#chatMessages")[0].scrollHeight);
     };
     //Set $scope.setAvailableSessions as callback in CollabBookReader.getSessions() - Called when availableSession list is updated
-    CollabBookReader.getChat().getChatMessageObserver().subscribe($scope.setChatMessages);
+    Chat.getChatMessageObserver().subscribe($scope.setChatMessages);
 
     //Send user input chat message and clear display
     $scope.sendChatMessage = function(message) {
         if (message) {
             if (Sessions.getCurrentUserSession()) {
-                CollabBookReader.getChat().sendChatMessage(Sessions.getCurrentUserSession()._id, Sessions.getCurrentUserId(), message);
+                Chat.sendChatMessage(Sessions.getCurrentUserSession()._id, Sessions.getCurrentUserId(), message);
             } else {
                 alert("You aren't currently in a session");
             }

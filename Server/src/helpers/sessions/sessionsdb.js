@@ -104,7 +104,7 @@ function createSession(sessionName, user, bookId, callback) {
         if (err) {
             callback(err, result);
         } else if (!result) {
-            callback("A book with this Id does not exist");
+            callback("A book with this ID does not exist");
         } else {
             isUserInAnySession(user.userId, function(err, inAnySession) {
                 if (err) {

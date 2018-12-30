@@ -3,26 +3,30 @@ var sampleNote1 = {
     "_id": "fakeId1",
     "user": "ShaunH",
     "pageNum": 0,
-    "message": "Sample 1"
+    "message": "Sample 1",
+    "sessionId": "5c0936db8a7aa44ea0adf4be"
 };
 
 var sampleNote2 = {
     "_id": "fakeId2",
     "user": "JohnS",
     "pageNum": 1,
-    "message": "Sample 2"
+    "message": "Sample 2",
+    "sessionId": "5c0936db8a7aa44ea0adf4be"
 };
 
 var sampleNotes = [{
     "_id": "fakeId3",
     "user": "Tim",
     "page": 0,
-    "message": "Message 1"
+    "message": "Message 1",
+    "sessionId": "5c0936db8a7aa44ea0adf4be"
 }, {
     "_id": "fakeId4",
     "user": "Jim",
     "pageNum": 1,
-    "message": "Message 2"
+    "message": "Message 2",
+    "sessionId": "5c0936db8a7aa44ea0adf4be"
 }];
 
 

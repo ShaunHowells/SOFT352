@@ -25,7 +25,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
      * Returns bookListObserver
      * 
      * @memberof Books
-     * @return {Observer} Observer for the bookList
+     * @return {Observer} - Observer for the bookList
      */
     function getBookListObserver() {
         return bookListObserver;
@@ -34,7 +34,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
      * Returns updateBookPageObserver
      * 
      * @memberof Books
-     * @return {Observer} Observer for updating the current page and book
+     * @return {Observer} - Observer for updating the current page and book
      */
     function getUpdateBookPageObserver() {
         return updateBookPageObserver;
@@ -79,7 +79,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns the bookList
      * 
-     * @returns {Book[]} The current list of books
+     * @returns {Book[]} - The current list of books
      * @memberof Books
      */
     function getBookList() {
@@ -89,7 +89,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns the currentBookPage
      * 
-     * @returns {BookPage} Current book page
+     * @returns {BookPage} - Current book page
      */
     function getCurrentBookPage() {
         return currentBookPage;
@@ -144,7 +144,7 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     /**
      * Given a session, find the details of the book/page and retrieve the page from the book.
      * 
-     * @param {Session} Session to retrieve book details from
+     * @param {Session} session - Session to retrieve book details from
      * @memberof Books
      */
     function getSessionBookPage(session) {
@@ -234,7 +234,7 @@ function Book(bookDetails) {
  */
 function BookPage(bookPageDetails) {
     /**
-     * The Id of the book
+     * The ID of the book
      * @member {Integer}
      */
     this._id = bookPageDetails._id;

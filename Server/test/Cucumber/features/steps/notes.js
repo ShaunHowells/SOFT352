@@ -260,5 +260,5 @@ Then("the note should be deleted", function() {
 Then("I should be informed that it was deleted", function() {
     //Check that the result returned by the websocket is correct
     assert.ok(this.removedNoteId, "The websocket should have received a message regarding the note being deleted");
-    assert.equal(this.removedNoteId, this.noteToDeleteId, "The note that was deleted should have the same Id as the message the web socket received");
+    assert.equal(this.removedNoteId, this.noteToDeleteId, "The note that was deleted should have the same ID as the message the web socket received");
 });

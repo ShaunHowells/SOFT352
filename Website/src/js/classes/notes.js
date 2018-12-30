@@ -14,7 +14,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Returns noteObserver
      * 
      * @memberof Notes
-     * @return {Observer} Observer for the chat messages
+     * @return {Observer} - Observer for the chat messages
      */
     function getNoteObserver() {
         return noteObserver;
@@ -35,7 +35,10 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Create a note for a page in the current session
      * 
      * @memberof Notes
-     * @param {String} message
+     * @param {Integer} pageNum - The number of the page to add the note to
+     * @param {String} note - The contents of the note itself
+     * @param {String} sessionId - The ID of the session the note is being added to
+     * @param {String} userId - The ID of the user adding the note to the session
      */
     function createNewNote(pageNum, note, sessionId, userId, callback) {
         $.post("http://localhost:9000/notes/addnewnote", {
@@ -58,6 +61,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Remove all notes from note list
      * 
      * @memberof Notes
+     * @param {Object} session - If the session is empty then remove all notes
      */
     function removeAllNotes(session) {
         if (!session) {
@@ -70,7 +74,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Returns noteList
      * 
      * @memberof Notes
-     * @returns {Note[]} List of all current notes
+     * @returns {Note[]} - List of all current notes
      */
     function getNoteList() {
         return noteList;
@@ -80,7 +84,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Sets the list of chat messages
      * 
      * @memberof Notes
-     * @param {Object} notes Contains the data for the notes
+     * @param {Object} notes - Contains the data for the notes
      */
     function setNoteList(notes) {
         noteList = [];
@@ -96,7 +100,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Given a session, decided if we need to retrieve the notes, or clear the current notes
      * 
      * @memberof Notes
-     * @param {Session} session A given session 
+     * @param {Session} session - The details of the session
      */
     function getSessionNotes(session) {
         //If session exists then retrieve notes, otherwise remove all notes
@@ -112,8 +116,9 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Given a session id, retrieve the notes for that saession
      * 
      * @memberof Notes
-     * @param {String} sessionId The id of the session whose notes we want to retrieve
-     * @param {Function} callback The callback to execute after the server has responded 
+     * @param {String} sessionId - The id of the session whose notes we want to retrieve
+     * @param {String} userId - The ID of the user retrieving the notes
+     * @param {Function} callback - The callback to execute after the server has responded 
      */
     function retrieveAllSessionNotes(sessionId, userId, callback) {
         $.post("http://localhost:9000/notes/getallsessionnotes", {
@@ -134,8 +139,8 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * The delete is being handled here instead of in the Note itself, because we also need the current session
      * 
      * @memberof Notes
-     * @param {String} noteId The id of the note to delete
-     * @param {Function} callback The callback to execute after the server has responded 
+     * @param {String} noteId - The id of the note to delete
+     * @param {Function} callback - The callback to execute after the server has responded 
      */
     function deleteNote(noteId, callback) {
         for (var note in noteList) {
@@ -152,7 +157,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Removes a note from noteList
      * 
      * @memberof Notes
-     * @param {String} noteId The id of the note to remove from the list
+     * @param {String} noteId - The id of the note to remove from the list
      */
     function removeNote(noteId) {
         noteList = noteList.filter(function(value) {
@@ -172,13 +177,13 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
         if (!currentUserId) {
             currentUserId = newUserId;
         } else {
-            console.error("Current User Id may only be set once");
+            console.error("Current User ID may only be set once");
         }
     }
     /**
      * Returns currentUserId
      * 
-     * @return {String} The current User ID
+     * @return {String} - The current User ID
      * @memberof Books
      */
     function getCurrentUserId() {
@@ -234,7 +239,8 @@ function Note(noteDetails) {
     /**
      * Deletes the note
      * 
-     * @param {Function} callback The callback to be executed when the note is deleted
+     * @param {String} userId - The ID of the user deleting the note
+     * @param {Function} callback - The callback to be executed when the note is deleted
      */
     this.deleteNote = function(userId, callback) {
         $.post("http://localhost:9000/notes/deletenote", {

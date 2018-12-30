@@ -57,7 +57,7 @@ module.exports = function(testMode) {
      * @property {String} notes.user The name of the user who created the note
      * @property {String} notes.note The contents of the note
      * @property {Number} notes.pageNum The page number this note related to (starts at 0)
-     * @property {String} notes.sessionId The Id of the session the note belongs to
+     * @property {String} notes.sessionId The ID of the session the note belongs to
      */
     var Sessions = mongoose.model("Sessions", {
         name: String,

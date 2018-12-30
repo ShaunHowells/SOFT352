@@ -8,12 +8,6 @@
 const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
 
     var websocket = null; //Websocket for receiving data from server
-    var sessions = Sessions; //Sessions object for performing operations on Sessions
-    var books = Books; //Books object for performing operations on Books
-    var chat = Chat; //Chat object for performing operations on Books
-    var notes = Notes; //Notes object for performing operations on Notes
-    var users = Users; //Users object for performing opersations on Users
-
     var username;
 
     var webSocketMessageObserver = new Observer();
@@ -48,7 +42,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Handle the messages sent to the websocket
      * 
-     * @return {Boolean} A boolean indicating if the websocket is active
+     * @return {Boolean} - A boolean indicating if the websocket is active
      * @memberof CollabBookReader
      */
     function isWebSocketActive() {
@@ -68,103 +62,53 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         switch (messageData.type) {
             // Message received containing our unique client id
             case "connected":
-                sessions.setCurrentUserId(messageData.clientId);
-                notes.setCurrentUserId(messageData.clientId);
+                Sessions.setCurrentUserId(messageData.clientId);
+                Notes.setCurrentUserId(messageData.clientId);
                 break;
-                //Message received containing the list of all available sessions
+                //Message received containing the list of all available Sessions
             case "allsessions":
-                sessions.setAvailableSessions(messageData.result);
+                Sessions.setAvailableSessions(messageData.result);
                 break;
                 //Message received when another session is created (either by us or by another user)
             case "newsessioncreated":
-                sessions.pushAvailableSession(messageData.result);
+                Sessions.pushAvailableSession(messageData.result);
                 break;
                 //Message received when a session is no longer available
             case "sessionremoved":
-                sessions.removeAvailableSession(messageData.result.sessionId);
+                Sessions.removeAvailableSession(messageData.result.sessionId);
                 break;
                 //Message received when the page in the current session has changed
             case "pagechanged":
-                books.getSessionBookPage(messageData.result);
+                Books.getSessionBookPage(messageData.result);
                 break;
             case "chatmessagereceived":
-                chat.addChatMessage(messageData.result);
+                Chat.addChatMessage(messageData.result);
                 break;
             case "userjoinedsession":
-                chat.addChatMessage({
+                Chat.addChatMessage({
                     user: messageData.user.username,
                     message: messageData.user.username + " has joined the session",
                     notification: true
                 });
-                users.addUser(messageData.user);
+                Users.addUser(messageData.user);
                 break;
             case "userleftsession":
-                chat.addChatMessage({
+                Chat.addChatMessage({
                     user: messageData.user.username,
                     message: messageData.user.username + " has left the session",
                     notification: true
                 });
-                users.removeUser(messageData.user._id);
+                Users.removeUser(messageData.user._id);
                 break;
             case "newnoteadded":
-                notes.addNote(messageData.note, sessions.getCurrentUserSession()._id);
+                Notes.addNote(messageData.note, Sessions.getCurrentUserSession()._id);
                 break;
             case "noteremoved":
-                notes.removeNote(messageData.noteId);
+                Notes.removeNote(messageData.noteId);
                 break;
             default:
                 break;
         }
-    }
-
-    /**
-     * Returns Sessions object
-     * 
-     * @returns {Sessions} Sessions Singleton Class
-     * @memberof CollabBookReader
-     */
-    function getSessions() {
-        return sessions;
-    }
-
-    /**
-     * Returns Books object
-     * 
-     * @returns {Books} Books Singleton Class
-     * @memberof CollabBookReader
-     */
-    function getBooks() {
-        return books;
-    }
-
-    /**
-     * Returns Chat object
-     * 
-     * @returns {Chat} Chat Singleton Class
-     * @memberof CollabBookReader
-     */
-    function getChat() {
-        return chat;
-    }
-
-    /**
-     * Returns Notes object
-     * 
-     * @returns {Notes} Notes Singleton Class
-     * @memberof CollabBookReader
-     */
-    function getNotes() {
-        return notes;
-    }
-
-    /**
-     * Returns Users object
-     * 
-     * @returns {Users} Users Singleton Class
-     * @memberof CollabBookReader
-     */
-    function getUsers() {
-        return users;
     }
 
     /**
@@ -186,7 +130,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns the username
      * 
-     * @returns {Users} Users Singleton Class
+     * @returns {String} - The name of the current user
      * @memberof CollabBookReader
      */
     function getUsername() {
@@ -195,7 +139,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns the username
      * 
-     * @returns {Observer} Observer for WebSocket messages
+     * @returns {Observer} - Observer for WebSocket messages
      * @memberof CollabBookReader
      */
 
@@ -204,11 +148,6 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     }
 
     return {
-        getSessions,
-        getBooks,
-        getChat,
-        getNotes,
-        getUsers,
         setUsername,
         getUsername,
         startWebSocketConnection,
