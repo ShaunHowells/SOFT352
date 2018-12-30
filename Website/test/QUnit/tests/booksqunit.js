@@ -46,9 +46,9 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
     //Gets the current bookList
-    var previousBookList = CollabBookReader.getBooks().getBookList();
+    var previousBookList = Books.getBookList();
     //Get the current currentUserSession
-    var previousCurrentUserSession = CollabBookReader.getSessions().getCurrentUserSession();
+    var previousCurrentUserSession = Sessions.getCurrentUserSession();
 
     //Get Angular scope for the the book list
     var bookListCtrlScope = angular.element("#createNewSessionBook").scope();
@@ -58,14 +58,14 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
     //Click 'My Session' tab heading
     angular.element("#currentUserSessionTabHeading").click();
     //Set the currentUserSession to empty to ensure we have the 'Create a new session' button
-    CollabBookReader.getSessions().removeCurrentUserSession();
+    Sessions.removeCurrentUserSession();
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
     //Display the 'Create a new session' popup
     angular.element("#createNewSession").click();
 
-    CollabBookReader.getBooks().setBookList(sampleBookList);
+    Books.setBookList(sampleBookList);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookListCtrlScope.$apply();
 
@@ -80,9 +80,9 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
 
     //RESET TO PREVIOUS VALUES
     //Set currentUserSession back to previous value
-    CollabBookReader.getSessions().setCurrentUserSession(previousCurrentUserSession);
+    Sessions.setCurrentUserSession(previousCurrentUserSession);
     //Set the bookList to previous value
-    CollabBookReader.getBooks().setBookList(previousBookList);
+    Books.setBookList(previousBookList);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -92,12 +92,12 @@ QUnit.test("Display list of books in 'Create a new session' book list", function
  */
 QUnit.test("Display book page in book carousel", function(assert) {
     //STORE PREVIOUS VALUES
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
 
     //Get Angular scope for the the currentPage
     var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
 
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    Books.setCurrentBookPage(sampleBookPage);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -110,7 +110,7 @@ QUnit.test("Display book page in book carousel", function(assert) {
     assert.equal(angular.element("#bookPageImage").attr("alt"), "Page could not be found", "Book Page Carousel alt should be set to \"Page could not be found\"");
 
     //RESET TO PREVIOUS VALUES
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
 });
 
 /**
@@ -118,12 +118,12 @@ QUnit.test("Display book page in book carousel", function(assert) {
  */
 QUnit.test("Display alerts when attempted to navigate to a page that doesn't exist", function(assert) {
     //STORE PREVIOUS VALUES
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
 
     //Get Angular scope for the the currentPage
     var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
 
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    Books.setCurrentBookPage(sampleBookPage);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -141,7 +141,7 @@ QUnit.test("Display alerts when attempted to navigate to a page that doesn't exi
     assert.ok(!angular.element("#nextPageWarning").is(":visible"), "Next page warning should be hidden after the button is clicked");
 
     //RESET TO PREVIOUS VALUES
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
 });
 
 /**
@@ -149,14 +149,14 @@ QUnit.test("Display alerts when attempted to navigate to a page that doesn't exi
  */
 QUnit.test("Update BookPage details when changing book/page", function(assert) {
     //STORE PREVIOUS VALUES
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
 
     //Get Angular scope for the the currentPage
     var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
     var bookPageDetailsCtrlScope = angular.element("#bookDetails").scope();
 
     //Remove the current book
-    CollabBookReader.getBooks().setCurrentBookPage({});
+    Books.setCurrentBookPage({});
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -166,7 +166,7 @@ QUnit.test("Update BookPage details when changing book/page", function(assert) {
     //Check that the UI has been udpated to display the correct image
     assert.equal(angular.element("#pBookPageDetails").text(), "Currently Reading: Nothing", "Current Book/Page details displays \"Currently Reading: Nothing \"");
 
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPage);
+    Books.setCurrentBookPage(sampleBookPage);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -179,5 +179,5 @@ QUnit.test("Update BookPage details when changing book/page", function(assert) {
     assert.equal(angular.element("#pBookPageDetails").text(), "Currently Reading: " + sampleBookPage.title + " - Page: " + (sampleBookPage.currentPage.pageNum + 1), "Current Book/Page details displays \"Currently Reading: " + sampleBookPage.title + " - Page: " + sampleBookPage.currentPage.pageNum + "\"");
 
     //RESET TO PREVIOUS VALUES
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
 });

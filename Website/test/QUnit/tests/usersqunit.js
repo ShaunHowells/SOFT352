@@ -48,9 +48,9 @@ QUnit.test("Set list of Users", function(assert) {
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
     //Get the current currentUserSession
-    var previousCurrentUserSession = CollabBookReader.getSessions().getCurrentUserSession();
+    var previousCurrentUserSession = Sessions.getCurrentUserSession();
     //Get the current users
-    var previousUserList = CollabBookReader.getUsers().getUsers();
+    var previousUserList = Users.getUsers();
 
     //Click currentUserSession tab heading
     angular.element("#currentUserSessionTabHeading").click();
@@ -59,13 +59,13 @@ QUnit.test("Set list of Users", function(assert) {
     var currentUserSessionCtrlScope = angular.element("#currentUserSession").scope();
 
     //Set the currentUserSession to the sampleCurrentUserSession - So we have a session to add users for
-    CollabBookReader.getSessions().setCurrentUserSession(sampleCurrentUserSession);
+    Sessions.setCurrentUserSession(sampleCurrentUserSession);
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getUsers().setUsers(sampleUsers);
+    Users.setUsers(sampleUsers);
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
@@ -76,9 +76,9 @@ QUnit.test("Set list of Users", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getUsers().getUsers(previousUserList);
+    Users.getUsers(previousUserList);
     //Set the notes to previous value
-    CollabBookReader.getSessions().setCurrentUserSession(previousCurrentUserSession);
+    Sessions.setCurrentUserSession(previousCurrentUserSession);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -91,9 +91,9 @@ QUnit.test("Clear list of Users", function(assert) {
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
     //Get the current currentUserSession
-    var previousCurrentUserSession = CollabBookReader.getSessions().getCurrentUserSession();
+    var previousCurrentUserSession = Sessions.getCurrentUserSession();
     //Get the current users
-    var previousUserList = CollabBookReader.getUsers().getUsers();
+    var previousUserList = Users.getUsers();
 
     //Click currentUserSession tab heading
     angular.element("#currentUserSessionTabHeading").click();
@@ -102,17 +102,17 @@ QUnit.test("Clear list of Users", function(assert) {
     var currentUserSessionCtrlScope = angular.element("#currentUserSession").scope();
 
     //Set the currentUserSession to the sampleCurrentUserSession - So we have a session to add users for
-    CollabBookReader.getSessions().setCurrentUserSession(sampleCurrentUserSession);
+    Sessions.setCurrentUserSession(sampleCurrentUserSession);
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getUsers().setUsers(sampleUsers);
+    Users.setUsers(sampleUsers);
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
-    CollabBookReader.getUsers().removeAllUsers();
+    Users.removeAllUsers();
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
@@ -123,9 +123,9 @@ QUnit.test("Clear list of Users", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getUsers().getUsers(previousUserList);
+    Users.getUsers(previousUserList);
     //Set the notes to previous value
-    CollabBookReader.getSessions().setCurrentUserSession(previousCurrentUserSession);
+    Sessions.setCurrentUserSession(previousCurrentUserSession);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -138,9 +138,9 @@ QUnit.test("Add user to the list of Users", function(assert) {
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
     //Get the current currentUserSession
-    var previousCurrentUserSession = CollabBookReader.getSessions().getCurrentUserSession();
+    var previousCurrentUserSession = Sessions.getCurrentUserSession();
     //Get the current users
-    var previousUserList = CollabBookReader.getUsers().getUsers();
+    var previousUserList = Users.getUsers();
 
     //Click currentUserSession tab heading
     angular.element("#currentUserSessionTabHeading").click();
@@ -149,18 +149,18 @@ QUnit.test("Add user to the list of Users", function(assert) {
     var currentUserSessionCtrlScope = angular.element("#currentUserSession").scope();
 
     //Set the currentUserSession to the sampleCurrentUserSession - So we have a session to add users for
-    CollabBookReader.getSessions().setCurrentUserSession(sampleCurrentUserSession);
+    Sessions.setCurrentUserSession(sampleCurrentUserSession);
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
 
     //Remove all users so we start from 0 users
-    CollabBookReader.getUsers().removeAllUsers();
+    Users.removeAllUsers();
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
     //Add the first sample user
-    CollabBookReader.getUsers().addUser(sampleUser1);
+    Users.addUser(sampleUser1);
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
@@ -170,7 +170,7 @@ QUnit.test("Add user to the list of Users", function(assert) {
     assert.equal(angular.element("#currentUserSessionUsers").children("li").length, 1, "1 user should be displayed in the users list");
 
     //Add the 2nd sample user
-    CollabBookReader.getUsers().addUser(sampleUser2);
+    Users.addUser(sampleUser2);
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
@@ -181,9 +181,9 @@ QUnit.test("Add user to the list of Users", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getUsers().getUsers(previousUserList);
+    Users.getUsers(previousUserList);
     //Set the notes to previous value
-    CollabBookReader.getSessions().setCurrentUserSession(previousCurrentUserSession);
+    Sessions.setCurrentUserSession(previousCurrentUserSession);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -196,9 +196,9 @@ QUnit.test("Remove user from the list of Users", function(assert) {
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#sessionTabList").find("li .active");
     //Get the current currentUserSession
-    var previousCurrentUserSession = CollabBookReader.getSessions().getCurrentUserSession();
+    var previousCurrentUserSession = Sessions.getCurrentUserSession();
     //Get the current users
-    var previousUserList = CollabBookReader.getUsers().getUsers();
+    var previousUserList = Users.getUsers();
 
     //Click currentUserSession tab heading
     angular.element("#currentUserSessionTabHeading").click();
@@ -207,18 +207,18 @@ QUnit.test("Remove user from the list of Users", function(assert) {
     var currentUserSessionCtrlScope = angular.element("#currentUserSession").scope();
 
     //Set the currentUserSession to the sampleCurrentUserSession - So we have a session to add users for
-    CollabBookReader.getSessions().setCurrentUserSession(sampleCurrentUserSession);
+    Sessions.setCurrentUserSession(sampleCurrentUserSession);
     //Manually call $apply
     //The functions themselves use $applyAsync so we need to guarantee that the values have been updated before we check the values
     currentUserSessionCtrlScope.$apply();
 
     //Set our sample users
-    CollabBookReader.getUsers().setUsers(sampleUsers);
+    Users.setUsers(sampleUsers);
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
     //Remove the first user from our list
-    CollabBookReader.getUsers().removeUser(sampleUsers[0]._id);
+    Users.removeUser(sampleUsers[0]._id);
     //Manually call .$apply() as it normally uses $applyAsync()
     currentUserSessionCtrlScope.$apply();
 
@@ -231,9 +231,9 @@ QUnit.test("Remove user from the list of Users", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getUsers().getUsers(previousUserList);
+    Users.getUsers(previousUserList);
     //Set the notes to previous value
-    CollabBookReader.getSessions().setCurrentUserSession(previousCurrentUserSession);
+    Sessions.setCurrentUserSession(previousCurrentUserSession);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });

@@ -11,13 +11,13 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
         $scope.$applyAsync();
     };
     //Set $scope.setAvailableSessions as callback in CollabBookReader.getSessions() - Called when availableSession list is updated
-    CollabBookReader.getSessions().getAvailableSessionsObserver().subscribe($scope.setAvailableSessions);
+    Sessions.getAvailableSessionsObserver().subscribe($scope.setAvailableSessions);
 
     //Check if we're currently displaying available session details
     //If that session is no longer available then close the popup and alert the user
     function checkDisplayedSessionDetails() {
         if ($scope.displaySession) {
-            var allAvailableSessions = CollabBookReader.getSessions().getAvailableSessions();
+            var allAvailableSessions = Sessions.getAvailableSessions();
             var found = false;
             for (var i = 0; i < allAvailableSessions.length; i++) {
                 if ($scope.displaySession._id == allAvailableSessions[i]._id) {
@@ -70,7 +70,7 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
     $scope.showSessionDetails = function(session) {
         $scope.displaySession = session;
         $scope.$applyAsync();
-        if (CollabBookReader.getSessions().getCurrentUserSession()) {
+        if (Sessions.getCurrentUserSession()) {
             angular.element("#availableSessionDetailsModalJoinSession").prop("disabled", true);
             angular.element("#canJoinSession").html("<b>You cannot join another session while you are already in one!</b>");
         } else {
@@ -82,9 +82,9 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
 
     //Called from availableSessionDetailsModalJoinSession button - Join a session
     $scope.joinSession = function(session) {
-        CollabBookReader.getSessions().joinSession(session._id, CollabBookReader.getUsername(), function(data) {
+        Sessions.joinSession(session._id, CollabBookReader.getUsername(), function(data) {
 
-            CollabBookReader.getUsers().setUsers(data.users);
+            Users.setUsers(data.users);
             //Hide modal popup and select 'My Session' tab
             angular.element("#availableSessionDetailsModalClose").click();
             angular.element("#currentUserSessionTabHeading").click();
@@ -121,7 +121,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
         $scope.$applyAsync();
     };
     //Set $scope.setCurrentUserSession as callback in CollabBookReader.getSessions() - Called when currentUserSession is updated
-    CollabBookReader.getSessions().getCurrentUserSessionObserver().subscribe($scope.setCurrentUserSession);
+    Sessions.getCurrentUserSessionObserver().subscribe($scope.setCurrentUserSession);
 
     //Called from createNewSession - Display 'Create a new session' modal popup
     $scope.displayCreateNewSessionDetails = function() {
@@ -136,7 +136,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
             var newSessionName = angular.element("#createNewSessionName").val();
             var newSessionBook = angular.element("#createNewSessionBook").val();
             //Create a new session and update UI upon success
-            CollabBookReader.getSessions().createNewSession(newSessionName, newSessionBook, CollabBookReader.getUsername(), function(data) {
+            Sessions.createNewSession(newSessionName, newSessionBook, CollabBookReader.getUsername(), function(data) {
                 //Hide create new session modal
                 angular.element("#createNewSessionModalClose").click();
                 //Show newly created session details
@@ -162,7 +162,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
 
     //Called by currentUserSessionDetailsLeaveSession - Leave current session
     $scope.leaveSession = function() {
-        CollabBookReader.getSessions().leaveCurrentSession(function() { //Can take data
+        Sessions.leaveCurrentSession(function() { //Can take data
             angular.element("#currentUserSessionDetailsModalClose").click();
             angular.element("#availableSessionsTabHeading").click();
         });
@@ -174,7 +174,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
         $scope.currentUserSessionUsers = data;
         $scope.$applyAsync();
     };
-    //Set $scope.setBookList as callback in CollabBookReader.getBooks() - Called when bookList is updated
-    CollabBookReader.getUsers().getCurrentSessionUsersObserver().subscribe($scope.setCurrentUserSessionUsers);
+    //Set $scope.setBookList as callback in Books. - Called when bookList is updated
+    Users.getCurrentSessionUsersObserver().subscribe($scope.setCurrentUserSessionUsers);
 
 });

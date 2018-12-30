@@ -35,7 +35,7 @@ function startServerConnection() {
 
     CollabBookReader.startWebSocketConnection();
     //Retrieve book list
-    CollabBookReader.getBooks().retrieveBookList();
+    Books.retrieveBookList();
 }
 
 //Validate usernameForm

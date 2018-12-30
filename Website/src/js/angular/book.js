@@ -8,8 +8,8 @@ AngularMainApp.controller("bookListCtrl", function($scope) {
         $scope.bookList = data;
         $scope.$applyAsync();
     };
-    //Set $scope.setBookList as callback in CollabBookReader.getBooks() - Called when bookList is updated
-    CollabBookReader.getBooks().getBookListObserver().subscribe($scope.setBookList);
+    //Set $scope.setBookList as callback in Books. - Called when bookList is updated
+    Books.getBookListObserver().subscribe($scope.setBookList);
 });
 
 /**
@@ -22,8 +22,8 @@ AngularMainApp.controller("bookPageCtrl", function($scope) {
         $scope.currentBookPage = bookPage;
         $scope.$applyAsync();
     };
-    //Set $scope.updatePage as callback in CollabBookReader.getBooks() - Called when currentPage is updated
-    CollabBookReader.getBooks().getUpdateBookPageObserver().subscribe($scope.updatePage);
+    //Set $scope.updatePage as callback in Books. - Called when currentPage is updated
+    Books.getUpdateBookPageObserver().subscribe($scope.updatePage);
 
     var prevPageWarningTimeout;
     //Navigate to previous page
@@ -34,7 +34,7 @@ AngularMainApp.controller("bookPageCtrl", function($scope) {
             //If we we're at a page greater than 0, then navigate backwards
             //If we're at page 0 then we can't go backwards, so display an alert
             if (bookPage.currentPage.pageNum > 0) {
-                CollabBookReader.getSessions().updateCurrentSessionBookPage(bookPage.currentPage.pageNum - 1);
+                Sessions.updateCurrentSessionBookPage(bookPage.currentPage.pageNum - 1);
             } else {
                 //If timeout for exists, then clear it
                 if (prevPageWarningTimeout) {
@@ -73,7 +73,7 @@ AngularMainApp.controller("bookPageCtrl", function($scope) {
             //If we have pages left to go to (we aren't currently at the last page) then navigate to next page
             //If we're at the last page then display an alert
             if (bookPage.currentPage.pageNum < bookPage.pageCount - 1) {
-                CollabBookReader.getSessions().updateCurrentSessionBookPage(bookPage.currentPage.pageNum + 1);
+                Sessions.updateCurrentSessionBookPage(bookPage.currentPage.pageNum + 1);
             } else {
                 //If timeout exists, then clear it
                 if (nextPageWarningTimeout) {
@@ -112,7 +112,7 @@ AngularMainApp.controller("bookPageDetailsCtrl", function($scope) {
         $scope.currentBookPage = bookPage;
         $scope.$applyAsync();
     };
-    //Set $scope.updatePage as callback in CollabBookReader.getBooks() - Called when currentPage is updated
-    CollabBookReader.getBooks().getUpdateBookPageObserver().subscribe($scope.updatePage);
+    //Set $scope.updatePage as callback in Books. - Called when currentPage is updated
+    Books.getUpdateBookPageObserver().subscribe($scope.updatePage);
 
 });

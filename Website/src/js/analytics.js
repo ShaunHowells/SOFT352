@@ -4,7 +4,7 @@ function sessionServerConnectionTiming() {
     //Check that the websocket is active, otherwise this may be called by the unit tests
     if (CollabBookReader.isWebSocketActive()) {
         //Ensure this is only called once
-        CollabBookReader.getSessions().getAvailableSessionsObserver().unsubscribe(sessionServerConnectionTiming);
+        Sessions.getAvailableSessionsObserver().unsubscribe(sessionServerConnectionTiming);
         //If this is the first time this is called, then set
         if (window.shaun_ServerConnectionReceived) {
             //Output time to receive all initial information from the server
@@ -24,7 +24,7 @@ function bookServerConnectionTiming() {
     //Check that the websocket is active, otherwise this may be called by the unit tests
     if (CollabBookReader.isWebSocketActive()) {
         //Ensure this is only called once
-        CollabBookReader.getBooks().getBookListObserver().unsubscribe(bookServerConnectionTiming);
+        Books.getBookListObserver().unsubscribe(bookServerConnectionTiming);
         //If this is the first time this is called, then set
         if (window.shaun_ServerConnectionReceived) {
             //Output time to receive all initial information from the server
@@ -70,8 +70,8 @@ $(document).ready(function() {
     //Add the Google Analytics function to the websocket message observer to record events
     CollabBookReader.getWebSocketMessageObserver().subscribe(googleAnalyticsWebSocketEvent);
     //Add server connection timers to the observers
-    CollabBookReader.getSessions().getAvailableSessionsObserver().subscribe(sessionServerConnectionTiming);
-    CollabBookReader.getBooks().getBookListObserver().subscribe(bookServerConnectionTiming);
+    Sessions.getAvailableSessionsObserver().subscribe(sessionServerConnectionTiming);
+    Books.getBookListObserver().subscribe(bookServerConnectionTiming);
 
     if (typeof(QUnit) != "undefined") {
         QUnit.done(function(details) {

@@ -50,9 +50,9 @@ QUnit.module("Notes");
 QUnit.test("Set list of Notes", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current notes
-    var previousNotes = CollabBookReader.getNotes().getNoteList();
+    var previousNotes = Notes.getNoteList();
     //Get current bookPage
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#chatNotesTabList").find("li .active");
 
@@ -65,12 +65,12 @@ QUnit.test("Set list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
+    Books.setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
     //Set notes to our sample set
-    CollabBookReader.getNotes().setNoteList(sampleNotes);
+    Notes.setNoteList(sampleNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     notesCtrl.$apply();
 
@@ -91,9 +91,9 @@ QUnit.test("Set list of Notes", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
     //Set the notes to previous value
-    CollabBookReader.getNotes().setNoteList(previousNotes);
+    Notes.setNoteList(previousNotes);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -104,9 +104,9 @@ QUnit.test("Set list of Notes", function(assert) {
 QUnit.test("Clear list of Notes", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current notes
-    var previousNotes = CollabBookReader.getNotes().getNoteList();
+    var previousNotes = Notes.getNoteList();
     //Get current bookPage
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#chatNotesTabList").find("li .active");
 
@@ -119,17 +119,17 @@ QUnit.test("Clear list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
+    Books.setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
     //Set notes to our sample list (So we have notes to remove)
-    CollabBookReader.getNotes().setNoteList(sampleNotes);
+    Notes.setNoteList(sampleNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     notesCtrl.$apply();
 
     //Remove all notes
-    CollabBookReader.getNotes().removeAllNotes();
+    Notes.removeAllNotes();
 
     //Check values of the Angular scope has been correctly updated
     var notes = notesCtrl.noteList;
@@ -139,9 +139,9 @@ QUnit.test("Clear list of Notes", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
     //Set the notes to previous value
-    CollabBookReader.getNotes().setNoteList(previousNotes);
+    Notes.setNoteList(previousNotes);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -152,9 +152,9 @@ QUnit.test("Clear list of Notes", function(assert) {
 QUnit.test("Add note to list of Notes", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current notes
-    var previousNotes = CollabBookReader.getNotes().getNoteList();
+    var previousNotes = Notes.getNoteList();
     //Get current bookPage
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#chatNotesTabList").find("li .active");
 
@@ -167,16 +167,16 @@ QUnit.test("Add note to list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
+    Books.setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
     //Remove all notes (to ensure that we start from 0)
-    CollabBookReader.getNotes().removeAllNotes();
+    Notes.removeAllNotes();
     //Manually call .$apply() as it normally uses $applyAsync()
     notesCtrl.$apply();
 
-    CollabBookReader.getNotes().addNote(sampleNote1);
+    Notes.addNote(sampleNote1);
     //Manually call .$apply() as it normally uses $applyAsync()
     notesCtrl.$apply();
 
@@ -186,7 +186,7 @@ QUnit.test("Add note to list of Notes", function(assert) {
     assert.equal(angular.element("#allPagesNotesBody").children("li").length, 1, "1 note should be displayed in the all pages notes list");
     assert.equal(angular.element("#currentPageNotesBody").children("li").length, 1, "1 note should be displayed in the current page notes list");
 
-    CollabBookReader.getNotes().addNote(sampleNote2);
+    Notes.addNote(sampleNote2);
     //Manually call .$apply() as it normally uses $applyAsync()
     notesCtrl.$apply();
 
@@ -198,9 +198,9 @@ QUnit.test("Add note to list of Notes", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
     //Set the notes to previous value
-    CollabBookReader.getNotes().setNoteList(previousNotes);
+    Notes.setNoteList(previousNotes);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -211,9 +211,9 @@ QUnit.test("Add note to list of Notes", function(assert) {
 QUnit.test("Remove a note from the list of Notes", function(assert) {
     //STORE PREVIOUS VALUES
     //Gets the current notes
-    var previousNotes = CollabBookReader.getNotes().getNoteList();
+    var previousNotes = Notes.getNoteList();
     //Get current bookPage
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#chatNotesTabList").find("li .active");
 
@@ -226,16 +226,16 @@ QUnit.test("Remove a note from the list of Notes", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
+    Books.setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
     //Set notes to our sample list (So we have notes to remove)
-    CollabBookReader.getNotes().setNoteList(sampleNotes);
+    Notes.setNoteList(sampleNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     notesCtrl.$apply();
 
-    CollabBookReader.getNotes().removeNote(sampleNotes[0]._id);
+    Notes.removeNote(sampleNotes[0]._id);
 
     //The length we now expect out list to be after removing 1 note from sampleNotes
     var expectedLength = sampleNotes.length - 1;
@@ -246,9 +246,9 @@ QUnit.test("Remove a note from the list of Notes", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set the currentBookPage to previous value
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
     //Set the notes to previous value
-    CollabBookReader.getNotes().setNoteList(previousNotes);
+    Notes.setNoteList(previousNotes);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
@@ -261,7 +261,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
     //Get the currently active tab heading
     var currentlyActiveTab = angular.element("#chatNotesTabList").find("li .active");
     //Get current bookPage
-    var previousCurrentPage = CollabBookReader.getBooks().getCurrentBookPage();
+    var previousCurrentPage = Books.getCurrentBookPage();
 
     //Get Angular scope for the the currentPage
     var bookPageCtrlScope = angular.element("#bookPageCarousel").scope();
@@ -270,7 +270,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
     angular.element("#notesHeading").click();
 
     //Set current page to sample page so that the Notes tab content is shown
-    CollabBookReader.getBooks().setCurrentBookPage(sampleBookPageForNotes);
+    Books.setCurrentBookPage(sampleBookPageForNotes);
     //Manually call .$apply() as it normally uses $applyAsync()
     bookPageCtrlScope.$apply();
 
@@ -307,7 +307,7 @@ QUnit.test("Display 'Add a note' popup", function(assert) {
 
     //RESET TO PREVIOUS VALUES
     //Set currentUserSession back to previous value
-    CollabBookReader.getBooks().setCurrentBookPage(previousCurrentPage);
+    Books.setCurrentBookPage(previousCurrentPage);
     //Click the previously selected tab heading
     currentlyActiveTab.click();
 });
