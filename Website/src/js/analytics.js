@@ -42,7 +42,6 @@ function bookServerConnectionTiming() {
 window.onload = function() {
     if ("performance" in window) {
         if ("timing" in window.performance) {
-            console.log("Page Performance API supported");
             console.log("Total time taken to download the webpage from server is: " + (window.performance.timing.responseEnd - window.performance.timing.navigationStart) + " milliseconds");
             console.log("Total time taken to render the webpage is: " + (window.performance.timing.loadEventStart - window.performance.timing.domLoading) + " milliseconds");
         }
