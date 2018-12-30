@@ -11,8 +11,7 @@ INSTALLATION GUIDE:
 5). Open the Website/src/html/home.html page to use the application.
 
 USEFUL SCRIPTS (to be run in the project root)
-npm run init-application -          Runs both npm run complete-install and npm run populate-databases. 
-                                    This installs all of the neccessary npm modules, the populates the normal and test databases with books to be used.
+npm run init-application -          Runs both npm run complete-install and npm run populate-databases. This installs all of the neccessary npm modules, the populates the normal and test databases with books to be used.
 npm run complete-install -          Installs all of the packages required for this application.
 npm run populate-databases -        Adds 3 samples books to both the normal and test database. NOTE: This should only be run once as you will have multiple copies of the same books otherwise.
 npm run complete-test -             Runs both the Website and Server tests against the test database
