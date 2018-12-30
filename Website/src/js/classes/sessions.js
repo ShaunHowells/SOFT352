@@ -168,7 +168,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      * @param {Function} callback - The callback to be executed after the session is created
      * @memberof Sessions
      */
-    function createNewSession(sessionName, bookId, callback) {
+    function createNewSession(sessionName, bookId, username, callback) {
         if (currentUserId) {
             var self = this;
             $.post("http://localhost:9000/sessions/createsession", {
@@ -176,7 +176,7 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
                 bookId: bookId,
                 user: {
                     userId: currentUserId,
-                    username: CollabBookReader.getUsername()
+                    username: username
                 }
             }).done(function(data) {
                 if (data.success) {
@@ -196,12 +196,12 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
      * @param {Function} callback - The callback to be executed after the session is joined
      * @memberof Sessions
      */
-    function joinSession(sessionId, callback) {
-        if (currentUserId && CollabBookReader.getUsername()) {
+    function joinSession(sessionId, username, callback) {
+        if (currentUserId && username) {
             for (var session in availableSessions) {
                 if (availableSessions[session]._id == sessionId) {
                     var self = this;
-                    availableSessions[session].joinSession(currentUserId, function(data) {
+                    availableSessions[session].joinSession(currentUserId, username, function(data) {
                         self.setCurrentUserSession(data.result);
                         callback(data.result);
                     });
@@ -305,12 +305,12 @@ function Session(sessionDetails) {
      * @param {String} userId - ID of the user to joining the session
      * @param {Function} callback - The callback to be executed when the session is joined
      */
-    this.joinSession = function(userId, callback) {
+    this.joinSession = function(userId, username, callback) {
         $.post("http://localhost:9000/sessions/joinsession", {
             sessionId: this._id,
             user: {
                 userId: userId,
-                username: CollabBookReader.getUsername()
+                username: username
             }
         }).done(function(data) {
             if (data.success) {

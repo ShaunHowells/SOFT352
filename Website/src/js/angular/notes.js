@@ -36,7 +36,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
             //-1 to translate between 0 indexed and 1 indexed
             newNotePageNum -= 1;
             if (CollabBookReader.getSessions().getCurrentUserSession()) {
-                CollabBookReader.getNotes().createNewNote(newNotePageNum, newNoteDetails, function() {
+                CollabBookReader.getNotes().createNewNote(newNotePageNum, newNoteDetails,  CollabBookReader.getSessions().getCurrentUserSession()._id, CollabBookReader.getSessions().getCurrentUserId(), function() {
                     //Hide create new session modal
                     angular.element("#createNewNoteModalClose").click();
                 });

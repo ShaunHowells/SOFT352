@@ -82,7 +82,7 @@ AngularMainApp.controller("availableSessionsCtrl", function($scope) {
 
     //Called from availableSessionDetailsModalJoinSession button - Join a session
     $scope.joinSession = function(session) {
-        CollabBookReader.getSessions().joinSession(session._id, function(data) {
+        CollabBookReader.getSessions().joinSession(session._id, CollabBookReader.getUsername(), function(data) {
 
             CollabBookReader.getUsers().setUsers(data.users);
             //Hide modal popup and select 'My Session' tab
@@ -136,7 +136,7 @@ AngularMainApp.controller("currentUserSessionCtrl", function($scope) {
             var newSessionName = angular.element("#createNewSessionName").val();
             var newSessionBook = angular.element("#createNewSessionBook").val();
             //Create a new session and update UI upon success
-            CollabBookReader.getSessions().createNewSession(newSessionName, newSessionBook, function(data) {
+            CollabBookReader.getSessions().createNewSession(newSessionName, newSessionBook, CollabBookReader.getUsername(), function(data) {
                 //Hide create new session modal
                 angular.element("#createNewSessionModalClose").click();
                 //Show newly created session details

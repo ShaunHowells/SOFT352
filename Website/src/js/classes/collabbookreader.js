@@ -69,7 +69,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
             // Message received containing our unique client id
             case "connected":
                 sessions.setCurrentUserId(messageData.clientId);
-                books.setCurrentUserId(messageData.clientId);
+                notes.setCurrentUserId(messageData.clientId);
                 break;
                 //Message received containing the list of all available sessions
             case "allsessions":
@@ -107,7 +107,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 users.removeUser(messageData.user._id);
                 break;
             case "newnoteadded":
-                notes.addNote(messageData.note);
+                notes.addNote(messageData.note, sessions.getCurrentUserSession()._id);
                 break;
             case "noteremoved":
                 notes.removeNote(messageData.noteId);

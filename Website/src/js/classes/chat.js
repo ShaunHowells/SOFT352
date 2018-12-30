@@ -36,10 +36,10 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * @memberof Chat
      * @param {String} message
      */
-    function sendChatMessage(message) {
+    function sendChatMessage(sessionId, userId, message) {
         $.post("http://localhost:9000/chat/sendchatmessage", {
-            sessionId: Sessions.getCurrentUserSession()._id,
-            userId: Sessions.getCurrentUserId(),
+            sessionId: sessionId,
+            userId: userId,
             message: message
         }).done(function(data) {
             if (!data.success) {

@@ -67,7 +67,8 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                                         "notes": {
                                             user: username,
                                             note: note,
-                                            pageNum: pageNum
+                                            pageNum: pageNum,
+                                            sessionId: sessionId
                                         }
                                     }
                                 }, {

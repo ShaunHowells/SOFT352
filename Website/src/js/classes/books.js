@@ -5,7 +5,6 @@
  * @hideconstructor
  */
 const Books = (function() { // eslint-disable-line no-unused-vars
-    var currentUserId; //ID of the current user
     var bookList = []; //Stores the list of retrieved books
     const defaultBookPage = {
         _id: null,
@@ -39,29 +38,6 @@ const Books = (function() { // eslint-disable-line no-unused-vars
      */
     function getUpdateBookPageObserver() {
         return updateBookPageObserver;
-    }
-
-    /**
-     * Sets the current user id - Value may only be set once
-     * 
-     * @param {String} newUserId - ID to set currentUserID as
-     * @memberof Books
-     */
-    function setCurrentUserId(newUserId) {
-        if (!currentUserId) {
-            currentUserId = newUserId;
-        } else {
-            console.error("Current User Id may only be set once");
-        }
-    }
-    /**
-     * Returns currentUserId
-     * 
-     * @return {String} The current User ID
-     * @memberof Books
-     */
-    function getCurrentUserId() {
-        return currentUserId;
     }
 
     /**
@@ -194,8 +170,6 @@ const Books = (function() { // eslint-disable-line no-unused-vars
     return {
         getBookListObserver,
         getUpdateBookPageObserver,
-        setCurrentUserId,
-        getCurrentUserId,
         retrieveBookList,
         setBookList,
         getBookList,
