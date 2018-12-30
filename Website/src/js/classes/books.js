@@ -290,5 +290,5 @@ function BookPage(bookPageDetails) {
          * @member {String}
          */
         src: bookPageDetails.currentPage.src ? bookPageDetails.currentPage.src : bookPageDetails.currentPage.imageData ? "data:" + bookPageDetails.currentPage.contentType + ";base64," + util_encode(bookPageDetails.currentPage.imageData) : null
-    }
+    };
 }

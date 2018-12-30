@@ -1,3 +1,9 @@
+/**
+ * Sessions Database Access
+ * @module Sessionsdb
+ */
+
+
 //Variable to store webSockets
 var webSockets;
 

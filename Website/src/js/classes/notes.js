@@ -139,7 +139,6 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
     function deleteNote(noteId, callback) {
         for (var note in noteList) {
             if (noteList[note]._id == noteId) {
-                var self = this;
                 noteList[note].deleteNote(function() {
                     callback();
                 });
@@ -218,5 +217,5 @@ function Note(noteDetails) {
                 console.log(data);
             }
         });
-    }
+    };
 }

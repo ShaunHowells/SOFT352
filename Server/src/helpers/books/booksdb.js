@@ -1,3 +1,8 @@
+/**
+ * Books Database Access
+ * @module Booksdb
+ */
+
 //Mongoose Models
 var models;
 

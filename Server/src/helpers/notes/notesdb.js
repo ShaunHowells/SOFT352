@@ -1,3 +1,8 @@
+/**
+ * Notes Database Access
+ * @module Notesdb
+ */
+
 //Mongoose Models
 var models;
 

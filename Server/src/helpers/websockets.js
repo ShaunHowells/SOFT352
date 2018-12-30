@@ -1,3 +1,9 @@
+/**
+ * WebSocket Management
+ * @module helpers/WebSocket
+ */
+
+
 module.exports = function(server) {
     var WebSocketServer = require("websocket").server;
     var sessionsdb = require("../helpers/sessions/sessionsdb.js");
@@ -5,7 +11,11 @@ module.exports = function(server) {
     //Store connected users in an object so I can easily refer to them by their unique id
     var connectedUsers = {};
 
-    //Function to send a message to all connected users
+    /**
+     * Send a WebSocket message to all connected users
+     *
+     * @param {Object} messageToSend JSON data to send to all connected users
+     */
     function notifyAllConnectedUsers(messageToSend) {
         var message = JSON.stringify(messageToSend);
         for (var user in connectedUsers) {
@@ -13,7 +23,12 @@ module.exports = function(server) {
         }
     }
 
-    //Function to send messages to all users in a given session
+    /**
+     * Send a WebSocket message to the specified users
+     *
+     * @param {Object[]} sessionUsers Details of users to send the message to. Expected to be in the same format as the users in the Sessions Mongoose model.
+     * @param {Object} messageToSend JSON data to send to the specified users
+     */
     function notifyUsers(sessionUsers, messageToSend) {
         var message = JSON.stringify(messageToSend);
         for (var user in connectedUsers) {

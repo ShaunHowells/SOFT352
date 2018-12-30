@@ -1,3 +1,9 @@
+/**
+ * Chat messages handling
+ * @module Chatdb
+ */
+
+
 //Mongoose Models
 var models;
 
