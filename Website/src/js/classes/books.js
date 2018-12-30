@@ -254,7 +254,10 @@ function Book(bookDetails) {
         }
     };
 }
-
+/**
+ * Handles all of the functionality related to an page in a book
+ * @constructor
+ */
 function BookPage(bookPageDetails) {
     /**
      * The Id of the book
