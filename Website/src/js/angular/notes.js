@@ -11,7 +11,12 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
 
     $scope.refreshNoteList = function() {
         if (CollabBookReader.getBooks().getCurrentBookPage() && CollabBookReader.getBooks().getCurrentBookPage()._id) {
+            var isHidden = angular.element("#notesDisplay").is(":hidden");
+            var isEitherCollapsed = (angular.element("#allPagesNotes").hasClass("show") || angular.element("#currentPageNotes").hasClass("show")) 
             angular.element("#notesDisplay").show();
+            if (isHidden && !isEitherCollapsed) {
+                angular.element("#allPagesNotes").collapse("show");
+            }
         } else {
             angular.element("#notesDisplay").hide();
         }
