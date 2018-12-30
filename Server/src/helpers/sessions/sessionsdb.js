@@ -416,7 +416,7 @@ var isUserInAnySession = function(userId, callback) {
 };
 
 /**
- * Closes all current sessions - USED FOR TEST CLEANUP ONLY
+ * Closes all current sessions - Used for clean up before/after tests and when starting the server
  *
  * @param {Function} callback to execute after sessions have been deleted
  */
@@ -425,7 +425,8 @@ var closeAllSessions = function(callback) {
         if (err) {
             console.log(err);
         }
-        callback(err, result);
+        if (callback)
+            callback(err, result);
     });
 };
 

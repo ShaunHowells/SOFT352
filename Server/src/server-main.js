@@ -61,3 +61,6 @@ notesRouting.notesdb.setWebSockets(webSockets);
 app.get("/", function(req, res) {
     res.send("CollabBookReader Server");
 });
+
+//Clear all of the sessions when starting the server to remove any stranded sessions
+sessionsRouting.sessionsdb.closeAllSessions();

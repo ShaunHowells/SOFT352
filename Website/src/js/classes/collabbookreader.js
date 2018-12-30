@@ -35,20 +35,16 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                     "keyboard": false
                 });
             };
+
+            websocket.onclose = function() {
+                $("#noConnectionModal").modal({
+                    "backdrop": "static",
+                    "keyboard": false
+                });
+            }
         }
     }
-    /**
-     * Close websocket and set to null
-     * 
-     * @memberof CollabBookReader
-     */
-    function stopWebSocketConnection() {
-        //Only close the websocket if it exists
-        if (websocket) {
-            websocket.close();
-            websocket = null;
-        }
-    }
+
     /**
      * Handle the messages sent to the websocket
      * 
@@ -206,7 +202,6 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         setUsername,
         getUsername,
         startWebSocketConnection,
-        stopWebSocketConnection,
         getWebSocketMessageObserver
     };
 })();
