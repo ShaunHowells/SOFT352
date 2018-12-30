@@ -16,6 +16,8 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
 
     var username;
 
+    var webSocketMessageObserver = new Observer();
+
     /**
      * Initialise websocket, connect to server, and set onmessage
      * 
@@ -55,6 +57,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
      */
     function handleWebSocketMessage(message) {
         var messageData = JSON.parse(message.data);
+        webSocketMessageObserver.notify(messageData);
 
         switch (messageData.type) {
             // Message received containing our unique client id
@@ -183,6 +186,16 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     function getUsername() {
         return username;
     }
+    /**
+     * Returns the username
+     * 
+     * @returns {Observer} Observer for WebSocket messages
+     * @memberof CollabBookReader
+     */
+
+    function getWebSocketMessageObserver() {
+        return webSocketMessageObserver;
+    }
 
     return {
         getSessions,
@@ -193,6 +206,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         setUsername,
         getUsername,
         startWebSocketConnection,
-        stopWebSocketConnection
+        stopWebSocketConnection,
+        getWebSocketMessageObserver
     };
 })();

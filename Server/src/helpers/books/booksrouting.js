@@ -16,7 +16,7 @@ module.exports = function(app) {
         next();
     });
 
-    function getBookPageContents(pages) {
+    function isPageContentJpg(pages) {
         for (var page in pages) {
             if (pages[page].mimetype !== "image/jpeg") {
                 return false;
@@ -25,12 +25,11 @@ module.exports = function(app) {
         return true;
     }
 
-    //This is purley for populating the books database
+    //This is purely for populating the books database
     //This isn't intended to be used as part of regular functionality
     booksRouter.post("/addnewbook", upload.any(), function(request, response) {
         var title = request.body.title; //Title of the book being added
         var pages = request.files; //Array of images representing the pages of the book
-
 
         //Check all required values have been supplied
         if (!title) {
@@ -43,7 +42,7 @@ module.exports = function(app) {
                 success: false,
                 message: "You must supply pages - A set of JPGs representing the pages in a book"
             });
-        } else if (!getBookPageContents(pages)) {
+        } else if (!isPageContentJpg(pages)) {
             response.send({
                 success: false,
                 message: "Your list of pages must use the JPG format"
