@@ -21,18 +21,28 @@
     "start-server-and-test": "^1.7.11"
   },
   "scripts": {
+    "start-server": "node Server\\src\\server-main.js",
+    "start-test-server": "node Server\\src\\server-main.js test no-logging",
     "install-root": "npm install",
     "install-server": "cd Server\\src\\ && npm install",
     "complete-install": "npm run install-root & npm run install-server",
-    "start-test-server": "node Server\\src\\server-main.js test",
-    "run-server-cucumber": "node_modules\\.bin\\cucumber-js Server\\test\\Cucumber\\features\\ --format=json | node_modules\\.bin\\cucumber-junit > Server/test/Cucumber/report/Test_Cucumber.xml",
+    "run-server-cucumber-reports": "node_modules\\.bin\\cucumber-js Server\\test\\Cucumber\\features\\ --format=json | node_modules\\.bin\\cucumber-junit > Server/test/Cucumber/report/Test_Cucumber.xml",
+    "test-server-reports": "start-server-and-test start-test-server 9001 run-server-cucumber-reports",
+    "run-server-cucumber": "node_modules\\.bin\\cucumber-js Server\\test\\Cucumber\\features\\",
     "test-server": "start-server-and-test start-test-server 9001 run-server-cucumber",
     "test-website": "node_modules\\.bin\\grunt",
+    "complete-test-reports": " npm run test-website && npm run test-server-reports",
     "complete-test": " npm run test-website && npm run test-server",
     "generate-website-doc": ".\\node_modules\\.bin\\jsdoc -c .\\Website\\Documentation\\jsdoc.json",
     "generate-server-doc": ".\\node_modules\\.bin\\jsdoc -c .\\Server\\Documentation\\jsdoc.json",
     "generate-documentation": "npm run generate-website-doc && npm run generate-server-doc",
-    "eslint": ".\\node_modules\\.bin\\eslint -c .\\.eslintrc.json --ignore-path .\\.eslintignore ."
+    "eslint": ".\\node_modules\\.bin\\eslint -c .\\.eslintrc.json --ignore-path .\\.eslintignore .",
+    "populate-database-start": "node Server\\test\\populate_databases\\main.js",
+    "populate-test-database-start": "node Server\\test\\populate_databases\\main-test.js",
+    "populate-main-database": "start-server-and-test start-server 9000 populate-database-start",
+    "populate-test-database": "start-server-and-test start-test-server 9001 populate-test-database-start",
+    "populate-databases": "npm run populate-main-database && npm run populate-test-database",
+    "init-application": "npm run complete-install && npm run populate-databases"
   },
   "author": "",
   "license": "ISC"

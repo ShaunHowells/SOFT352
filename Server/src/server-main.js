@@ -4,13 +4,19 @@ var bodyParser = require("body-parser");
 //Get commandline arguments
 var myArgs = process.argv.slice(2);
 var test = false;
-switch (myArgs[0]) {
-    case "test":
-        console.log("Enabling Test Mode");
-        test = true;
-        break;
-    default:
-        break;
+for (arg in myArgs) {
+    switch (myArgs[arg]) {
+        case "test":
+            console.log("Enabling Test Mode");
+            test = true;
+            break;
+        case "no-logging":
+            console.log = function() {};
+            console.error = function() {};
+            break;
+        default:
+            break;
+    }
 }
 
 var app = express();
@@ -34,7 +40,7 @@ var chatRouting = require("./helpers/chat/chatrouting.js")(app);
 var notesRouting = require("./helpers/notes/notesrouting.js")(app);
 
 //Set up http server
-var server = app.listen(port, function () {
+var server = app.listen(port, function() {
     console.log(`Listening on port ${port}`);
 });
 
@@ -52,6 +58,6 @@ chatRouting.chatdb.setWebSockets(webSockets);
 notesRouting.notesdb.setWebSockets(webSockets);
 
 //Set root page
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
     res.send("CollabBookReader Server");
 });
