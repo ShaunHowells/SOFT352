@@ -33,8 +33,6 @@ function startServerConnection() {
     //Start the websocket connection
     window.shaun_serverConnectionTimingStart = performance.now();
 
-    CollabBookReader.getSessions().getAvailableSessionsObserver().subscribe(sessionServerConnectionTiming);
-    CollabBookReader.getBooks().getBookListObserver().subscribe(bookServerConnectionTiming);
     CollabBookReader.startWebSocketConnection();
     //Retrieve book list
     CollabBookReader.getBooks().retrieveBookList();

@@ -24,7 +24,7 @@ function Observer() { // eslint-disable-line no-unused-vars
      */
     this.unsubscribe = function (fn) {
         this.observers = this.observers.filter(function (value) {
-            value !== fn;
+            return value !== fn;
         });
     };
 

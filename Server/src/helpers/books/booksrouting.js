@@ -37,7 +37,7 @@ module.exports = function(app) {
                 success: false,
                 message: "You must supply a title"
             });
-        } else if (!pages) {
+        } else if (!pages || !pages.length) {
             response.send({
                 success: false,
                 message: "You must supply pages - A set of JPGs representing the pages in a book"

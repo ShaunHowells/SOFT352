@@ -63,4 +63,7 @@ function googleAnalyticsWebSocketEvent(message){
 $(document).ready(function(){
     //Add the Google Analytics function to the websocket message observer to record events
     CollabBookReader.getWebSocketMessageObserver().subscribe(googleAnalyticsWebSocketEvent);
+    //Add server connection timers to the observers
+    CollabBookReader.getSessions().getAvailableSessionsObserver().subscribe(sessionServerConnectionTiming);
+    CollabBookReader.getBooks().getBookListObserver().subscribe(bookServerConnectionTiming);
 });
