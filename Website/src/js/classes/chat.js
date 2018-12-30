@@ -113,6 +113,7 @@ function ChatMessage(messageDetails) {
     this.message = messageDetails.message;
     /**
      * A boolean indictating if the message is a notification or not
+     * This flag is used to differentiate messages stating a user has joined the session
      * @member {Boolean}
      */
     this.notification;

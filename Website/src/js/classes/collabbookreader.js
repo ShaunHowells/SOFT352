@@ -158,6 +158,12 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         return users;
     }
 
+    /**
+     * Sets the name of the user. This username is used as their display name
+     * The username can only be set once.
+     * 
+     * @memberof CollabBookReader
+     */
     function setUsername(inputUsername) {
         if (!username) {
             username = inputUsername;
@@ -165,10 +171,15 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
             $("#displayUsername").removeClass("username-init");
             $("#displayUsername").addClass("username-set");
         } else {
-            console.error("Username");
+            console.error("Username can only be set once");
         }
     }
-
+    /**
+     * Returns the username
+     * 
+     * @returns {Users} Users Singleton Class
+     * @memberof CollabBookReader
+     */
     function getUsername() {
         return username;
     }

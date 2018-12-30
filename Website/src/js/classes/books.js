@@ -256,12 +256,25 @@ function Book(bookDetails) {
 }
 
 function BookPage(bookPageDetails) {
+    /**
+     * The Id of the book
+     * @member {Integer}
+     */
     this._id = bookPageDetails._id;
-
+    /**
+     * The title of the book
+     * @member {String}
+     */
     this.title = bookPageDetails.title;
-
+    /**
+     * The number of pages in the book
+     * @member {Integer}
+     */
     this.pageCount = bookPageDetails.pageCount;
-
+    /**
+     * The current page of the book
+     * @member {Object}
+     */
     this.currentPage = {
         /**
          * The number of the page - Starts from 0
@@ -270,16 +283,9 @@ function BookPage(bookPageDetails) {
         pageNum: bookPageDetails.currentPage.pageNum,
         /**
          * The source of the page image
+         * This source will either be a filename, or the image data as retrieved from the server
          * @member {String}
          */
-        src: null
-    }
-
-    //The page src can come in two formats
-    //Either as a filename, or the image data as retrieved from the server
-    if (bookPageDetails.currentPage.src) {
-        this.currentPage.src = bookPageDetails.currentPage.src;
-    } else if (bookPageDetails.currentPage.imageData) {
-        this.currentPage.src = "data:" + bookPageDetails.currentPage.contentType + ";base64," + util_encode(bookPageDetails.currentPage.imageData);
+        src: bookPageDetails.currentPage.src ? bookPageDetails.currentPage.src : bookPageDetails.currentPage.imageData ? "data:" + bookPageDetails.currentPage.contentType + ";base64," + util_encode(bookPageDetails.currentPage.imageData) : null
     }
 }

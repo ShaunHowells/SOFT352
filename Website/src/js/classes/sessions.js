@@ -266,15 +266,45 @@ const Sessions = (function() { // eslint-disable-line no-unused-vars
  * @constructor
  */
 function Session(sessionDetails) {
+    /**
+     * The Id of the session
+     * @member {String}
+     */
     this._id = sessionDetails._id;
+    /**
+     * The name of the session
+     * @member {String}
+     */
     this.name = sessionDetails.name;
+    /**
+     * The user who originally created the session
+     * @member {String}
+     */
     this.owner = sessionDetails.owner;
+    /**
+     * The raw user details of the session
+     * @member {String}
+     */
     this.users = sessionDetails.users;
+    /**
+     * The current page of the book being read
+     * @member {String}
+     */
     this.currentPageNum = sessionDetails.currentPageNum;
+    /**
+     * The details of the current book being read
+     * @member {String}
+     */
     this.currentBook = sessionDetails.currentBook;
+
     this.test = sessionDetails.test ? sessionDetails.test : false; // Used to identify sessions used for unit tests
 
-
+    /**
+     * Joins the supplied user to the session
+     * 
+     * @param {String} userId - ID of the user to joining the session
+     * @param {Function} callback - The callback to be executed when the session is joined
+     */
     this.joinSession = function(userId, callback) {
         $.post("http://localhost:9000/sessions/joinsession", {
             sessionId: this._id,
