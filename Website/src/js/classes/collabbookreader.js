@@ -77,6 +77,8 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 break;
             case "pagechanged": //Message received when the page in the current session has changed
                 Books.getSessionBookPage(messageData.updatedSessionPage);
+                //Get the updated pageNum from the message
+                Sessions.getCurrentUserSession().currentPageNum = messageData.updatedSessionPage.currentPageNum;
                 break;
             case "chatmessagereceived": //Message received when a user sends a chat message in the current session
                 Chat.addChatMessage(messageData.chatMessage);

@@ -284,11 +284,6 @@ function Session(sessionDetails) {
      */
     this.owner = sessionDetails.owner;
     /**
-     * The raw user details of the session
-     * @member {string}
-     */
-    this.users = sessionDetails.users;
-    /**
      * The current page of the book being read
      * @member {string}
      */

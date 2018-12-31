@@ -1,6 +1,6 @@
 /**
  * WebSocket Management
- * @module WebSocket
+ * @module WebSockets
  */
 
 
