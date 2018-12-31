@@ -48,8 +48,7 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
                     //Notify this sessions users
                     webSockets.notifyUsers(userList, {
                         type: "chatmessagereceived",
-                        success: true,
-                        result: {
+                        chatMessage: {
                             user: username,
                             message: message
                         }

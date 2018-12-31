@@ -57,12 +57,9 @@ module.exports = function(server) {
                 console.log(`Error in getAllSessions: ${err}`);
 
                 //Check that our user is still here - Added for cases where a user joins and leaves instantly
+                //If we can't retrieve the list of sessions, then something has gone wrong so close the websocket
                 if (connectedUsers[uniqueId]) {
-                    connectedUsers[uniqueId].sendUTF(JSON.stringify({
-                        type: "allsessions",
-                        success: false,
-                        message: "An error has occured trying to get all of the sessions. Please try again."
-                    }));
+                    connectedUsers[uniqueId].close();
                 }
             } else {
                 //Check that our user is still here - Added for cases where a user joins and leaves instantly
@@ -70,8 +67,7 @@ module.exports = function(server) {
                     //If successful then return result to caller
                     connectedUsers[uniqueId].sendUTF(JSON.stringify({
                         type: "allsessions",
-                        success: true,
-                        result: result
+                        sessionList: result
                     }));
                 }
             }

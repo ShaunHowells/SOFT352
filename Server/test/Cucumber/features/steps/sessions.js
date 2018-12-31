@@ -69,7 +69,7 @@ Given("that I have just arrived", function(callback) {
             switch (messageData.type) {
                 // Message received containing our unique client id
                 case "allsessions":
-                    world.availableSessions = messageData.result;
+                    world.availableSessions = messageData.sessionList;
                     //As we only want to check the initial values returned, then close the websocket after we get our required message
                     tempWebsocketConnection.close();
                     tempWebsocket = null;
@@ -118,7 +118,7 @@ When("I try to create a session", function(callback) {
         switch (messageData.type) {
             // Message received containing newly created session (sent to all users)
             case "newsessioncreated":
-                world.newSessionId = messageData.result._id;
+                world.newSessionId = messageData.newSession._id;
                 callback();
                 break;
             default:
@@ -312,7 +312,7 @@ When("I try to leave the session", function(callback) {
         switch (messageData.type) {
             // Message received containing delete session (sent to all users)
             case "sessionremoved":
-                world.deletedSessionId = messageData.result.sessionId;
+                world.deletedSessionId = messageData.sessionId;
                 callback();
                 break;
             default:
@@ -495,7 +495,7 @@ When("I change the page displayed in the session", function(callback) {
         switch (messageData.type) {
             // Message received containing delete session (sent to all users)
             case "pagechanged":
-                world.updatedPage = messageData.result;
+                world.updatedPage = messageData.updatedSessionPage;
                 callback();
                 break;
             default:

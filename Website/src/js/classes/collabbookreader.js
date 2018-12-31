@@ -67,19 +67,19 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 Chat.setCurrentUserId(messageData.clientId);
                 break;
             case "allsessions": //Message received containing the list of all available Sessions
-                Sessions.setAvailableSessions(messageData.result);
+                Sessions.setAvailableSessions(messageData.sessionList);
                 break;
             case "newsessioncreated": //Message received when another session is created (either by us or by another user)
-                Sessions.pushAvailableSession(messageData.result);
+                Sessions.pushAvailableSession(messageData.newSession);
                 break;
             case "sessionremoved": //Message received when a session is no longer available
-                Sessions.removeAvailableSession(messageData.result.sessionId);
+                Sessions.removeAvailableSession(messageData.sessionId);
                 break;
             case "pagechanged": //Message received when the page in the current session has changed
-                Books.getSessionBookPage(messageData.result);
+                Books.getSessionBookPage(messageData.updatedSessionPage);
                 break;
             case "chatmessagereceived": //Message received when a user sends a chat message in the current session
-                Chat.addChatMessage(messageData.result);
+                Chat.addChatMessage(messageData.chatMessage);
                 break;
             case "userjoinedsession": //Message received when a user joins the current session
                 Chat.addChatMessage({
@@ -98,7 +98,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 Users.removeUser(messageData.user._id);
                 break;
             case "newnoteadded": //Message recevied when a note is added to the current session
-                Notes.addNote(messageData.note, Sessions.getCurrentUserSession()._id);
+                Notes.addNote(messageData.note);
                 break;
             case "noteremoved": //Message recevied when a note is removed from the current session
                 Notes.removeNote(messageData.noteId);

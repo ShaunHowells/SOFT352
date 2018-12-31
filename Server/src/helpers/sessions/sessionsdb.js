@@ -155,7 +155,7 @@ function createSession(sessionName, user, bookId, callback) {
                                         webSockets.notifyAllConnectedUsers({
                                             type: "newsessioncreated",
                                             success: true,
-                                            result: result
+                                            newSession: result
                                         });
                                         webSockets.notifyUsers(userList, {
                                             type: "userjoinedsession",
@@ -217,10 +217,7 @@ function removeUserFromSession(sessionId, userId, callback) {
                         if (webSockets) {
                             webSockets.notifyAllConnectedUsers({
                                 type: "sessionremoved",
-                                success: true,
-                                result: {
-                                    sessionId: sessionId
-                                }
+                                sessionId: sessionId
                             });
                         }
                     } else {
@@ -315,10 +312,7 @@ function removeUserFromAllSessions(userId) {
                     if (webSockets) {
                         webSockets.notifyAllConnectedUsers({
                             type: "sessionremoved",
-                            success: true,
-                            result: {
-                                sessionId: session._id
-                            }
+                            sessionId: session._id
                         });
                     }
                 }
@@ -391,8 +385,7 @@ var changeSessionPage = function(sessionId, pageNum, userId, callback) {
                                                 if (webSockets) {
                                                     webSockets.notifyUsers(result.users, {
                                                         type: "pagechanged",
-                                                        success: true,
-                                                        result: result
+                                                        updatedSessionPage: result
                                                     });
                                                 }
                                             }

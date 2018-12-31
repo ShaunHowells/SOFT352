@@ -66,7 +66,7 @@ When("I send a chat message", function(callback) {
         switch (messageData.type) {
         // Message received contains the data about the incoming chat message
             case "chatmessagereceived":
-                world.receivedChatMessage = messageData.result;
+                world.receivedChatMessage = messageData.chatMessage;
                 callback();
                 break;
             default:
