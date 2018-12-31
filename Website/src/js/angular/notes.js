@@ -36,7 +36,7 @@ AngularMainApp.controller("noteListCtrl", function($scope) {
             //-1 to translate between 0 indexed and 1 indexed
             newNotePageNum -= 1;
             if (Sessions.getCurrentUserSession()) {
-                Notes.createNewNote(newNotePageNum, newNoteDetails,  Sessions.getCurrentUserSession()._id, Sessions.getCurrentUserId(), function() {
+                Notes.createNewNote(newNotePageNum, newNoteDetails,  Sessions.getCurrentUserSession()._id, function() {
                     //Hide create new session modal
                     angular.element("#createNewNoteModalClose").click();
                 });

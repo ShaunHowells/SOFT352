@@ -17,7 +17,7 @@ AngularMainApp.controller("chatMessagesCtrl", function($scope) {
     $scope.sendChatMessage = function(message) {
         if (message) {
             if (Sessions.getCurrentUserSession()) {
-                Chat.sendChatMessage(Sessions.getCurrentUserSession()._id, Sessions.getCurrentUserId(), message);
+                Chat.sendChatMessage(Sessions.getCurrentUserSession()._id, message);
             } else {
                 alert("You aren't currently in a session");
             }

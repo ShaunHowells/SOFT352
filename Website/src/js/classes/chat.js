@@ -6,6 +6,7 @@
  */
 var Chat = (function() { // eslint-disable-line no-unused-vars
     var chatMessages = [];
+    var currentUserId;
 
     var chatMessageObserver = new Observer();
 
@@ -38,10 +39,10 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * @param {string} userId - The ID of the user sending the message
      * @param {string} message - The message to send
      */
-    function sendChatMessage(sessionId, userId, message) {
+    function sendChatMessage(sessionId, message) {
         $.post("http://localhost:9000/chat/sendchatmessage", {
             sessionId: sessionId,
-            userId: userId,
+            userId: currentUserId,
             message: message
         }).done(function(data) {
             if (!data.success) {
@@ -89,13 +90,38 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
         chatMessageObserver.notify(chatMessages);
     }
 
+    /**
+     * Sets the current user id - Value may only be set once
+     * 
+     * @param {string} newUserId - ID to set currentUserID as
+     * @memberof Chat
+     */
+    function setCurrentUserId(newUserId) {
+        if (!currentUserId) {
+            currentUserId = newUserId;
+        } else {
+            console.error("Current User ID may only be set once");
+        }
+    }
+    /**
+     * Returns currentUserId
+     * 
+     * @return {string} - The current User ID
+     * @memberof Chat
+     */
+    function getCurrentUserId() {
+        return currentUserId;
+    }
+
     return {
         getChatMessageObserver,
         addChatMessage,
         sendChatMessage,
         removeAllChatMessages,
         getChatMessages,
-        setChatMessages
+        setChatMessages,
+        setCurrentUserId,
+        getCurrentUserId
     };
 })();
 

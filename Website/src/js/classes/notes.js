@@ -40,10 +40,10 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * @param {string} sessionId - The ID of the session the note is being added to
      * @param {string} userId - The ID of the user adding the note to the session
      */
-    function createNewNote(pageNum, note, sessionId, userId, callback) {
+    function createNewNote(pageNum, note, sessionId, callback) {
         $.post("http://localhost:9000/notes/addnewnote", {
             sessionId: sessionId,
-            userId: userId,
+            userId: currentUserId,
             note: note,
             pageNum: pageNum
         }).done(function(data) {
@@ -171,7 +171,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Sets the current user id - Value may only be set once
      * 
      * @param {string} newUserId - ID to set currentUserID as
-     * @memberof Books
+     * @memberof Notes
      */
     function setCurrentUserId(newUserId) {
         if (!currentUserId) {
@@ -184,7 +184,7 @@ var Notes = (function() { // eslint-disable-line no-unused-vars
      * Returns currentUserId
      * 
      * @return {string} - The current User ID
-     * @memberof Books
+     * @memberof Notes
      */
     function getCurrentUserId() {
         return currentUserId;

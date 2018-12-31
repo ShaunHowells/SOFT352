@@ -60,31 +60,28 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
         webSocketMessageObserver.notify(messageData);
 
         switch (messageData.type) {
-            // Message received containing our unique client id
-            case "connected":
+            case "connected": // Message received containing our unique client id
+                //As Sessions/Notes/Chat need access to this variable, I'm setting it there to remove the need to keep retrieving it from this class
                 Sessions.setCurrentUserId(messageData.clientId);
                 Notes.setCurrentUserId(messageData.clientId);
+                Chat.setCurrentUserId(messageData.clientId);
                 break;
-                //Message received containing the list of all available Sessions
-            case "allsessions":
+            case "allsessions": //Message received containing the list of all available Sessions
                 Sessions.setAvailableSessions(messageData.result);
                 break;
-                //Message received when another session is created (either by us or by another user)
-            case "newsessioncreated":
+            case "newsessioncreated": //Message received when another session is created (either by us or by another user)
                 Sessions.pushAvailableSession(messageData.result);
                 break;
-                //Message received when a session is no longer available
-            case "sessionremoved":
+            case "sessionremoved": //Message received when a session is no longer available
                 Sessions.removeAvailableSession(messageData.result.sessionId);
                 break;
-                //Message received when the page in the current session has changed
-            case "pagechanged":
+            case "pagechanged": //Message received when the page in the current session has changed
                 Books.getSessionBookPage(messageData.result);
                 break;
-            case "chatmessagereceived":
+            case "chatmessagereceived": //Message received when a user sends a chat message in the current session
                 Chat.addChatMessage(messageData.result);
                 break;
-            case "userjoinedsession":
+            case "userjoinedsession": //Message received when a user joins the current session
                 Chat.addChatMessage({
                     user: messageData.user.username,
                     message: messageData.user.username + " has joined the session",
@@ -92,7 +89,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 });
                 Users.addUser(messageData.user);
                 break;
-            case "userleftsession":
+            case "userleftsession": //Message received when a user leaves the current user session
                 Chat.addChatMessage({
                     user: messageData.user.username,
                     message: messageData.user.username + " has left the session",
@@ -100,10 +97,10 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                 });
                 Users.removeUser(messageData.user._id);
                 break;
-            case "newnoteadded":
+            case "newnoteadded": //Message recevied when a note is added to the current session
                 Notes.addNote(messageData.note, Sessions.getCurrentUserSession()._id);
                 break;
-            case "noteremoved":
+            case "noteremoved": //Message recevied when a note is removed from the current session
                 Notes.removeNote(messageData.noteId);
                 break;
             default:
