@@ -21,7 +21,8 @@
         "Chat": false,
         "Users": false,
         "Observer": false,
-        "util_encode": false
+        "util_encode": false,
+        "gtag": false
     },
     "rules": {
         "indent": [

@@ -35,7 +35,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
                     "backdrop": "static",
                     "keyboard": false
                 });
-            }
+            };
         }
     }
 
