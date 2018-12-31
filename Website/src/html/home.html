@@ -259,7 +259,8 @@
                                     <ul id="allPagesNotesBody" class="card-body list-group">
                                         <li class="list-group-item flex-column align-items-start" ng-repeat="note in noteList">
                                             <div class="d-flex w-100 justify-content-between">
-                                                <h5 class="mb-1 userNoteHeading"><p>{{note.user}} - Page {{note.pageNum + 1}}</p></h5>
+                                                <h5 class="mb-1 userNoteHeading"><p>{{note.user}} - Page {{note.pageNum + 1}}</p>
+                                                </h5>
                                                 <button type="button" class="btn btn-dark" ng-click="displayDeleteNote(note)">
                                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                 </button>
@@ -350,9 +351,9 @@
                                 </div>
                                 <div class="modal-body">
                                     <h3>Note Details</h3>
-                                    <p>User: <b><span id="deleteNoteModalUser">{{noteToDelete.user}}</span></b></p>
-                                    <p>Page:  <b><span id="deleteNoteModalPageNum">{{noteToDelete.pageNum + 1}}</span></b></p>
-                                    <p>Message:  <b><span id="deleteNoteModalDetails">{{noteToDelete.note}}</span></b></p>
+                                    <p class="modalText">User: <b><span id="deleteNoteModalUser">{{noteToDelete.user}}</span></b></p>
+                                    <p class="modalText">Page:  <b><span id="deleteNoteModalPageNum">{{noteToDelete.pageNum + 1}}</span></b></p>
+                                    <p class="modalText">Message:  <b><span id="deleteNoteModalDetails">{{noteToDelete.note}}</span></b></p>
                                 </div>
                                 <div class="modal-footer">
                                     <button id="deleteNoteModalClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
