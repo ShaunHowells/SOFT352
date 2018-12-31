@@ -288,7 +288,7 @@ function removeUserFromAllSessions(userId) {
                             user_id: userId
                         }
                     }
-                }, function(err, result) {
+                }, function(err) {
                     if (err) {
                         console.log(err);
                     } else {
