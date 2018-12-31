@@ -26,10 +26,10 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
     } else {
         //Check that the user is in the session they are trying to send the message in
         sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
-            if (!inSession) {
-                callback("User is not in this session");
-            } else if (err) {
+            if (err) {
                 callback(err);
+            } else if (!inSession) {
+                callback(`User: ${userId} is not in Session ${sessionId}`);
             } else {
                 //Get the session from the database so we can retrieve the list of users to send the message to
                 models.Sessions.findOne({

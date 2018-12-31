@@ -27,10 +27,10 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
     } else {
         //Check that the user is in the session they are trying to add the note to
         sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
-            if (!inSession) {
-                callback("User is not in this session");
-            } else if (err) {
+            if (err) {
                 callback(err);
+            } else if (!inSession) {
+                callback(`User: ${userId} is not in Session ${sessionId}`);
             } else {
                 //First find the session the note is being added to
                 //Find the list of users so we know the users who need to be told about the new note
@@ -54,39 +54,43 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                             path: "currentBook",
                             select: "pageCount"
                         }, function(err, result) {
-                            if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
-                                callback("This page does not exist in the book");
+                            if (err || !result) {
+                                callback(`An error has occured while attempting to find the book in Session ${sessionId}`);
                             } else {
-                                //Add the note to the session and return the new session details
-                                //The session details are returned so that we know the _id of the newly created note to return
-                                models.Sessions.findOneAndUpdate({
-                                    _id: sessionId
-                                }, {
-                                    "$push": {
-                                        "notes": {
-                                            user: username,
-                                            note: note,
-                                            pageNum: pageNum,
-                                            sessionId: sessionId
+                                if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
+                                    callback(`Page Number ${pageNum} does not exist in Book ${result.currentBook._id}`);
+                                } else {
+                                    //Add the note to the session and return the new session details
+                                    //The session details are returned so that we know the _id of the newly created note to return
+                                    models.Sessions.findOneAndUpdate({
+                                        _id: sessionId
+                                    }, {
+                                        "$push": {
+                                            "notes": {
+                                                user: username,
+                                                note: note,
+                                                pageNum: pageNum,
+                                                sessionId: sessionId
+                                            }
                                         }
-                                    }
-                                }, {
-                                    new: true
-                                }, function(err, result) {
-                                    if (err || !result) {
-                                        callback(err, result);
-                                    } else {
-                                        var newNote = result.notes[result.notes.length - 1];
-                                        callback(err, newNote);
-                                        //Notify all users in the session of the newly added note
-                                        if (webSockets) {
-                                            webSockets.notifyUsers(result.users, {
-                                                type: "newnoteadded",
-                                                note: newNote
-                                            });
+                                    }, {
+                                        new: true
+                                    }, function(err, result) {
+                                        if (err || !result) {
+                                            callback(err, result);
+                                        } else {
+                                            var newNote = result.notes[result.notes.length - 1];
+                                            callback(err, newNote);
+                                            //Notify all users in the session of the newly added note
+                                            if (webSockets) {
+                                                webSockets.notifyUsers(result.users, {
+                                                    type: "newnoteadded",
+                                                    note: newNote
+                                                });
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                         });
                     }
@@ -111,10 +115,10 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
     } else {
         //Check that the user is in the session they want to remove the note from
         sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
-            if (!inSession) {
-                callback("User is not in this session");
-            } else if (err) {
+            if (err) {
                 callback(err);
+            } else if (!inSession) {
+                callback(`User: ${userId} is not in Session ${sessionId}`);
             } else {
                 //Remove the note from the session
                 models.Sessions.findOneAndUpdate({
@@ -158,10 +162,10 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
 var getAllSessionNotes = function(sessionId, userId, callback) {
     //Check that the user in the session they want to retrieve the notes for
     sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
-        if (!inSession) {
-            callback("User is not in this session");
-        } else if (err) {
+        if (err) {
             callback(err);
+        } else if (!inSession) {
+            callback(`User: ${userId} is not in Session ${sessionId}`);
         } else {
             //Retrieve the notes from the session
             models.Sessions.findOne({
@@ -172,7 +176,6 @@ var getAllSessionNotes = function(sessionId, userId, callback) {
         }
     });
 };
-
 
 /**
  * Sets available mongoose models

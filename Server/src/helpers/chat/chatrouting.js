@@ -57,6 +57,11 @@ module.exports = function(app) {
                         success: false,
                         message: "An error has occured attempting to send that message. Please try again."
                     });
+                } else if (!result) {
+                    response.send({
+                        success: false,
+                        message: "A session with this ID does not exist"
+                    });
                 } else {
                     //If successful then return result to caller
                     response.send({
