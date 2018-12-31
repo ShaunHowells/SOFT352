@@ -1,8 +1,13 @@
+/**
+ * Routing for Chat. All requests routed through ChatRouting take the form /chat/*
+ * @module ChatRouting
+ */
+
 var express = require("express");
 
 module.exports = function(app) {
     //Set up router for /chat
-    var chatRouter = express.Router();
+    const chatRouter = express.Router();
 
     //Include sessiondb access
     var chatdb = require("./chatdb.js");
@@ -12,7 +17,15 @@ module.exports = function(app) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
-
+    /**
+     * Send a chat message to all users in the users current session
+     * 
+     * @name POST/chat/sendchatmessage
+     * @function
+     * @param {string} sessionId - The ID of the session to send the message in
+     * @param {string} userId - The ID of the user sending the message
+     * @param {string} message - The message being sent
+     */
     chatRouter.post("/sendchatmessage", function(request, response) {
         var sessionId = request.body.sessionId; //ID of the session the chat message is being sent in
         var userId = request.body.userId; //ID of the user sending the message

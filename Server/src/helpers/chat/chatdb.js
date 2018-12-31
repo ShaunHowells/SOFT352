@@ -13,20 +13,12 @@ var webSockets;
 var sessionsdb = require("../sessions/sessionsdb.js");
 
 /**
- * Callback used when processing Chat messages
- * 
- * @callback chatCallback
- * @param {Object} err - The error
- * @param {Object} result - The result
- */
-
-/**
  * Sends a Chat message to all other users in the session
  *
- * @param {String} sessionId - The id of the session the message is being sent in
- * @param {String} userId -The id of the user sending the message
- * @param {String} message - The message being sent
- * @param {chatCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session the message is being sent in
+ * @param {string} userId -The id of the user sending the message
+ * @param {string} message - The message being sent
+ * @param {callback} callback - A callback to run after database access.
  */
 var sendChatMessage = function(sessionId, userId, message, callback) {
     if (!webSockets) {
@@ -70,7 +62,7 @@ var sendChatMessage = function(sessionId, userId, message, callback) {
 /**
  * Sets available mongoose models
  *
- * @param {Object} mongooseModels Available Mongoose models
+ * @param {object} mongooseModels - Available Mongoose models
  */
 var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
@@ -79,7 +71,7 @@ var setMongooseModels = function(mongooseModels) {
 /**
  * Set webSockets variable so that sessions can update websocket connections
  *
- * @param {Object} newWebSockets The value to set webSockets to
+ * @param {object} newWebSockets - The value to set webSockets to
  */
 function setWebSockets(newWebSockets) {
     webSockets = newWebSockets;

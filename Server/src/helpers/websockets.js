@@ -1,6 +1,6 @@
 /**
  * WebSocket Management
- * @module helpers/WebSocket
+ * @module WebSocket
  */
 
 
@@ -14,7 +14,7 @@ module.exports = function(server) {
     /**
      * Send a WebSocket message to all connected users
      *
-     * @param {Object} messageToSend JSON data to send to all connected users
+     * @param {object} messageToSend JSON data to send to all connected users
      */
     function notifyAllConnectedUsers(messageToSend) {
         var message = JSON.stringify(messageToSend);
@@ -26,8 +26,8 @@ module.exports = function(server) {
     /**
      * Send a WebSocket message to the specified users
      *
-     * @param {Object[]} sessionUsers Details of users to send the message to. Expected to be in the same format as the users in the Sessions Mongoose model.
-     * @param {Object} messageToSend JSON data to send to the specified users
+     * @param {object[]} sessionUsers Details of users to send the message to. Expected to be in the same format as the users in the Sessions Mongoose model.
+     * @param {object} messageToSend JSON data to send to the specified users
      */
     function notifyUsers(sessionUsers, messageToSend) {
         var message = JSON.stringify(messageToSend);

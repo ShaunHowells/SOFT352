@@ -4,7 +4,7 @@ var bodyParser = require("body-parser");
 //Get commandline arguments
 var myArgs = process.argv.slice(2);
 var test = false;
-for (arg in myArgs) {
+for (var arg in myArgs) {
     switch (myArgs[arg]) {
         case "test":
             console.log("Enabling Test Mode");

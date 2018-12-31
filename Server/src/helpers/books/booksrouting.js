@@ -1,10 +1,16 @@
+/**
+ * Routing for Books. All requests routed through BooksRouting take the form /books/*
+ * @module BooksRouting
+ */
+
 var express = require("express");
 var multer = require("multer");
 var upload = multer();
 
 module.exports = function(app) {
-    //Set up router for /books
-    var booksRouter = express.Router();
+
+    //Set up router for /books/
+    const booksRouter = express.Router();
 
     //Include bookdb access
     var booksdb = require("./booksdb.js");
@@ -16,6 +22,7 @@ module.exports = function(app) {
         next();
     });
 
+    //Book pages should only be JPGs
     function isPageContentJpg(pages) {
         for (var page in pages) {
             if (pages[page].mimetype !== "image/jpeg") {
@@ -24,9 +31,16 @@ module.exports = function(app) {
         }
         return true;
     }
-
-    //This is purely for populating the books database
-    //This isn't intended to be used as part of regular functionality
+    /**
+     * Route for adding a new book. This function is used purely as a means of populating the database.
+     * This functionality isn't present in the rest of the application.
+     * Any uploaded images should be in the JPG format.
+     * 
+     * @name POST/books/addnewbook
+     * @function
+     * @param {string} title - The title of the book being created
+     * @param {file[]} pages - An array of files containing the JPGs used as page images
+     */
     booksRouter.post("/addnewbook", upload.any(), function(request, response) {
         var title = request.body.title; //Title of the book being added
         var pages = request.files; //Array of images representing the pages of the book
@@ -62,7 +76,13 @@ module.exports = function(app) {
             });
         }
     });
-
+    /**
+     * Route for retrieving the list of all books.
+     * Any uploaded images should be in the JPG format.
+     * 
+     * @name POST/books/getallbooks
+     * @function
+     */
     booksRouter.post("/getallbooks", function(request, response) {
         //Get all books
         booksdb.getAllBooks(function(err, result) {
@@ -82,7 +102,14 @@ module.exports = function(app) {
             }
         });
     });
-
+    /**
+     * Route for retrieving the data for a specific page from a book
+     * 
+     * @name POST/books/getpagefrombook
+     * @function
+     * @param {string} bookId - The ID of the book you want to retrieve the page from
+     * @param {number} pageNum - The number of the page you want to retrieve. Starts at 0.
+     */
     booksRouter.post("/getpagefrombook", function(request, response) {
         var bookId = request.body.bookId; //ID of the book containing the page
         var pageNum = request.body.pageNum; //Number of the page within the book

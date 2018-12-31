@@ -12,21 +12,13 @@ var webSockets;
 var sessionsdb = require("../sessions/sessionsdb.js");
 
 /**
- * Callback used when accessing Books from MongoDB
- * 
- * @callback notesCallback
- * @param {Object} err - The error returned from MongoDB access
- * @param {Object} result - The result returned from MongoDB access
- */
-
-/**
  * Add a new note to a session
  *
- * @param {String} sessionId - The id of the session the note is being added to
- * @param {String} userId -The id of the user adding the note
- * @param {String} note - The contents of the note being added
- * @param {Integer} pageNum - The number of the page the note is being added to
- * @param {notesCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session the note is being added to
+ * @param {string} userId -The id of the user adding the note
+ * @param {string} note - The contents of the note being added
+ * @param {number} pageNum - The number of the page the note is being added to
+ * @param {callback} callback - A callback to run after database access.
  */
 var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
     if (!webSockets) {
@@ -98,10 +90,10 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
 /**
  * Get all notes from a session
  *
- * @param {String} sessionId - The id of the session to delete the note from
- * @param {String} noteId - The id of the note being deleted
- * @param {String} userId - The id of user deleting the note
- * @param {notesCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session to delete the note from
+ * @param {string} noteId - The id of the note being deleted
+ * @param {string} userId - The id of user deleting the note
+ * @param {callback} callback - A callback to run after database access.
  */
 var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
     if (!webSockets) {
@@ -148,9 +140,9 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
 /**
  * Get all notes from a session
  *
- * @param {String} sessionId - The id of the session to retrieve the notes from
- * @param {String} userId - The id of the user retrieving the notes
- * @param {notesCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session to retrieve the notes from
+ * @param {string} userId - The id of the user retrieving the notes
+ * @param {callback} callback - A callback to run after database access.
  */
 var getAllSessionNotes = function(sessionId, userId, callback) {
     sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
@@ -172,7 +164,7 @@ var getAllSessionNotes = function(sessionId, userId, callback) {
 /**
  * Sets available mongoose models
  *
- * @param {Object} mongooseModels Available Mongoose models
+ * @param {object} mongooseModels - Available Mongoose models
  */
 var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
@@ -181,7 +173,7 @@ var setMongooseModels = function(mongooseModels) {
 /**
  * Set webSockets variable so that sessions can update websocket connections
  *
- * @param {Object} newWebSockets The value to set webSockets to
+ * @param {object} newWebSockets - The value to set webSockets to
  */
 function setWebSockets(newWebSockets) {
     webSockets = newWebSockets;

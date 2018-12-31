@@ -3,7 +3,6 @@
  * @module Sessionsdb
  */
 
-
 //Variable to store webSockets
 var webSockets;
 
@@ -11,17 +10,9 @@ var webSockets;
 var models;
 
 /**
- * Callback used when accessing Sessions from MongoDB
- * 
- * @callback sessionsCallback
- * @param {Object} err - The error returned from MongoDB access
- * @param {Object} result - The result returned from MongoDB access
- */
-
-/**
  * Gets all of the Sessions from MongoDB
  *
- * @param {sessionsCallback} callback - A callback to run after database access.
+ * @param {callback} callback - A callback to run after database access.
  */
 function getAllSessions(callback) {
     models.Sessions.find().select("-notes -users").populate({
@@ -33,9 +24,9 @@ function getAllSessions(callback) {
 /**
  * Join a session
  *
- * @param {String} sessionId - The id of the session to be joined
- * @param {String} userId - The id of the user that is attempting to join the session
- * @param {sessionsCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session to be joined
+ * @param {string} userId - The id of the user that is attempting to join the session
+ * @param {callback} callback - A callback to run after database access.
  */
 function joinSession(sessionId, user, callback) {
     //First check that user isn't already in the sesssion
@@ -92,10 +83,10 @@ function joinSession(sessionId, user, callback) {
 /**
  * Creates a new session
  *
- * @param {String} sessionName - The user input name of the new session
- * @param {Object} user - The id and username of the user that is attempting to create the session. Will be set as the owner of the session
- * @param {String} bookId - The id of the book being to be viewed in the session.
- * @param {sessionsCallback} callback - A callback to run after database access.
+ * @param {string} sessionName - The user input name of the new session
+ * @param {object} user - The id and username of the user that is attempting to create the session. Will be set as the owner of the session
+ * @param {string} bookId - The id of the book being to be viewed in the session.
+ * @param {callback} callback - A callback to run after database access.
  */
 function createSession(sessionName, user, bookId, callback) {
     models.Books.findOne({
@@ -164,9 +155,9 @@ function createSession(sessionName, user, bookId, callback) {
 /**
  * Removes the specified user from the specified Session in MongoDB
  *
- * @param {String} sessionId - The id of the session that the user wants to leave
- * @param {String} userId - The id of the user that wants to leave the session
- * @param {sessionsCallback} callback - A callback to run after database access.
+ * @param {string} sessionId - The id of the session that the user wants to leave
+ * @param {string} userId - The id of the user that wants to leave the session
+ * @param {callback} callback - Callback to run after database access.
  */
 function removeUserFromSession(sessionId, userId, callback) {
     //Check that user is in that session
@@ -240,15 +231,14 @@ function removeUserFromSession(sessionId, userId, callback) {
             callback("User not in session");
         }
     });
-
 }
 
 
 /**
  * Remove a given user all sessions
  *
- * @param {String} userId - The id of the user to remove from all sessons
- * @param {sessionsCallback} callback - A callback to run after database access.
+ * @param {string} userId - The id of the user to remove from all sessons
+ * @param {callback} callback - Callback to run after database access.
  */
 function removeUserFromAllSessions(userId) {
     models.Sessions.find({
@@ -309,9 +299,9 @@ function removeUserFromAllSessions(userId) {
 /**
  * Change the current page of a session
  *
- * @param {String} sessionId ID of the session to retrieve the users from
- * @param {Integer} pageNum Number of the page to navigate to
- * @param {Function} callback to execute after users have been retrieved
+ * @param {string} sessionId - ID of the session to retrieve the users from
+ * @param {number} pageNum - Number of the page to navigate to
+ * @param {callback} callback - Callback to execute after users have been retrieved
  */
 var changeSessionPage = function(sessionId, pageNum, userId, callback) {
     //Check that user is in that session
@@ -375,9 +365,9 @@ var changeSessionPage = function(sessionId, pageNum, userId, callback) {
 /**
  * Check if a user is in a given session
  *
- * @param {String} sessionId ID of the session
- * @param {String} userId ID of the user
- * @param {Function} callback to execute after query has found (or not found) the user/session
+ * @param {string} sessionId - ID of the session
+ * @param {string} userId - ID of the user
+ * @param {callback} callback - Callback to execute after query has found (or not found) the user/session
  */
 var isUserInSession = function(sessionId, userId, callback) {
     models.Sessions.findOne({
@@ -397,8 +387,8 @@ var isUserInSession = function(sessionId, userId, callback) {
 /**
  * Check if a user is in a any session
  *
- * @param {String} userId ID of the user
- * @param {Function} callback to execute after query has found (or not found) the user/session
+ * @param {string} userId - ID of the user
+ * @param {callback} callback - Callback to execute after query has found (or not found) the user/session
  */
 var isUserInAnySession = function(userId, callback) {
     models.Sessions.findOne({
@@ -418,7 +408,7 @@ var isUserInAnySession = function(userId, callback) {
 /**
  * Closes all current sessions - Used for clean up before/after tests and when starting the server
  *
- * @param {Function} callback to execute after sessions have been deleted
+ * @param {callback} callback - Callback to execute after sessions have been deleted
  */
 var closeAllSessions = function(callback) {
     models.Sessions.deleteMany({}, function(err, result) {
@@ -433,7 +423,7 @@ var closeAllSessions = function(callback) {
 /**
  * Sets available mongoose models
  *
- * @param {Object} mongooseModels Available Mongoose models
+ * @param {object} mongooseModels - Available Mongoose models
  */
 var setMongooseModels = function(mongooseModels) {
     models = mongooseModels;
@@ -442,7 +432,7 @@ var setMongooseModels = function(mongooseModels) {
 /**
  * Set webSockets variable so that sessions can update websocket connections
  *
- * @param {Object} newWebSockets The value to set webSockets to
+ * @param {object} newWebSockets - The value to set webSockets to
  */
 function setWebSockets(newWebSockets) {
     webSockets = newWebSockets;

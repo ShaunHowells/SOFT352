@@ -1,8 +1,13 @@
+/**
+ * Routing for Notes. All requests routed through NotesRouting take the form /notes/*
+ * @module NotesRouting
+ */
+
 var express = require("express");
 
 module.exports = function(app) {
     //Set up router for /chat
-    var notesRouter = express.Router();
+    const notesRouter = express.Router();
 
     //Include sessiondb access
     var notesdb = require("./notesdb.js");
@@ -12,7 +17,16 @@ module.exports = function(app) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
-
+    /**
+     * Adds a new note to a session
+     * 
+     * @name POST/notes/addnewnote
+     * @function
+     * @param {string} sessionId - The ID of the session to add the note to
+     * @param {string} userId - The ID of the user adding the note
+     * @param {string} note - The contents of the note
+     * @param {number} pageNum - The number of the page the note is being added to. Starts at 0.
+     */
     notesRouter.post("/addnewnote", function(request, response) {
         var sessionId = request.body.sessionId; //ID of the session the note is being added to
         var userId = request.body.userId; //ID of the user sending the note
@@ -65,7 +79,15 @@ module.exports = function(app) {
             });
         }
     });
-
+    /**
+     * Deletes a note from a session
+     * 
+     * @name POST/notes/deletenote
+     * @function
+     * @param {string} sessionId - The ID of the session the note is being deleted from
+     * @param {string} noteId - The ID of the note being deleted
+     * @param {string} userId - The ID of the user deleting the note
+     */
     notesRouter.post("/deletenote", function(request, response) {
         var sessionId = request.body.sessionId; //ID of the session the note belongs to
         var noteId = request.body.noteId; //ID of the note to be delete
@@ -112,7 +134,14 @@ module.exports = function(app) {
             });
         }
     });
-
+    /**
+     * Retrieves all of the notes from a session
+     * 
+     * @name POST/notes/getallsessionnotes
+     * @function
+     * @param {string} sessionId - The ID of the session to retrieve the notes from
+     * @param {string} userId - The ID of the user retrieving the notes
+     */
     notesRouter.post("/getallsessionnotes", function(request, response) {
         var sessionId = request.body.sessionId; //ID of the session the chat message is being sent in
         var userId = request.body.userId; //ID of the user sending the message

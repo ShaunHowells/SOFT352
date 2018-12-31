@@ -1,3 +1,8 @@
+/**
+ * Routing for Sessions. All requests routed through SessionsRouting take the form /sessions/*
+ * @module SessionsRouting
+ */
+
 var express = require("express");
 
 module.exports = function(app, test) {
@@ -12,7 +17,12 @@ module.exports = function(app, test) {
         response.setHeader("Access-Control-Allow-Origin", "*");
         next();
     });
-
+    /**
+     * Retrieves the list of available sessions
+     * 
+     * @name POST/sessions/getallsessions
+     * @function
+     */
     sessionsRouter.post("/getallsessions", function(request, response) {
         //Get all sessions
         sessionsdb.getAllSessions(function(err, result) {
@@ -32,7 +42,16 @@ module.exports = function(app, test) {
             }
         });
     });
-
+    /**
+     * Joins a user to a session
+     * 
+     * @name POST/sessions/joinsession
+     * @function
+     * @param {string} sessionId - The ID of the session the user is join
+     * @param {object} user - The details of the user joining the session
+     * @param {string} user.userId - The ID of the user joining the session
+     * @param {string} user.username - The name of the user joining the session
+     */
     sessionsRouter.post("/joinsession", function(request, response) {
         var sessionId = request.body.sessionId; //ID of the session to join
         var user = request.body.user; //The details of the user who wants to join the session
@@ -75,7 +94,17 @@ module.exports = function(app, test) {
             });
         }
     });
-
+    /**
+     * Creates a new session and joins the user creating the session to that session
+     * 
+     * @name POST/sessions/createsession
+     * @function
+     * @param {string} sessionName - The name of the session being created
+     * @param {object} user - The details of the user creating the session
+     * @param {string} user.userId - The ID of the user creating the session
+     * @param {string} user.username - The name of the user creating the session
+     * @param {string} bookId - The ID of the book to be read in the session
+     */
     sessionsRouter.post("/createsession", function(request, response) {
         var sessionName = request.body.sessionName; //User friendly name of the session
         var user = request.body.user; //The details of the user creating the session
@@ -117,7 +146,14 @@ module.exports = function(app, test) {
             });
         }
     });
-
+    /**
+     * Removes the user from the given session
+     * 
+     * @name POST/sessions/leavesession
+     * @function
+     * @param {string} sessionId - The ID of the session the user is leaving
+     * @param {string} userId - The ID of the user leaving the session
+     */
     sessionsRouter.post("/leavesession", function(request, response) {
         var sessionId = request.body.sessionId; //User friendly name of the session
         var userId = request.body.userId; //ID of the user creating the session
@@ -159,7 +195,15 @@ module.exports = function(app, test) {
             });
         }
     });
-
+    /**
+     * Updates the current page being read in the session
+     * 
+     * @name POST/sessions/updatecurrentpage
+     * @function
+     * @param {string} sessionId - The ID of the session that the page is being updated in.
+     * @param {number} pageNum - The new page number that the session will be reading. Starts at 0.
+     * @param {string} userId - The ID of the user updating the page number
+     */
     sessionsRouter.post("/updatecurrentpage", function(request, response) {
         var sessionId = request.body.sessionId; //User friendly name of the session
         var pageNum = request.body.pageNum; //ID of the user creating the session
