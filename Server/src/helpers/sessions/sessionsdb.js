@@ -15,6 +15,7 @@ var models;
  * @param {callback} callback - A callback to run after database access.
  */
 function getAllSessions(callback) {
+    //Retrieve the list of sessions + book details, but exclude the notes and user list as these can be quite large and shouldn't be shown to users not in the session
     models.Sessions.find().select("-notes -users").populate({
         path: "currentBook",
         select: "_id title"
@@ -29,11 +30,12 @@ function getAllSessions(callback) {
  * @param {callback} callback - A callback to run after database access.
  */
 function joinSession(sessionId, user, callback) {
-    //First check that user isn't already in the sesssion
+    //First check that user isn't already in a sesssion
     isUserInAnySession(user.userId, function(err, inAnySession) {
         if (err) {
             callback(err, null);
         } else if (!inAnySession) {
+            //Find the session and add the user to it
             models.Sessions.findOneAndUpdate({
                 _id: sessionId
             }, {
@@ -46,15 +48,19 @@ function joinSession(sessionId, user, callback) {
             }, {
                 new: true
             }, function(err, result) {
+                //If err or no result returned then the user won't have been added
                 if (err || !result) {
                     callback(err, result);
                 } else {
+                    //Populate the details of the book so we can return them to the user
                     result.populate({
                         path: "currentBook",
                         select: "_id title"
                     }, function(err, result) {
+                        //Return completed result to the user
                         callback(err, result);
                     });
+                    //Find the unique id of the user who was just added to the session
                     var userId;
                     var userList = result.users.toObject();
                     for (var i = 0; i < userList.length; i++) {
@@ -63,8 +69,9 @@ function joinSession(sessionId, user, callback) {
                             break;
                         }
                     }
+                    //Notify all users in the session that a new user has just joined
                     if (webSockets) {
-                        webSockets.notifyUsers(result.users, {
+                        webSockets.notifyUsers(userList, {
                             type: "userjoinedsession",
                             user: {
                                 _id: userId,
@@ -89,18 +96,21 @@ function joinSession(sessionId, user, callback) {
  * @param {callback} callback - A callback to run after database access.
  */
 function createSession(sessionName, user, bookId, callback) {
-    models.Books.findOne({
-        _id: bookId
-    }, function(err, result) {
+    //First check that the user isn't in another session
+    isUserInAnySession(user.userId, function(err, inAnySession) {
         if (err) {
-            callback(err, result);
-        } else if (!result) {
-            callback("A book with this ID does not exist");
-        } else {
-            isUserInAnySession(user.userId, function(err, inAnySession) {
+            callback(err, null);
+        } else if (!inAnySession) {
+            //Check that the bookId they have supplied is a real book
+            models.Books.findOne({
+                _id: bookId
+            }, function(err, result) {
                 if (err) {
-                    callback(err, null);
-                } else if (!inAnySession) {
+                    callback(err, result);
+                } else if (!result) {
+                    callback("A book with this ID does not exist");
+                } else {
+                    //Create the new session with the details provided
                     var newSession = new models.Sessions({
                         name: sessionName,
                         owner: user.username,
@@ -112,42 +122,47 @@ function createSession(sessionName, user, bookId, callback) {
                         }]
                     });
                     newSession.save(function(err, result) {
-                        //Get currentBook _id and title to return
+                        //Populate the book in the session so that we can return it to the user
                         result.populate({
                             path: "currentBook",
                             select: "_id title"
                         }, function(err, result) {
-                            callback(err, result);
-
-                            var userList = result.users.toObject();
-                            var userId;
-                            for (var i = 0; i < userList.length; i++) {
-                                if (userList[i].user_id == user.userId) {
-                                    userId = userList[i]._id;
-                                    break;
-                                }
-                            }
-                            //Only notify users if new session creation was successful
-                            if (!err && webSockets) {
-                                webSockets.notifyAllConnectedUsers({
-                                    type: "newsessioncreated",
-                                    success: true,
-                                    result: result
-                                });
-                                webSockets.notifyUsers(result.users, {
-                                    type: "userjoinedsession",
-                                    user: {
-                                        _id: userId,
-                                        username: user.username
+                            if (err || !result) {
+                                callback(err, result);
+                            } else {
+                                callback(err, result);
+                                //Get the unique Id (generated by MongoDb) of the user in the session
+                                var userList = result.users.toObject();
+                                var userId;
+                                for (var i = 0; i < userList.length; i++) {
+                                    if (userList[i].user_id == user.userId) {
+                                        userId = userList[i]._id;
+                                        break;
                                     }
-                                });
+                                }
+                                //Inform every user connected that a new session has been created
+                                //Inform all users in the session (should only be the person who created it) that someone has joined
+                                if (!err && webSockets) {
+                                    webSockets.notifyAllConnectedUsers({
+                                        type: "newsessioncreated",
+                                        success: true,
+                                        result: result
+                                    });
+                                    webSockets.notifyUsers(userList, {
+                                        type: "userjoinedsession",
+                                        user: {
+                                            _id: userId,
+                                            username: user.username
+                                        }
+                                    });
+                                }
                             }
                         });
                     });
-                } else {
-                    callback("User is already in another session");
                 }
             });
+        } else {
+            callback("User is already in another session");
         }
     });
 }
@@ -165,6 +180,7 @@ function removeUserFromSession(sessionId, userId, callback) {
         if (err) {
             callback(err, null);
         } else if (inSession) {
+            //Retrieve the session
             models.Sessions.findOne({
                 "_id": sessionId
             }).exec(function(err, result) {
@@ -186,9 +202,11 @@ function removeUserFromSession(sessionId, userId, callback) {
                             break;
                         }
                     }
-
+                    //If we only have one user then we will remove the session as a session shouldn't exist with 0 users
+                    //Otherwise remove the user from the session
                     if (userLength <= 1) {
                         result.remove(callback);
+                        //Inform every user that the session has been closed and is no longer available
                         if (webSockets) {
                             webSockets.notifyAllConnectedUsers({
                                 type: "sessionremoved",
@@ -199,6 +217,7 @@ function removeUserFromSession(sessionId, userId, callback) {
                             });
                         }
                     } else {
+                        //Remove the user from the session
                         models.Sessions.updateOne({
                             _id: sessionId
                         }, {
@@ -212,7 +231,7 @@ function removeUserFromSession(sessionId, userId, callback) {
                                 callback(err, {});
                             } else {
                                 callback(err, {});
-
+                                //Notify users in the session that the user has left
                                 if (webSockets) {
                                     webSockets.notifyUsers(userList, {
                                         type: "userleftsession",
@@ -235,12 +254,14 @@ function removeUserFromSession(sessionId, userId, callback) {
 
 
 /**
- * Remove a given user all sessions
+ * Remove a given user all sessions - Used when their websocket closes to ensure they aren't in any sessions
  *
  * @param {string} userId - The id of the user to remove from all sessons
  * @param {callback} callback - Callback to run after database access.
  */
 function removeUserFromAllSessions(userId) {
+    //Find all of the sessions they user is in.
+    //We expect them to be in max 1 session
     models.Sessions.find({
         "users.user_id": userId
     }).exec(function(err, sessions) {
@@ -256,8 +277,12 @@ function removeUserFromAllSessions(userId) {
                     break;
                 }
             }
+            //If they are the only user in the session then close the session
+            //Otherwise remove them from the session
             if (session.users.length > 1) {
-                models.Sessions.findOneAndUpdate(session._id, {
+                models.Sessions.updateOne({
+                    _id: session._id
+                }, {
                     $pull: {
                         users: {
                             user_id: userId
@@ -267,9 +292,9 @@ function removeUserFromAllSessions(userId) {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log(`User: ${userId} has been removed from Session: ${result._id}`);
+                        console.log(`User: ${userId} has been removed from Session: ${session._id}`);
                         if (webSockets) {
-                            webSockets.notifyUsers(result.users, {
+                            webSockets.notifyUsers(userList, {
                                 type: "userleftsession",
                                 user: {
                                     _id: foundUserId,
@@ -280,14 +305,13 @@ function removeUserFromAllSessions(userId) {
                     }
                 });
             } else {
-                var sessionId = session._id;
                 session.remove();
                 if (webSockets) {
                     webSockets.notifyAllConnectedUsers({
                         type: "sessionremoved",
                         success: true,
                         result: {
-                            sessionId: sessionId
+                            sessionId: session._id
                         }
                     });
                 }
@@ -309,19 +333,22 @@ var changeSessionPage = function(sessionId, pageNum, userId, callback) {
         if (err) {
             callback(err, null);
         } else if (inSession) {
+            //Find the session the user is in
             models.Sessions.findOne({
                 _id: sessionId
             }).select("currentBook").exec(function(err, result) {
                 if (err || !result) {
                     callback(err, result);
                 } else {
+                    //Retrieve the details of the book in the session so that we can check if the page turn will go out of bounds of the book
                     result.populate({
                         path: "currentBook",
-                        select: "pageCount"
+                        select: "_id title pageCount"
                     }, function(err, result) {
                         if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
                             callback("This page does not exist in the book");
                         } else {
+                            //Update the session and return the new values
                             models.Sessions.findOneAndUpdate({
                                 _id: sessionId
                             }, {
@@ -370,6 +397,7 @@ var changeSessionPage = function(sessionId, pageNum, userId, callback) {
  * @param {callback} callback - Callback to execute after query has found (or not found) the user/session
  */
 var isUserInSession = function(sessionId, userId, callback) {
+    //Find the provided session and check that the user is in that session
     models.Sessions.findOne({
         _id: sessionId,
         "users.user_id": userId
@@ -391,6 +419,7 @@ var isUserInSession = function(sessionId, userId, callback) {
  * @param {callback} callback - Callback to execute after query has found (or not found) the user/session
  */
 var isUserInAnySession = function(userId, callback) {
+    //Try to find any sessions with this user in it
     models.Sessions.findOne({
         "users.user_id": userId
     }, function(err, result) {
@@ -411,6 +440,7 @@ var isUserInAnySession = function(userId, callback) {
  * @param {callback} callback - Callback to execute after sessions have been deleted
  */
 var closeAllSessions = function(callback) {
+    //Close every session
     models.Sessions.deleteMany({}, function(err, result) {
         if (err) {
             console.log(err);

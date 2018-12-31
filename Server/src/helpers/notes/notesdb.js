@@ -5,10 +5,9 @@
 
 //Mongoose Models
 var models;
-
-//Websocket
+//Websocket connections
 var webSockets;
-
+//Sessions database access
 var sessionsdb = require("../sessions/sessionsdb.js");
 
 /**
@@ -21,16 +20,21 @@ var sessionsdb = require("../sessions/sessionsdb.js");
  * @param {callback} callback - A callback to run after database access.
  */
 var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
+    //This requires websockets to be set up, so if it isn't then we can't continue
     if (!webSockets) {
         console.error("Web sockets not set up.");
         callback(new Error("Web sockets not set up"), null);
     } else {
+        //Check that the user is in the session they are trying to add the note to
         sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
             if (!inSession) {
                 callback("User is not in this session");
             } else if (err) {
                 callback(err);
             } else {
+                //First find the session the note is being added to
+                //Find the list of users so we know the users who need to be told about the new note
+                //Get the book being read so that we can check if the supplied pageNum is present in the book
                 models.Sessions.findOne({
                     _id: sessionId
                 }).select("currentBook users").exec(function(err, result) {
@@ -45,6 +49,7 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                                 break;
                             }
                         }
+                        //As the book belongs in another table we need to populate the currentBook to retrieve the number of pages
                         result.populate({
                             path: "currentBook",
                             select: "pageCount"
@@ -52,6 +57,8 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                             if (pageNum < 0 || pageNum > result.currentBook.pageCount - 1) {
                                 callback("This page does not exist in the book");
                             } else {
+                                //Add the note to the session and return the new session details
+                                //The session details are returned so that we know the _id of the newly created note to return
                                 models.Sessions.findOneAndUpdate({
                                     _id: sessionId
                                 }, {
@@ -71,6 +78,7 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
                                     } else {
                                         var newNote = result.notes[result.notes.length - 1];
                                         callback(err, newNote);
+                                        //Notify all users in the session of the newly added note
                                         if (webSockets) {
                                             webSockets.notifyUsers(result.users, {
                                                 type: "newnoteadded",
@@ -96,17 +104,20 @@ var addNoteToSession = function(sessionId, userId, note, pageNum, callback) {
  * @param {callback} callback - A callback to run after database access.
  */
 var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
+    //This requires the user of websockets, so if the websockets aren't set up then we can't continue
     if (!webSockets) {
         console.error("Web sockets not set up.");
         callback(new Error("Web sockets not set up"), null);
     } else {
+        //Check that the user is in the session they want to remove the note from
         sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
             if (!inSession) {
                 callback("User is not in this session");
             } else if (err) {
                 callback(err);
             } else {
-                models.Sessions.updateOne({
+                //Remove the note from the session
+                models.Sessions.findOneAndUpdate({
                     _id: sessionId
                 }, {
                     $pull: {
@@ -115,16 +126,16 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
                         }
                     }
                 }, function(err, result) {
+                    //If there was an error, or no result returned, then the note was not removed
                     if (err || !result) {
-                        callback(err, {
-                            removed: false
-                        });
+                        callback(err, result);
                     } else {
                         callback(err, {
                             removed: true
                         });
+                        //Inform users
                         if (webSockets) {
-                            webSockets.notifyAllConnectedUsers({
+                            webSockets.notifyUsers(result.users, {
                                 type: "noteremoved",
                                 success: true,
                                 noteId: noteId
@@ -145,12 +156,14 @@ var removeNoteFromSession = function(sessionId, noteId, userId, callback) {
  * @param {callback} callback - A callback to run after database access.
  */
 var getAllSessionNotes = function(sessionId, userId, callback) {
+    //Check that the user in the session they want to retrieve the notes for
     sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
         if (!inSession) {
             callback("User is not in this session");
         } else if (err) {
             callback(err);
         } else {
+            //Retrieve the notes from the session
             models.Sessions.findOne({
                 _id: sessionId
             }).select("notes").exec(function(err, result) {

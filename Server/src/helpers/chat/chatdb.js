@@ -3,13 +3,11 @@
  * @module Chatdb
  */
 
-
 //Mongoose Models
 var models;
-
-//Websocket
+//WebSockets connections
 var webSockets;
-
+//Sessions database access
 var sessionsdb = require("../sessions/sessionsdb.js");
 
 /**
@@ -21,16 +19,19 @@ var sessionsdb = require("../sessions/sessionsdb.js");
  * @param {callback} callback - A callback to run after database access.
  */
 var sendChatMessage = function(sessionId, userId, message, callback) {
+    //This requires the user of websockets, so if websockets haven't been set up we can't continue
     if (!webSockets) {
         console.error("Web sockets not set up.");
         callback(new Error("Web sockets not set up"), null);
     } else {
+        //Check that the user is in the session they are trying to send the message in
         sessionsdb.isUserInSession(sessionId, userId, function(err, inSession) {
             if (!inSession) {
                 callback("User is not in this session");
             } else if (err) {
                 callback(err);
             } else {
+                //Get the session from the database so we can retrieve the list of users to send the message to
                 models.Sessions.findOne({
                     _id: sessionId
                 }).exec(function(err, result) {
