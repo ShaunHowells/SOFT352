@@ -10,7 +10,7 @@ function Observer() { // eslint-disable-line no-unused-vars
     /**
      * Add a new method to observers
      * 
-     * @param {Function} fn The function to add as an observer
+     * @param {function} fn - The function to add as an observer
      * @memberof Observer
      */
     this.subscribe = function (fn) {
@@ -20,7 +20,7 @@ function Observer() { // eslint-disable-line no-unused-vars
     /**
      * Remove a method from observers
      * 
-     * @param {Function} fn The function to remove as an observer
+     * @param {function} fn-  The function to remove as an observer
      */
     this.unsubscribe = function (fn) {
         this.observers = this.observers.filter(function (value) {
@@ -32,7 +32,7 @@ function Observer() { // eslint-disable-line no-unused-vars
     /**
      * Call every observer
      * 
-     * @param data The data to pass into the each observer 
+     * @param {object} data - The data to pass into the each observer 
      * @memberof Observer
      */
     this.notify = function (data) {

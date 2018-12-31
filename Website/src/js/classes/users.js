@@ -25,7 +25,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * Adds a user to currentSessionUsers
      * 
      * @memberof Users
-     * @param {Object} user - The details of the user to add
+     * @param {object} user - The details of the user to add
      */
     function addUser(user) {
         currentSessionUsers.push(new User(user));
@@ -37,7 +37,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * Removes a user from currentSessionUsers
      * 
      * @memberof Users
-     * @param {String} userId - The id of the user to remove
+     * @param {string} userId - The id of the user to remove
      */
     function removeUser(userId) {
         currentSessionUsers = currentSessionUsers.filter(function(value) {
@@ -73,7 +73,7 @@ var Users = (function() { // eslint-disable-line no-unused-vars
      * Sets the list of users
      * 
      * @memberof Users
-     * @param {Object} users - Contains the data for the users
+     * @param {object} users - Contains the data for the users
      */
     function setUsers(users) {
         currentSessionUsers = [];
@@ -101,12 +101,12 @@ var Users = (function() { // eslint-disable-line no-unused-vars
 function User(userDetails) {
     /**
      * The ID of the user
-     * @member {String}
+     * @member {string}
      */
     this._id = userDetails._id;
     /**
      * The username of that user
-     * @member {String}
+     * @member {string}
      */
     this.username = userDetails.username;
 }

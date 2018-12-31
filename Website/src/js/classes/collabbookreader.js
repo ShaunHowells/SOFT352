@@ -42,7 +42,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Handle the messages sent to the websocket
      * 
-     * @return {Boolean} - A boolean indicating if the websocket is active
+     * @return {boolean} - A boolean indicating if the websocket is active
      * @memberof CollabBookReader
      */
     function isWebSocketActive() {
@@ -130,7 +130,7 @@ const CollabBookReader = (function() { // eslint-disable-line no-unused-vars
     /**
      * Returns the username
      * 
-     * @returns {String} - The name of the current user
+     * @returns {string} - The name of the current user
      * @memberof CollabBookReader
      */
     function getUsername() {

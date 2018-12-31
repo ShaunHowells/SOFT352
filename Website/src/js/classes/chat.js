@@ -23,7 +23,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Adds a ChatMessage to chatMessages
      * 
      * @memberof Chat
-     * @param {Object} chatMessage - The details of the message to add
+     * @param {object} chatMessage - The details of the message to add
      */
     function addChatMessage(chatMessage) {
         chatMessages.push(new ChatMessage(chatMessage));
@@ -34,9 +34,9 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Send a message to other users in the session
      * 
      * @memberof Chat
-     * @param {String} message - The ID the message is being sent in
-     * @param {String} userId - The ID of the user sending the message
-     * @param {String} message - The message to send
+     * @param {string} message - The ID the message is being sent in
+     * @param {string} userId - The ID of the user sending the message
+     * @param {string} message - The message to send
      */
     function sendChatMessage(sessionId, userId, message) {
         $.post("http://localhost:9000/chat/sendchatmessage", {
@@ -55,7 +55,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Removes all chat messages
      * 
      * @memberof Chat
-     * @param {Object} session - If session is empty then clear the list of chat messages
+     * @param {object} session - If session is empty then clear the list of chat messages
      */
     function removeAllChatMessages(session) {
         if (!session) {
@@ -78,7 +78,7 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
      * Sets the list of chat messages
      * 
      * @memberof Chat
-     * @param {Object} messages - Contains the data for the chat messages
+     * @param {object} messages - Contains the data for the chat messages
      */
     function setChatMessages(messages) {
         chatMessages = [];
@@ -106,18 +106,18 @@ var Chat = (function() { // eslint-disable-line no-unused-vars
 function ChatMessage(messageDetails) {
     /**
      * The user who sent the message
-     * @member {String}
+     * @member {string}
      */
     this.user = messageDetails.user;
     /**
      * The contents of the message
-     * @member {String}
+     * @member {string}
      */
     this.message = messageDetails.message;
     /**
      * A boolean indictating if the message is a notification or not
      * This flag is used to differentiate messages stating a user has joined the session
-     * @member {Boolean}
+     * @member {boolean}
      */
     this.notification;
     if (messageDetails.notification) {
